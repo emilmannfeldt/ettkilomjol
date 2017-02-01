@@ -11,6 +11,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Snackbar from 'material-ui/Snackbar';
 import Chip from 'material-ui/Chip';
 import TextField from 'material-ui/TextField';
+import './foods.js';
 
 
 
@@ -115,6 +116,29 @@ class App extends Component {
 
 }
 
+  loadFoods(event){
+    event.preventDefault();
+    console.log("LOAD FOODS");
+    // for (var i = 0; i < skafferi.length; i++) {
+    //   let foodName, foodUses;
+    //     foodName = skafferi[i].substring(0,skafferi[i].indexOf(" ("));
+    //     foodUses = skafferi[i].substring(skafferi[i].indexOf("(")+1,skafferi[i].indexOf(")"));
+
+    //     foodUses = Math.round(foodUses/10);
+
+    //     let food = {
+    //       name: foodName,
+    //       uses: foodUses
+    //     };
+
+    //     console.log(food);
+    //     console.log(food.name);
+    //     firebase.database().ref('foods/' + food.name).set(food);
+
+    // }
+
+  }
+
   createUser(event){
         event.preventDefault();
     console.log(this);
@@ -188,15 +212,16 @@ class App extends Component {
   render() {
     return (
       <div className="App container">
-
+https://facebook.github.io/react/docs/thinking-in-react.html
         <div className="col-lg-12" style={this.styles.wrapper}>
                 {this.state.searchChips.map(this.renderChip, this)}
                 </div>
 <div class="col-lg-12">
+//autokompletten fungerar sådär. skriv eget filter? som fortfarande tar in uses i räkningen men även krav på att första bokstaven måste vara första bokstaven i söksträngen. 
         <AutoComplete
           searchText={this.state.searchText}
           floatingLabelText="sök ingredienser"
-          filter={AutoComplete.fuzzyFilter}
+          filter={AutoComplete.caseInsensitiveFilter}
           onUpdateInput={this.handleUpdateInput}
           dataSource={foods}
           onNewRequest={this.handleNewRequest}
@@ -205,10 +230,12 @@ class App extends Component {
         />
         </div>
         <form onSubmit={this.signInEmail.bind(this)}>
-          <TextField hindText="Ange Email" type="email" ref="email"/> //ref fungerar inte med material ui textfield. hur gör jag annars? använd value prop till state?börja strukturera om alla delar jag har nu 
-          //och gör statiska ui componenter för det jag komma använda, recipecard cardlist, filtercontainer, filter.
+          <TextField hindText="Ange Email" type="email" ref="email"/> //ref fungerar inte med material ui textfield. använd value prop till state?börja strukturera om alla delar jag har nu 
+          //och gör statiska ui componenter för det jag komma använda, recipecard cardlist, filtercontainer, filter.kolla tutorial facebook
           <input type="password" placeholder="Password" ref="password"/>
-          <RaisedButton label="Sign in" primary={true} type="submit"/>
+                    <input type="email" placeholder="email" ref="email"/>
+
+          <RaisedButton label="load data" primary={true} onTouchTap={this.loadFoods.bind(this)}/>
           <RaisedButton label="Create user" onTouchTap={this.createUser.bind(this)}/>
 
         </form>
