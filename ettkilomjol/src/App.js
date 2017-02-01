@@ -10,6 +10,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import AutoComplete from 'material-ui/AutoComplete';
 import Snackbar from 'material-ui/Snackbar';
 import Chip from 'material-ui/Chip';
+import TextField from 'material-ui/TextField';
+
 
 
 
@@ -71,6 +73,16 @@ foodBase.orderByChild("uses").on("child_added", function(snapshot) {
 
 
 class App extends Component {
+
+  styles = {
+      chip: {
+        margin: 4,
+      },
+      wrapper: {
+        display: 'flex',
+        flexWrap: 'wrap',
+      },
+    };
 
   constructor(props) {
     super(props);
@@ -166,6 +178,7 @@ class App extends Component {
     return (<Chip
         key={food}
         onRequestDelete={() => this.handleRequestDelete(food)}
+         style={this.styles.chip}
       >
         {food}
       </Chip>
@@ -174,16 +187,12 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-                {this.state.searchChips.map(this.renderChip, this)}
+      <div className="App container">
 
+        <div className="col-lg-12" style={this.styles.wrapper}>
+                {this.state.searchChips.map(this.renderChip, this)}
+                </div>
+<div class="col-lg-12">
         <AutoComplete
           searchText={this.state.searchText}
           floatingLabelText="sök ingredienser"
@@ -192,9 +201,12 @@ class App extends Component {
           dataSource={foods}
           onNewRequest={this.handleNewRequest}
           maxSearchResults={5}
+          fullWidth={true}
         />
+        </div>
         <form onSubmit={this.signInEmail.bind(this)}>
-          <input type="email" placeholder="Email" ref="email"/>
+          <TextField hindText="Ange Email" type="email" ref="email"/> //ref fungerar inte med material ui textfield. hur gör jag annars? använd value prop till state?börja strukturera om alla delar jag har nu 
+          //och gör statiska ui componenter för det jag komma använda, recipecard cardlist, filtercontainer, filter.
           <input type="password" placeholder="Password" ref="password"/>
           <RaisedButton label="Sign in" primary={true} type="submit"/>
           <RaisedButton label="Create user" onTouchTap={this.createUser.bind(this)}/>
