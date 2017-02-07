@@ -80,7 +80,13 @@ class FilterIngredients extends Component {
 
   }
 
+suggestIngredientFilter(searchText, key){
+  if(key.substring(0,1).toLowerCase() == searchText.substring(0,1).toLowerCase()){
+    return AutoComplete.caseInsensitiveFilter(searchText,key);//fnukar?
+  }
 
+  return false;
+}
 
   handleUpdateInputText(searchText) {
     this.setState({
@@ -118,7 +124,7 @@ class FilterIngredients extends Component {
     return (
       <div>
         { chips }
-        <AutoComplete searchText={ this.state.searchText } floatingLabelText="sök ingredienser" filter={ AutoComplete.caseInsensitiveFilter } onUpdateInput={ this.handleUpdateInputText } dataSource={ dataSourceFoods }
+        <AutoComplete searchText={ this.state.searchText } floatingLabelText="sök ingredienser" filter={ this.suggestIngredientFilter} onUpdateInput={ this.handleUpdateInputText } dataSource={ dataSourceFoods }
           onNewRequest={ this.handleNewRequest } maxSearchResults={ 5 } fullWidth={ true } />
       </div>
 

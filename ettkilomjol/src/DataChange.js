@@ -49,7 +49,7 @@ class DataChange extends Component {
       recipe.preptime = this.getPrepTime();
       recipe.baketime = Math.floor((Math.random() * 120) + 1);
       recipe.resttime = this.getRestTime();
-      recipe.creator = Math.floor((Math.random() * 2) + 1) === 3 ? "emiman" : "testsson";
+      recipe.creator = Math.floor((Math.random() * 2) + 1) === 3 ? "emiman3" : "testsson3";
       recipe.created = firebase.database.ServerValue.TIMESTAMP;
       recipe.quote = this.getQuote();
       recipe.dietary = this.getDietaryTags();
@@ -85,6 +85,7 @@ class DataChange extends Component {
       firebase.database().ref("recipeCards/"+newKey).set(recipeCard); 
       //fungerar men lite konstigt. timestamp på commentarer fugnerar intealls.
       //kommentarer samt recieppart på ingredienser finns inte? recipepart saknas på instructions ockås.
+      //jag har githubpages men det fungerar inte med firebase verkar det som??+
 
 
     }
@@ -118,7 +119,7 @@ class DataChange extends Component {
 
           break;
         }
-        if(j+1==recipeParts.length){
+        if(j+1===recipeParts.length){
           //sista loopen
           if(Math.floor((Math.random() * 3) + 1)===1){
             instruction.recipePart= "instruktion för potatismos";
@@ -134,18 +135,15 @@ class DataChange extends Component {
 
   getComments(votes){
 
-    //fixa in prop för users, kan jag få det från auth? eller tabell?
     let comments = [];
-    if (Math.floor((Math.random() * 2) + 1)==1) {
+    if (Math.floor((Math.random() * 2) + 1)===1) {
       return comments;
     }
     for(let i =0; i<votes; i++){
       let comment = {};
       comment.rating = Math.floor((Math.random() * 6) + 0);
       comment.comment = this.getIpsum(Math.floor((Math.random() * 50) + 5));
-      let created = new Date();
-      created.setTime(created.getTime()+(Math.floor((Math.random() * 10000000) + 0)));//funkar inte använd bara firebases
-      comment.timestamp = created;
+      comment.timestamp = firebase.database.ServerValue.TIMESTAMP;
       comment.user = this.getRandomUser();
       comments.push(comment);
     }
@@ -277,7 +275,7 @@ class DataChange extends Component {
       if(Math.floor((Math.random() * 5) + 1) > 2){
         ingredient.amount = Math.floor((Math.random() * 100) + 1)/10;
         ingredient.unit = this.getRandomUnit().name;
-        if(ingredient.unit=='g'){
+        if(ingredient.unit==='g'){
           ingredient.amount = ingredient.amount*10;
         }
           ingredient = this.checkUnit(ingredient);
@@ -398,9 +396,9 @@ class DataChange extends Component {
   let finalIngredient = ingredient;
   let newUnit;
   let unitsIndex;
-  if(selectedUnit.type =='volume'){
+  if(selectedUnit.type ==='volume'){
     unitsIndex=0;
-  }else if(selectedUnit.type =='weight'){
+  }else if(selectedUnit.type ==='weight'){
     unitsIndex=1;
   }
   for(let unit in this.props.units[unitsIndex]){
@@ -421,9 +419,9 @@ class DataChange extends Component {
   let finalIngredient = ingredient;
   let newUnit;
   let unitsIndex;
-  if(selectedUnit.type =='volume'){
+  if(selectedUnit.type ==='volume'){
     unitsIndex=0;
-  }else if(selectedUnit.type =='weight'){
+  }else if(selectedUnit.type ==='weight'){
     unitsIndex=1;
   }
   for(let unit in this.props.units[unitsIndex]){
@@ -443,7 +441,7 @@ class DataChange extends Component {
   for(let i = 0; i<this.props.units.length; i++){
       for(let unit in this.props.units[this.props.units[i]]){
         let curUnit = this.props.units[this.props.units[i]][unit];
-          if(curUnit.name == ingredient.unit){
+          if(curUnit.name === ingredient.unit){
             foundUnit=curUnit;
           }
       } 

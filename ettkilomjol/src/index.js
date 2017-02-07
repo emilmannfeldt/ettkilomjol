@@ -24,6 +24,8 @@ let foodNames = JSON.parse(localStorage.getItem('foodnames')) || [];
 let units = JSON.parse(localStorage.getItem('units')) || [];
 let tags = JSON.parse(localStorage.getItem('tags')) || [];
 let users = JSON.parse(localStorage.getItem('users')) || [];
+let recipeCards = JSON.parse(localStorage.getItem('recipecards')) || [];
+
 
 const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 
@@ -68,6 +70,8 @@ firebase.auth().onAuthStateChanged(function(user) {
     let unitsRef = firebase.database().ref("units");
     let tagsRef = firebase.database().ref("tags");
     let usersRef = firebase.database().ref("users");
+    let recipeCardsRef = firebase.database().ref("recipeCards");
+
 
 
     if(foodNames.length< 1 || localIsOld('lastupdatedfoodnames')){
@@ -108,6 +112,14 @@ firebase.auth().onAuthStateChanged(function(user) {
       });
       localStorage.setItem('lastupdatedusers', JSON.stringify(Date.now()));
     }
+    if(recipeCards.length< 1 || localIsOld('lastupdatedrecipecards')){
+      console.log("LOADING NEW RECIPECARDS");
+      recipeCardsRef.on("child_added", function(snapshot) {
+        recipeCards.push(snapshot.val());    
+        localStorage.setItem('recipecards', JSON.stringify(recipeCards));
+      });
+      localStorage.setItem('lastupdatedrecipecards', JSON.stringify(Date.now()));
+    }
   // User is signed in.
   } else {
     // No user is signed in.
@@ -120,7 +132,7 @@ const Applicaption = () => (
   <div>
   <RaisedButton label="login" primary={ true } onTouchTap={ signIn } />
     <DataChange foods={foodNames} tags = {tags} units = {units} users={users}/>
-    <FilterableRecipeList foods={foodNames} recipes={{}}/>
+    <FilterableRecipeList foods={foodNames} recipeCards={recipeCards}/>
     </div>
   </MuiThemeProvider>
 );
