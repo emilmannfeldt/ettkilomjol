@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import IngredientChip from './IngredientChip';
+import './App.css';
 
 
 class FilterIngredients extends Component {

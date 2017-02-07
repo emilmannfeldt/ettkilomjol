@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Chip from 'material-ui/Chip';
+import './App.css';
 
 
 class IngredientChip extends Component {
