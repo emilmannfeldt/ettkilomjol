@@ -96,8 +96,9 @@ suggestIngredientFilter(searchText, key){
 
   handleNewRequest = (searchText) => {
     let foundFood = false;
+    searchText = searchText.charAt(0).toUpperCase() + searchText.slice(1);
     for (var i = this.props.foods.length - 1; i >= 0; i--) {
-      if (this.props.foods[i] === searchText) {
+      if (this.props.foods[i]=== searchText) {
         foundFood = true;
       }
     }

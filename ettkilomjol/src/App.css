@@ -22,3 +22,57 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.list-item {
+   min-height: 230px;
+}
+.recipe-card-image {
+  width: 100%;
+
+}
+.recipecard-title{
+  font-size: 12;
+    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ingredient-badge{
+      padding: 16px 16px 0px 0px !important;
+}
+.matched-ingredients-list{
+  background-color: green;
+}
+.missing-ingredients-list{
+  background-color: red;
+}
+
+
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: @screen-sm-min) { 
+  .list-item {
+    min-height: 285px;
+  }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: @screen-md-min) { 
+  .list-item {
+    min-height: 320px;
+  } 
+}
+
+/* Large devices (large desktops, 1200px and up)  //fixa maxwidth på allt så jag känner igen mig. */
+@media (min-width: @screen-lg-min) { 
+  .list-item {
+    min-height: 360px;
+  } 
+}
+
+@media only screen and (max-device-width: 480px) {
+  .list-item {
+     width:100%;
+  }
+}

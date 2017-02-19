@@ -22,10 +22,13 @@ class FilterableRecipeList extends Component {
   }
   render() {
     return (
-      <div>
-     
-        <FilterBar onUserInput={ this.handleFilterInput } foods={ this.props.foods } filter={ this.state.filter } />
-        <RecipeList recipeCards={ this.props.recipeCards } filter={ this.state.filter } />
+      <div className="container">
+        <div className="row">
+          <FilterBar onUserInput={ this.handleFilterInput } foods={ this.props.foods } filter={ this.state.filter } />
+        </div>
+        <div className="row">
+          <RecipeList recipeCards={ this.props.recipeCards } filter={ this.state.filter } />
+        </div>
       </div>
       );
   }

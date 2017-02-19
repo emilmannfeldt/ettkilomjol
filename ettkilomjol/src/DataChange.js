@@ -31,10 +31,11 @@ class DataChange extends Component {
     //     console.log(this.props.units[0][key][key2]);
     //   }
     // }
-
+      // firebase.database().ref("recipeCards").remove();
+      // firebase.database().ref("recipes").remove();
     let recipesRef = firebase.database().ref("recipes");
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
 
       let recipe = {
         tags: {},
@@ -45,11 +46,11 @@ class DataChange extends Component {
       recipe.title = this.getIpsum(Math.floor((Math.random() * 80) + 5));
       recipe.rating = Math.floor((Math.random() * 51) + 0) / 10;
       recipe.votes = Math.floor((Math.random() * 20) + 0);
-      recipe.image = 'http://i.imgur.com/3CZ9hQs.jpg';
+      recipe.image = this.getImage();
       recipe.preptime = this.getPrepTime();
       recipe.baketime = Math.floor((Math.random() * 120) + 1);
       recipe.resttime = this.getRestTime();
-      recipe.creator = Math.floor((Math.random() * 2) + 1) === 3 ? "emiman3" : "testsson3";
+      recipe.creator = Math.floor((Math.random() * 2) + 1) === 3 ? "system" : "system";
       recipe.created = firebase.database.ServerValue.TIMESTAMP;
       recipe.quote = this.getQuote();
       recipe.dietary = this.getDietaryTags();
@@ -78,7 +79,11 @@ class DataChange extends Component {
       // console.log(recipe);
       // console.log(recipeCard);
       //testa firebase, tomma properties kommer de sparas ändå?
+
+
+
       let newKey = recipesRef.push().key;
+      recipeCard.recipeId=newKey;
       firebase.database().ref("recipes/"+newKey).set(recipe); 
 
       console.log(newKey);
@@ -91,7 +96,14 @@ class DataChange extends Component {
     }
 
   }
+  getImage(){
+    let images = ["http://i.imgur.com/bnk9xiJ.jpg","http://i.imgur.com/9vdMMbi.jpg","http://i.imgur.com/Sd7mc16.jpg","http://i.imgur.com/zQhbkgg.jpg","http://i.imgur.com/kia9DQ0.jpg","http://i.imgur.com/QQWAL3n.jpg",
+    "http://i.imgur.com/LXn8wNr.jpg","http://i.imgur.com/8JBzKgf.jpg","http://i.imgur.com/k7wSrvS.jpg","http://i.imgur.com/2DgWs7j.jpg","http://i.imgur.com/wZg9kZZ.jpg","http://i.imgur.com/TEV8CT3.jpg",
+    "http://i.imgur.com/IbQMQ1C.jpg","http://i.imgur.com/cZaSjfy.jpg","http://i.imgur.com/v5eBDLa.jpg","http://i.imgur.com/0XhVlLB.jpg","http://i.imgur.com/sb1iHC0.jpg","http://i.imgur.com/PVIFzlX.jpg","http://i.imgur.com/SsnG1el.jpg?1",
+    "http://i.imgur.com/AgOTYu5.jpg","http://i.imgur.com/44yh9WB.jpg","http://i.imgur.com/27exWsc.jpg","http://i.imgur.com/uxO0SJK.jpg"];
+    return images[Math.floor((Math.random() * images.length) + 0)];
 
+  }
   getInstructions(ingredients){
     let instructions = [];
     let nrOfInstructions = Math.floor((Math.random() * 20) + 1);
@@ -202,11 +214,11 @@ class DataChange extends Component {
   getDietaryTags() {
     let dietry = {};
     let dietaryDb = this.props.tags[DIETARY];
-    if (Math.floor((Math.random() * 10) + 1) === 1) {
+    if (Math.floor((Math.random() * 5) + 1) === 1) {
       return dietry;
     }
     for(let tag in dietaryDb){
-        if (Math.floor((Math.random() * 3) + 1) === 3) {
+        if (Math.floor((Math.random() * 4) + 1) === 3) {
             dietry[tag] = dietaryDb[tag];
       }
     }
@@ -216,11 +228,11 @@ class DataChange extends Component {
   getOtherTags() {
     let other = {};
     let otherDb = this.props.tags[OTHER];
-    if (Math.floor((Math.random() * 10) + 1) === 1) {
+    if (Math.floor((Math.random() * 5) + 1) === 1) {
       return other;
     }
     for(let tag in otherDb){
-        if (Math.floor((Math.random() * 3) + 1) === 3) {
+        if (Math.floor((Math.random() * 4) + 1) === 3) {
             other[tag] = otherDb[tag];
       }
     }
@@ -229,11 +241,11 @@ class DataChange extends Component {
   getDishtypeTag() {
        let dishtype = {};
     let dishtypeDb = this.props.tags[DISHTYPE];
-    if (Math.floor((Math.random() * 10) + 1) === 1) {
+    if (Math.floor((Math.random() * 5) + 1) === 1) {
       return dishtype;
     }
     for(let tag in dishtypeDb){
-        if (Math.floor((Math.random() * 3) + 1) === 3) {
+        if (Math.floor((Math.random() * 4) + 1) === 3) {
             dishtype[tag] = dishtypeDb[tag];
             if (Math.floor((Math.random() * 2) + 1) === 1) {
               break;
@@ -263,7 +275,7 @@ class DataChange extends Component {
 
   getIngredients(){
     let ingredients = [];
-    let nrOfIngredients = Math.floor((Math.random() * 20) + 1);
+    let nrOfIngredients = Math.floor((Math.random() * 12) + 1);
     let foods = [];
     for(let i =0; i<nrOfIngredients; i++){
       let ingredient = {};
