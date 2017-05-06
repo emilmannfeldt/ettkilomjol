@@ -11,12 +11,10 @@ class IngredientChip extends Component {
   }
   styles = {
     chip: {
-      margin: 4,
-    },
-    wrapper: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
+      marginTop: 4,
+      marginRight: 4,
+      backgroundColor: (239, 108, 0, 0.7),
+    }
   };
 
   handleDelete() {
@@ -25,7 +23,7 @@ class IngredientChip extends Component {
 
   render() {
     return (
-      <Chip key={ this.props.text } onRequestDelete={ this.handleDelete } style={ this.styles.chip }>
+      <Chip key={ this.props.text } onRequestDelete={ this.handleDelete } className="ingredient-chip">
         { this.props.text }
       </Chip>
       );

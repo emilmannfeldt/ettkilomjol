@@ -27,7 +27,30 @@
    min-height: 230px;
 }
 .recipe-card-image {
-  width: 100%;
+        display: block;
+    height: 0;
+    padding-bottom: 74.4%;
+    position: relative;
+    overflow: hidden;
+
+}
+.recipe-card-image img {
+      bottom: 0;
+    display: block;
+    height: auto;
+    left: 0;
+    position: absolute;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    -webkit-transition: transform .2s ease-in-out;
+    -moz-transition: transform .2s ease-in-out;
+    -o-transition: transform .2s ease-in-out;
+    transition: transform .2s ease-in-out;
+    top: 50%;
+    width: 100%;
 
 }
 .recipecard-title{
@@ -40,11 +63,30 @@
       padding: 16px 16px 0px 0px !important;
 }
 .matched-ingredients-list{
-  background-color: green;
+
 }
 .missing-ingredients-list{
-  background-color: red;
+
 }
+.chip-wrapper{
+  flex-wrap: wrap;
+  display: flex;
+}
+.ingredient-chip{
+  margin-top: 4px !important;
+  margin-right: 4px !important;
+  background-color: rgba(255, 152, 0, 0.7) !important;
+}
+.ingredient-chip span{
+  color: #ffffff !important;
+}
+.ingredient-chip svg{
+  fill: #ffffff !important;
+}
+.hidden{
+  display: none !important;
+}
+
 
 
 /* Extra small devices (phones, less than 768px) */

@@ -12,7 +12,7 @@ class FilterBar extends Component {
   render() {
 
     return (
-      <div>
+      <div className="col-md-12">
         <FilterIngredients onFilterChange={ this.props.onUserInput } foods={ this.props.foods } filter={ this.props.filter } />
       </div>
       );

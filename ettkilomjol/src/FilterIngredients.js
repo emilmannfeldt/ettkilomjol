@@ -18,7 +18,12 @@ class FilterIngredients extends Component {
   }
 
 
-
+  styles = {
+    chipWrapper: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+  };
   handleChange() {
     let newFilter = this.props.filter;
 
@@ -75,17 +80,19 @@ class FilterIngredients extends Component {
       });
     };
     //filtrerar bort de som redan finns i filtret. 
-
+    //problem: det blir dubbletter
+    //rensade local storage så fungerade det igen. men buggen kan återkomma.
+    //den uppstod när jag varit borta länge
     return this.props.foods.diff(this.props.filter.ingredients);
 
   }
 
 suggestIngredientFilter(searchText, key){
-  if(key.substring(0,1).toLowerCase() == searchText.substring(0,1).toLowerCase()){
+  // if(key.substring(0,1).toLowerCase() == searchText.substring(0,1).toLowerCase()){
     return AutoComplete.caseInsensitiveFilter(searchText,key);//fnukar?
-  }
+  // }
 
-  return false;
+  // return false;
 }
 
   handleUpdateInputText(searchText) {
@@ -124,7 +131,9 @@ suggestIngredientFilter(searchText, key){
 
     return (
       <div>
+        <div className="chip-wrapper">
         { chips }
+        </div>
         <AutoComplete searchText={ this.state.searchText } floatingLabelText="sök ingredienser" filter={ this.suggestIngredientFilter} onUpdateInput={ this.handleUpdateInputText } dataSource={ dataSourceFoods }
           onNewRequest={ this.handleNewRequest } maxSearchResults={ 5 } fullWidth={ true } />
       </div>

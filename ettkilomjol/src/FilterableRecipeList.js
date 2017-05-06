@@ -11,9 +11,9 @@ class FilterableRecipeList extends Component {
         ingredients: [],
       }
     };
-
     this.handleFilterInput = this.handleFilterInput.bind(this);
   }
+
 
   handleFilterInput(changedFilter) {
     this.setState({
@@ -27,7 +27,7 @@ class FilterableRecipeList extends Component {
           <FilterBar onUserInput={ this.handleFilterInput } foods={ this.props.foods } filter={ this.state.filter } />
         </div>
         <div className="row">
-          <RecipeList recipeCards={ this.props.recipeCards } filter={ this.state.filter } />
+          <RecipeList recipeCards={ this.props.recipeCards } filter={ this.state.filter } maxHits={12}/>
         </div>
       </div>
       );

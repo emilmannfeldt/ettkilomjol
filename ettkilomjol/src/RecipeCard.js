@@ -38,20 +38,21 @@ class RecipeCard extends Component {
             }
         }
     }
-    //snygga till lite här. skulle även behöva filter för att styla cardet utefter matchande ingredienser, skriva hur många/vilka som matchade i cardet
-    //koll på material ui cards. 
-    //efter att ajg fått till en hyfsad presentation här så ska jag gå på skapandet av egna recept. Innan den fulla recepy vyn. Behöver kanske routing till både skapa och visa vyerna?
-    //dra ner på storleken, responsiv, margins, 
-    //skapa component för att visa filtertagar, RecipeCardTagChip döp om andra till REcipeCardIngredientChip
 
-    //det är bara en tag som skrivs ut. matchedIngredient har bara en length på 1 fast det finns fler?? ja det är felet
-    // ös på med bootstrap
 
-    //mindksa ner titeln line-height och fontsize lite. snygga till ingredient-tag. kolla på koket.se m.m. efter snygga kort
 
+
+
+
+
+    //klick på bild eller titel ska vara vägen in till recipe. antingen länk till ny sida (routing) eller så fälls en detailvy ut.
+    //skapa recept kan också vara routing/modalt fönster/formuilär fälls ut.
+    //mer som ska till recipecard: betyg, tidsåtgång, lägg till i favoriter (koket.se hjärta). 
+    //
     return ( <div className="col-lg-4 col-md-4 col-sm-4 col-xs-6 list-item" style={this.styles.wrapper}> <Card style={this.styles.recipeCard}>
-               
-                <img src={this.props.recipe.image} className="recipe-card-image"/>
+                <div className="recipe-card-image">
+                <img src={this.props.recipe.image}/>
+                </div>
                 <CardText>
                 <div className="recipecard-title">{this.props.recipe.title} </div>
                 

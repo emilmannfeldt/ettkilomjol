@@ -120,14 +120,17 @@ firebase.auth().onAuthStateChanged(function(user) {
       });
       localStorage.setItem('lastupdatedrecipecards', JSON.stringify(Date.now()));
     }
+    
   // User is signed in.
   } else {
     // No user is signed in.
     console.log("bye" + user);
+
   }
 });
 
 const Applicaption = () => (
+
   <MuiThemeProvider>
   <div>
   <RaisedButton label="login" primary={ true } onTouchTap={ signIn } />

@@ -3,6 +3,7 @@ import './App.css'; //fixa en egen css för varje komponent?
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 import ShoppingBasketIcon from 'material-ui/svg-icons/action/shopping-basket';
+import AddIcon from 'material-ui/svg-icons/content/add';
 import Popover from 'material-ui/Popover';
 import Divider from 'material-ui/Divider';
 import {List, ListItem} from 'material-ui/List';
@@ -36,9 +37,6 @@ class IngredientTag extends Component {
 
 
   handleTouchTap = (event) => {
-    console.log("clicked");
-    console.log(this.props.missingIngredients);
-    console.log(this.props.matchedIngredients);
     // This prevents ghost click.
     event.preventDefault();
 
@@ -54,20 +52,46 @@ class IngredientTag extends Component {
     });
   };
 
+
   render() {
       function IngredientList(props) {
-    const ingredients = props.ingredients;
-    const listItems = ingredients.map((ingredient, index) =>
-      <ListItem key={index} primaryText={ingredient} />
-    );
-    return (
-      <List>{listItems}</List>
-    );
+        const ingredients = props.ingredients;
+        const matched = props.matched;
+        if(ingredients.length <1){
+          return (<List className="hidden"/>);
+        }
+        let listItems;
+        if(matched){
+          listItems = ingredients.map((ingredient, index) =>
+          <ListItem key={index} primaryText={ingredient} />
+          );
+        }else{
+          listItems = ingredients.map((ingredient, index) =>
+          <ListItem key={index} primaryText={ingredient} rightIconButton={<IconButton onTouchTap={console.log("ADDED: " +{ingredient})} ><AddIcon /></IconButton>} />
+          );
+        }
+        //vid klick på add så ska ingrediensen läggas till i inköpslistan, behålla kopplingen till receptet för att kunna länka tillbaka/underlätta kvanitet
+     
+        return (
+          <List>{listItems}</List>
+        );
+
+      }
+
+    
+      function IngredientDivider(props) {
+      const render = props.render;
+      if (render) {
+        return(<Divider />);
+      }else{
+        return (<Divider className="hidden"/>);
+      }
+    
   }
     return (<div style={this.styles.wrapper}>
                   <Badge className="ingredient-badge"
                     badgeContent={this.props.matchedIngredients.length+'/'+(this.props.matchedIngredients.length+this.props.missingIngredients.length)}
-                    secondary={true}
+                    primary={true}
                     badgeStyle={this.styles.badge}>
                     <IconButton onTouchTap={ this.handleTouchTap } >
                       <ShoppingBasketIcon />
@@ -79,11 +103,12 @@ class IngredientTag extends Component {
                       targetOrigin={{horizontal: 'left', vertical: 'top'}}
                       onRequestClose={this.handleRequestClose}>
                         <div className="matched-ingredients-list">
-                          <IngredientList ingredients={this.props.matchedIngredients}/>
+                          <IngredientList ingredients={this.props.matchedIngredients} matched={true}/>
                         </div>
-                        <Divider />
+                        <IngredientDivider render={this.props.matchedIngredients.length > 0 && this.props.missingIngredients.length > 0}/>
                         <div className="missing-ingredients-list">
-                         <IngredientList ingredients={this.props.missingIngredients}/>
+                         <IngredientList ingredients={this.props.missingIngredients} matched={false}/>
+
                         </div>
                     </Popover>
                   </Badge>

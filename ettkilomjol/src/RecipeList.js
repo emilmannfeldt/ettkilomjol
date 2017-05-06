@@ -81,8 +81,9 @@ runIngredientFilter(recipeIngredients, filterIngredients){
     recipes.sort(function(a,b){
         return that.sortRecipeCards(a,b);    
     });
-    if(recipes.length>10){
-        recipes.length=10;
+    console.log(recipes.length + " " + that.props.maxHits);
+    if(recipes.length>this.props.maxHits){
+        recipes.length=this.props.maxHits;
     }
 
 
