@@ -40,7 +40,7 @@ const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 //   });
 // }
 
-let signIn = function() {
+window.onload = function() {
 firebase.auth().signInAnonymously().catch(function(error) {
   // Handle Errors here.
   var errorCode = error.code;
@@ -76,47 +76,70 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     if(foodNames.length< 1 || localIsOld('lastupdatedfoodnames')){
       console.log("LOADING NEW FOODS");
-      foodRef.orderByChild("uses").on("child_added", function(snapshot) {
-        foodNames.splice(0, 0, snapshot.val().name);
+      
+      foodRef.orderByChild("uses").once("value", function(snapshot) {
+        foodNames.length = 0;
+        snapshot.forEach(function(child) {
+            foodNames.splice(0, 0, child.val().name); 
+        });
         localStorage.setItem('foodnames', JSON.stringify(foodNames));
       });
       localStorage.setItem('lastupdatedfoodnames', JSON.stringify(Date.now()));
+    
     }
 
     if(units.length< 1 || localIsOld('lastupdatedunits')){
       console.log("LOADING NEW UNITS");
-      unitsRef.on("child_added", function(snapshot) {
-        let unitArray = Object.keys(snapshot.val()).map(function (key) { return snapshot.val()[key]; });
+      unitsRef.once("value", function(snapshot) {
+        units.length = 0;
+        snapshot.forEach(function(child) {
+            let unitArray = Object.keys(snapshot.val()).map(function (key) { return snapshot.val()[key]; });
           unitArray.sort(function(a,b){
          return a.ref - b.ref;
-        });
+          });
         units.push(unitArray);  
-        localStorage.setItem('units', JSON.stringify(units));
+        });
+      localStorage.setItem('units', JSON.stringify(units));
       });
       localStorage.setItem('lastupdatedunits', JSON.stringify(Date.now()));
     }
 
     if(tags.length< 1 || localIsOld('lastupdatedtags')){
       console.log("LOADING NEW TAGS");
-      tagsRef.on("child_added", function(snapshot) {
-        tags.push(snapshot.val());    
+      
+      tagsRef.once("value", function(snapshot) {
+        tags.length = 0;
+        snapshot.forEach(function(child) {
+          tags.push(snapshot.val());
+        });
         localStorage.setItem('tags', JSON.stringify(tags));
       });
       localStorage.setItem('lastupdatedtags', JSON.stringify(Date.now()));
     }
     if(users.length< 1 || localIsOld('lastupdatedusers')){
       console.log("LOADING NEW USERS");
-      usersRef.on("child_added", function(snapshot) {
-        users.push(snapshot.val());    
+      
+      usersRef.once('value', function(snapshot) {
+        users.length = 0;
+        snapshot.forEach(function(child) {
+          users.push(snapshot.val());
+        });
         localStorage.setItem('users', JSON.stringify(users));
       });
+
       localStorage.setItem('lastupdatedusers', JSON.stringify(Date.now()));
     }
     if(recipeCards.length< 1 || localIsOld('lastupdatedrecipecards')){
       console.log("LOADING NEW RECIPECARDS");
-      recipeCardsRef.on("child_added", function(snapshot) {
-        recipeCards.push(snapshot.val());    
+      
+
+      recipeCardsRef.once('value', function(snapshot) {
+        recipeCards.length = 0;
+        snapshot.forEach(function(child) {
+          recipeCards.push(child.val());  
+        });
         localStorage.setItem('recipecards', JSON.stringify(recipeCards));
+
       });
       localStorage.setItem('lastupdatedrecipecards', JSON.stringify(Date.now()));
     }
@@ -132,8 +155,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 const Applicaption = () => (
 
   <MuiThemeProvider>
+
   <div>
-  <RaisedButton label="login" primary={ true } onTouchTap={ signIn } />
     <DataChange foods={foodNames} tags = {tags} units = {units} users={users}/>
     <FilterableRecipeList foods={foodNames} recipeCards={recipeCards}/>
     </div>

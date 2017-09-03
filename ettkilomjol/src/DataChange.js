@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as firebase from 'firebase';
+import IconButton from 'material-ui/IconButton';
+import DashboardIcon from 'material-ui/svg-icons/action/dashboard';
+import CodeIcon from 'material-ui/svg-icons/action/code';
 
 
 
@@ -25,6 +28,7 @@ class DataChange extends Component {
   }
 
   runDataChange() {
+    return;
     // for(let key in this.props.units[0]){
     //   console.log(key);
     //   for(let key2 in this.props.units[0][key]){
@@ -498,7 +502,19 @@ class DataChange extends Component {
 
     return (
       <div>
-        <RaisedButton label="Excecute" secondary={ true } onTouchTap={ this.runDataChange } />
+        
+        <a href="https://tree.taiga.io/project/ettkilomjol-ett-kilo-mjol/">
+          <IconButton tooltip="Project backlog">
+                      <DashboardIcon/>
+           </IconButton>
+        </a>
+        <a href="https://github.com/emilmannfeldt/ettkilomjol">
+          <IconButton tooltip="gitHub">
+          <CodeIcon/>
+           </IconButton>
+        </a>
+
+        <RaisedButton disabled label="Run" secondary={ true } onTouchTap={ this.runDataChange } />
       </div>
       );
   }

@@ -88,11 +88,11 @@ class FilterIngredients extends Component {
   }
 
 suggestIngredientFilter(searchText, key){
-  // if(key.substring(0,1).toLowerCase() == searchText.substring(0,1).toLowerCase()){
+  if(key.substring(0,1).toLowerCase() == searchText.substring(0,1).toLowerCase()){
     return AutoComplete.caseInsensitiveFilter(searchText,key);//fnukar?
-  // }
+  }
 
-  // return false;
+  return false;
 }
 
   handleUpdateInputText(searchText) {
@@ -118,6 +118,7 @@ suggestIngredientFilter(searchText, key){
     this.setState({
       searchText: ''
     });
+    this.refs.ingredientSearchbar.focus();
   };
 
   render() {
@@ -134,7 +135,7 @@ suggestIngredientFilter(searchText, key){
         <div className="chip-wrapper">
         { chips }
         </div>
-        <AutoComplete searchText={ this.state.searchText } floatingLabelText="sök ingredienser" filter={ this.suggestIngredientFilter} onUpdateInput={ this.handleUpdateInputText } dataSource={ dataSourceFoods }
+        <AutoComplete ref="ingredientSearchbar" searchText={ this.state.searchText } floatingLabelText="sök ingredienser" filter={ this.suggestIngredientFilter} onUpdateInput={ this.handleUpdateInputText } dataSource={ dataSourceFoods }
           onNewRequest={ this.handleNewRequest } maxSearchResults={ 5 } fullWidth={ true } />
       </div>
 

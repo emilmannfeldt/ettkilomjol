@@ -49,11 +49,11 @@ class RecipeCard extends Component {
     //skapa recept kan också vara routing/modalt fönster/formuilär fälls ut.
     //mer som ska till recipecard: betyg, tidsåtgång, lägg till i favoriter (koket.se hjärta). 
     //
-    return ( <div className="col-lg-4 col-md-4 col-sm-4 col-xs-6 list-item" style={this.styles.wrapper}> <Card style={this.styles.recipeCard}>
+    return ( <div className="col-lg-4 col-md-4 col-sm-4 col-xs-6 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
                 <div className="recipe-card-image">
                 <img src={this.props.recipe.image}/>
                 </div>
-                <CardText>
+                <CardText className="recipe-card-info">
                 <div className="recipecard-title">{this.props.recipe.title} </div>
                 
           <IngredientTag
