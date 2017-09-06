@@ -32,26 +32,36 @@ runIngredientFilter(recipeIngredients, filterIngredients){
     if(this.filterIsEmpty(filter)){
         return false;
     }
-
+    //filterar bort alla recept som inte har någon matchning alls. 
+    //och om mer än 10/20 ingredienser angetts filtrera även bort alla som bara har 1/2 matchning med undantag för i fall där recept är kompletta
     let ingredientHits= this.runIngredientFilter(recipe.ingredients, filter.ingredients);
+    if(filter.ingredients.length >20){
+        return ingredientHits>2 || (ingredientHits === Object.keys(recipe.ingredients).length);
+    }
+    if(filter.ingredients.length >10){
+        return ingredientHits>1 || (ingredientHits === Object.keys(recipe.ingredients).length);
+    }
 
     return ingredientHits>0;
+    
+    
   }
 
   sortRecipeCards(a,b){
     //nångting är lite knasigt med sorteringen. den verkar frysa de som är höst upp och inte sortera om fullt ut?
      let filterIngredients= this.props.filter.ingredients;
+
         //return -1 om a är sämtre än b
         //return 1 om a är bättre än b
         //return 0 om de är lika
-    let l = filterIngredients.lenght;
+    let l = filterIngredients.length;
     let ingredientHitsA =0;
     let ingredientHitsB =0;
     for(let i =0; i<l; i++){
-        if(a.hasOwnProperty(filterIngredients[i])){
+        if(a.ingredients.hasOwnProperty(filterIngredients[i])){
             ingredientHitsA++;
         }
-        if(b.hasOwnProperty(filterIngredients[i])){
+        if(b.ingredients.hasOwnProperty(filterIngredients[i])){
             ingredientHitsB++;
         }
     }
@@ -59,10 +69,25 @@ runIngredientFilter(recipeIngredients, filterIngredients){
     let bIngredients = Object.keys(b.ingredients).length;
     let missingA = aIngredients - ingredientHitsA;
     let missingB = bIngredients - ingredientHitsB;
-    if(missingA===missingB){
+
+    //om båda är full match: Välj den som har flest antal ingredienser
+    if(missingA === 0 && missingB ===0){
         return bIngredients-aIngredients;
     }
-    return missingA-missingB;
+    //om båda har lika många matchningar: Välj den som saknar minst antal ingredienser
+    if(ingredientHitsA === ingredientHitsB){
+        return missingA-missingB;
+    }
+    //Annars: Välj den med flest matchande ingredienser
+    // return ingredientHitsB-ingredientHitsA;
+    return ((ingredientHitsB-0.3)/bIngredients)-((ingredientHitsA-0.3)/aIngredients);
+
+
+
+    // if(missingA===missingB){
+    //     return bIngredients-aIngredients;
+    // }
+    // return missingA-missingB;
   }
 
 
@@ -78,13 +103,16 @@ runIngredientFilter(recipeIngredients, filterIngredients){
         }
     }
     console.log("SORTING");
+    let n =0;
     recipes.sort(function(a,b){
+        n++;
         return that.sortRecipeCards(a,b);    
     });
+    console.log(n);
     console.log(recipes.length + " " + that.props.maxHits);
-    if(recipes.length>this.props.maxHits){
-        recipes.length=this.props.maxHits;
-    }
+    // if(recipes.length>this.props.maxHits){
+    //     recipes.length=this.props.maxHits;
+    // }
 
 
 

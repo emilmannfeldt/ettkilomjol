@@ -93,11 +93,10 @@ firebase.auth().onAuthStateChanged(function(user) {
       unitsRef.once("value", function(snapshot) {
         units.length = 0;
         snapshot.forEach(function(child) {
-            let unitArray = Object.keys(snapshot.val()).map(function (key) { return snapshot.val()[key]; });
-          unitArray.sort(function(a,b){
+            units = Object.keys(snapshot.val()).map(function (key) { return snapshot.val()[key]; });
+          units.sort(function(a,b){
          return a.ref - b.ref;
           });
-        units.push(unitArray);  
         });
       localStorage.setItem('units', JSON.stringify(units));
       });
@@ -110,7 +109,7 @@ firebase.auth().onAuthStateChanged(function(user) {
       tagsRef.once("value", function(snapshot) {
         tags.length = 0;
         snapshot.forEach(function(child) {
-          tags.push(snapshot.val());
+          tags.splice(0, 0, child.val());
         });
         localStorage.setItem('tags', JSON.stringify(tags));
       });
@@ -122,7 +121,7 @@ firebase.auth().onAuthStateChanged(function(user) {
       usersRef.once('value', function(snapshot) {
         users.length = 0;
         snapshot.forEach(function(child) {
-          users.push(snapshot.val());
+          users.splice(0, 0, child.val());
         });
         localStorage.setItem('users', JSON.stringify(users));
       });

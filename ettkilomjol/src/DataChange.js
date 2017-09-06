@@ -284,6 +284,7 @@ class DataChange extends Component {
     for(let i =0; i<nrOfIngredients; i++){
       let ingredient = {};
       let food = this.props.foods[Math.floor((Math.random() * this.props.foods.length) + 0)];
+
       if(foods.indexOf(food)>-1){
         continue;
       }
