@@ -110,9 +110,9 @@ runIngredientFilter(recipeIngredients, filterIngredients){
     });
     console.log(n);
     console.log(recipes.length + " " + that.props.maxHits);
-    // if(recipes.length>this.props.maxHits){
-    //     recipes.length=this.props.maxHits;
-    // }
+    if(recipes.length>this.props.maxHits){
+        recipes.length=this.props.maxHits;
+    }
 
 
 

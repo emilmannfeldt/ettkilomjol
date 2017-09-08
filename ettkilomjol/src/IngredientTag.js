@@ -3,6 +3,7 @@ import './App.css'; //fixa en egen css för varje komponent?
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 import ShoppingBasketIcon from 'material-ui/svg-icons/action/shopping-basket';
+import RestaurantMenuIcon from 'material-ui/svg-icons/maps/restaurant-menu';
 import AddIcon from 'material-ui/svg-icons/content/add';
 import Popover from 'material-ui/Popover';
 import Divider from 'material-ui/Divider';
@@ -32,7 +33,11 @@ class IngredientTag extends Component {
       fontSize: 10,
       width: 28,
       height: 28,
+      backgroundColor: '#ff9800',
     },
+    hide:{
+      display: 'none',
+    }
   };
 
 
@@ -93,8 +98,11 @@ class IngredientTag extends Component {
                     badgeContent={this.props.matchedIngredients.length+'/'+(this.props.matchedIngredients.length+this.props.missingIngredients.length)}
                     primary={true}
                     badgeStyle={this.styles.badge}>
-                    <IconButton onTouchTap={ this.handleTouchTap } >
+                    <IconButton onTouchTap={ this.handleTouchTap} style={this.props.missingIngredients.length === 0 ? this.styles.hide : ''}>
                       <ShoppingBasketIcon />
+                    </IconButton>
+                    <IconButton onTouchTap={ this.handleTouchTap} style={this.props.missingIngredients.length === 0 ? '' : this.styles.hide}>
+                      <RestaurantMenuIcon />
                     </IconButton>
                     <Popover
                       open={this.state.open}
