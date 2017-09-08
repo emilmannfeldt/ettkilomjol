@@ -72,7 +72,7 @@ runIngredientFilter(recipeIngredients, filterIngredients){
 
     //om båda är full match: Välj den som har flest antal ingredienser
     if(missingA === 0 && missingB ===0){
-        return bIngredients-aIngredients;
+        return ingredientHitsB-ingredientHitsA;
     }
     //om båda har lika många matchningar: Välj den som saknar minst antal ingredienser
     if(ingredientHitsA === ingredientHitsB){
@@ -80,7 +80,7 @@ runIngredientFilter(recipeIngredients, filterIngredients){
     }
     //Annars: Välj den med flest matchande ingredienser
     // return ingredientHitsB-ingredientHitsA;
-    return ((ingredientHitsB-0.3)/bIngredients)-((ingredientHitsA-0.3)/aIngredients);
+    return ((ingredientHitsB-0.1)/bIngredients)-((ingredientHitsA-0.1)/aIngredients);
 
 
 

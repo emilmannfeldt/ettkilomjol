@@ -158,7 +158,8 @@ const Applicaption = () => (
   <div>
     <DataChange foods={foodNames} tags = {tags} units = {units} users={users}/>
     <FilterableRecipeList foods={foodNames} recipeCards={recipeCards}/>
-    </div>
+    
+  </div>
   </MuiThemeProvider>
 );
 
