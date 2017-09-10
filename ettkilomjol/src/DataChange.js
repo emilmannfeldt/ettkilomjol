@@ -515,7 +515,7 @@ class DataChange extends Component {
            </IconButton>
         </a>
 
-        <RaisedButton disabled label="Run" secondary={ true } onTouchTap={ this.runDataChange } />
+        <RaisedButton disabled label="Run datachange" secondary={ true } onTouchTap={ this.runDataChange } />
       </div>
       );
   }
