@@ -7,15 +7,15 @@ import RestaurantMenuIcon from 'material-ui/svg-icons/maps/restaurant-menu';
 import AddIcon from 'material-ui/svg-icons/content/add';
 import Popover from 'material-ui/Popover';
 import Divider from 'material-ui/Divider';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 
 
 
 
 class IngredientTag extends Component {
-      constructor(props) {
+  constructor(props) {
     super(props);
-     this.state = {
+    this.state = {
       open: false,
     };
   }
@@ -27,7 +27,7 @@ class IngredientTag extends Component {
       display: 'flex',
       flexWrap: 'wrap',
     },
-    badge:{
+    badge: {
       top: 4,
       right: 4,
       fontSize: 10,
@@ -35,7 +35,7 @@ class IngredientTag extends Component {
       height: 28,
       backgroundColor: '#ff9800',
     },
-    hide:{
+    hide: {
       display: 'none',
     }
   };
@@ -62,17 +62,18 @@ class IngredientTag extends Component {
       function IngredientList(props) {
         const ingredients = props.ingredients;
         const matched = props.matched;
-        if(ingredients.length <1){
+        if (ingredients.length < 1) {
           return (<List className="hidden"/>);
         }
         let listItems;
-        if(matched){
+        if (matched) {
           listItems = ingredients.map((ingredient, index) =>
-          <ListItem key={index} primaryText={ingredient} />
+            <ListItem key={index} primaryText={ingredient} />
           );
-        }else{
+        }
+        else {
           listItems = ingredients.map((ingredient, index) =>
-          <ListItem key={index} primaryText={ingredient} rightIconButton={<IconButton onTouchTap={console.log("ADDED: " +{ingredient})} ><AddIcon /></IconButton>} />
+              <ListItem key={index} primaryText={ingredient} rightIconButton={<IconButton onTouchTap={console.log("ADDED: " +{ingredient})} ><AddIcon /></IconButton>} />
           );
         }
         //vid klick på add så ska ingrediensen läggas till i inköpslistan, behålla kopplingen till receptet för att kunna länka tillbaka/underlätta kvanitet

@@ -19,110 +19,131 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .list-item {
-   min-height: 230px;
+  min-height: 230px;
 }
+
 .recipe-card-image {
-        display: block;
-    height: 0;
-    padding-bottom: 74.4%;
-    position: relative;
-    overflow: hidden;
+  display: block;
+  height: 0;
+  padding-bottom: 74.4%;
+  position: relative;
+  overflow: hidden;
 
 }
+
 .recipe-card-image img {
-      bottom: 0;
-    display: block;
-    height: auto;
-    left: 0;
-    position: absolute;
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%);
-    -webkit-transition: transform .2s ease-in-out;
-    -moz-transition: transform .2s ease-in-out;
-    -o-transition: transform .2s ease-in-out;
-    transition: transform .2s ease-in-out;
-    top: 50%;
-    width: 100%;
+  bottom: 0;
+  display: block;
+  height: auto;
+  left: 0;
+  position: absolute;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -webkit-transition: transform .2s ease-in-out;
+  -moz-transition: transform .2s ease-in-out;
+  -o-transition: transform .2s ease-in-out;
+  transition: transform .2s ease-in-out;
+  top: 50%;
+  width: 100%;
 
 }
-.recipecard-content>div{
+
+.recipecard-content>div {
   padding-bottom: 0 !important;
 }
-.recipecard-title{
+
+.recipecard-title {
   font-size: 12;
-    white-space: nowrap;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 8px;
   padding-right: 8px;
-  padding-top:8px;
+  padding-top: 8px;
 }
-.recipe-card-info{
+
+.recipe-card-info {
   padding: 0 !important;
 }
-.ingredient-badge{
-      padding: 16px 16px 0px 0px !important;
-}
-.matched-ingredients-list{
 
+.ingredient-badge {
+  padding: 16px 16px 0px 0px !important;
 }
-.missing-ingredients-list{
 
-}
-.chip-wrapper{
+.matched-ingredients-list {}
+
+.missing-ingredients-list {}
+
+.chip-wrapper {
   flex-wrap: wrap;
   display: flex;
 }
-.ingredient-chip{
+
+.ingredient-chip {
   margin-top: 4px !important;
   margin-right: 4px !important;
   background-color: rgba(255, 152, 0, 0.7) !important;
 }
-.ingredient-chip span{
+
+.ingredient-chip span {
   color: #ffffff !important;
 }
-.ingredient-chip svg{
+
+.ingredient-chip svg {
   fill: #ffffff !important;
 }
-.hidden{
+
+.hidden {
   display: none !important;
+}
+
+.app-stats {
+  opacity: 0.5;
 }
 
 
 /* Extra small devices (phones, less than 768px) */
+
 /* No media query since this is the default in Bootstrap */
 
 /* Small devices (tablets, 768px and up) */
-@media (min-width: @screen-sm-min) { 
+
+@media (min-width: @screen-sm-min) {
   .list-item {
     min-height: 285px;
   }
 }
 
 /* Medium devices (desktops, 992px and up) */
-@media (min-width: @screen-md-min) { 
+
+@media (min-width: @screen-md-min) {
   .list-item {
     min-height: 320px;
-  } 
+  }
 }
 
 /* Large devices (large desktops, 1200px and up)  //fixa maxwidth på allt så jag känner igen mig. */
-@media (min-width: @screen-lg-min) { 
+
+@media (min-width: @screen-lg-min) {
   .list-item {
     min-height: 360px;
-  } 
+  }
 }
 
 @media only screen and (max-device-width: 480px) {
   .list-item {
-     width:100%;
+    width: 100%;
   }
 }
