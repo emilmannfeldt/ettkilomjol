@@ -26,9 +26,7 @@ runIngredientFilter(recipeIngredients, filterIngredients){
     }
     return ingredientHits;
 }
-  runFilter(recipe, filter){ //gör denna smart, ska ta med alla som har det mesta antalet träffar
-    //(om jag skriver in 3ingredienser men två receipt har två av dem så visa dessa två även om jag skirver in fler ingredienser)
-    //lägg på någon sorts poäng på hur relevant träffen är? sedan sorteras det efter denna poäng?
+  runFilter(recipe, filter){ 
     if(this.filterIsEmpty(filter)){
         return false;
     }
@@ -48,7 +46,6 @@ runIngredientFilter(recipeIngredients, filterIngredients){
   }
 
   sortRecipeCards(a,b){
-    //nångting är lite knasigt med sorteringen. den verkar frysa de som är höst upp och inte sortera om fullt ut?
      let filterIngredients= this.props.filter.ingredients;
 
         //return -1 om a är sämtre än b
@@ -79,15 +76,8 @@ runIngredientFilter(recipeIngredients, filterIngredients){
         return missingA-missingB;
     }
     //Annars: Välj den med flest matchande ingredienser
-    // return ingredientHitsB-ingredientHitsA;
     return ((ingredientHitsB-0.1)/bIngredients)-((ingredientHitsA-0.1)/aIngredients);
 
-
-
-    // if(missingA===missingB){
-    //     return bIngredients-aIngredients;
-    // }
-    // return missingA-missingB;
   }
 
 
@@ -103,13 +93,9 @@ runIngredientFilter(recipeIngredients, filterIngredients){
         }
     }
     console.log("SORTING");
-    let n =0;
     recipes.sort(function(a,b){
-        n++;
         return that.sortRecipeCards(a,b);    
     });
-    console.log(n);
-    console.log(recipes.length + " " + that.props.maxHits);
     if(recipes.length>this.props.maxHits){
         recipes.length=this.props.maxHits;
     }

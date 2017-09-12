@@ -150,7 +150,12 @@ firebase.auth().onAuthStateChanged(function(user) {
 
   }
 });
-
+//https://www.youtube.com/watch?v=_Fzl0Cim6F8
+//lägg till nav.js component. och routing här. Likt app.js i videon.
+//filterablerecipelist blir en route
+//createRecipeForm blir en route
+//etc...
+//visa detaljer på recipe blir nog en route till /recipe med <recipe id={-Kgkgdfir24j} /> och sen i den recipe komponenten får jag göra anropp till firebase för att hämta hela receptet på det id.
 const Applicaption = () => (
 
   <MuiThemeProvider>
@@ -158,7 +163,6 @@ const Applicaption = () => (
   <div>
     <DataChange foods={foodNames} tags = {tags} units = {units} users={users}/>
     <FilterableRecipeList foods={foodNames} recipeCards={recipeCards}/>
-    
   </div>
   </MuiThemeProvider>
 );
