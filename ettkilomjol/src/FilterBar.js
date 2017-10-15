@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css'; //fixa en egen css för varje komponent?
-import FilterIngredients from './FilterIngredients';
+import FilterInput from './FilterInput';
 
 class FilterBar extends Component {
 
@@ -13,9 +13,9 @@ class FilterBar extends Component {
 
     return (
       <div className="col-md-12">
-        <FilterIngredients onFilterChange={ this.props.onUserInput } foods={ this.props.foods } filter={ this.props.filter } />
+        <FilterInput onFilterChange={ this.props.onUserInput } tags={this.props.tags} foods={ this.props.foods } filter={ this.props.filter } />
       </div>
-      );
+    );
   }
 
 }

@@ -41,18 +41,19 @@ const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 // }
 
 window.onload = function() {
-firebase.auth().signInAnonymously().catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  // ...
-});};
+  firebase.auth().signInAnonymously().catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // ...
+  });
+};
 
-let localIsOld = function (localVar){
+let localIsOld = function(localVar) {
   let yesterday = new Date();
-  yesterday.setDate(yesterday.getDate()-DAYS_TO_SAVE_LOCALSTORAGE);
+  yesterday.setDate(yesterday.getDate() - DAYS_TO_SAVE_LOCALSTORAGE);
   let storage = JSON.parse(localStorage.getItem(localVar)) || '';
-  if(storage<yesterday.getTime()){
+  if (storage < yesterday.getTime()) {
     return true;
   }
   return false;
@@ -74,38 +75,38 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 
 
-    if(foodNames.length< 1 || localIsOld('lastupdatedfoodnames')){
+    if (foodNames.length < 1 || localIsOld('lastupdatedfoodnames')) {
       console.log("LOADING NEW FOODS");
-      
+
       foodRef.orderByChild("uses").once("value", function(snapshot) {
         foodNames.length = 0;
         snapshot.forEach(function(child) {
-            foodNames.splice(0, 0, child.val().name); 
+          foodNames.splice(0, 0, child.val().name);
         });
         localStorage.setItem('foodnames', JSON.stringify(foodNames));
       });
       localStorage.setItem('lastupdatedfoodnames', JSON.stringify(Date.now()));
-    
+
     }
 
-    if(units.length< 1 || localIsOld('lastupdatedunits')){
+    if (units.length < 1 || localIsOld('lastupdatedunits')) {
       console.log("LOADING NEW UNITS");
       unitsRef.once("value", function(snapshot) {
         units.length = 0;
         snapshot.forEach(function(child) {
-            units = Object.keys(snapshot.val()).map(function (key) { return snapshot.val()[key]; });
-          units.sort(function(a,b){
-         return a.ref - b.ref;
+          units = Object.keys(snapshot.val()).map(function(key) { return snapshot.val()[key]; });
+          units.sort(function(a, b) {
+            return a.ref - b.ref;
           });
         });
-      localStorage.setItem('units', JSON.stringify(units));
+        localStorage.setItem('units', JSON.stringify(units));
       });
       localStorage.setItem('lastupdatedunits', JSON.stringify(Date.now()));
     }
 
-    if(tags.length< 1 || localIsOld('lastupdatedtags')){
+    if (tags.length < 1 || localIsOld('lastupdatedtags')) {
       console.log("LOADING NEW TAGS");
-      
+
       tagsRef.once("value", function(snapshot) {
         tags.length = 0;
         snapshot.forEach(function(child) {
@@ -115,9 +116,9 @@ firebase.auth().onAuthStateChanged(function(user) {
       });
       localStorage.setItem('lastupdatedtags', JSON.stringify(Date.now()));
     }
-    if(users.length< 1 || localIsOld('lastupdatedusers')){
+    if (users.length < 1 || localIsOld('lastupdatedusers')) {
       console.log("LOADING NEW USERS");
-      
+
       usersRef.once('value', function(snapshot) {
         users.length = 0;
         snapshot.forEach(function(child) {
@@ -128,23 +129,24 @@ firebase.auth().onAuthStateChanged(function(user) {
 
       localStorage.setItem('lastupdatedusers', JSON.stringify(Date.now()));
     }
-    if(recipeCards.length< 1 || localIsOld('lastupdatedrecipecards')){
+    if (recipeCards.length < 1 || localIsOld('lastupdatedrecipecards')) {
       console.log("LOADING NEW RECIPECARDS");
-      
+
 
       recipeCardsRef.once('value', function(snapshot) {
         recipeCards.length = 0;
         snapshot.forEach(function(child) {
-          recipeCards.push(child.val());  
+          recipeCards.push(child.val());
         });
         localStorage.setItem('recipecards', JSON.stringify(recipeCards));
 
       });
       localStorage.setItem('lastupdatedrecipecards', JSON.stringify(Date.now()));
     }
-    
-  // User is signed in.
-  } else {
+
+    // User is signed in.
+  }
+  else {
     // No user is signed in.
     console.log("bye" + user);
 
@@ -159,13 +161,11 @@ firebase.auth().onAuthStateChanged(function(user) {
 const Applicaption = () => (
 
   <MuiThemeProvider>
-
   <div>
     <DataChange foods={foodNames} tags = {tags} units = {units} users={users}/>
-    <FilterableRecipeList foods={foodNames} recipeCards={recipeCards}/>
+    <FilterableRecipeList tags={['efterrätt','förrätt','snabbt','glutenfri']} foods={foodNames} recipeCards={recipeCards}/>
   </div>
   </MuiThemeProvider>
 );
-
-ReactDOM.render(<Applicaption />,document.getElementById('root')
-);
+//ändra tags till att läsa upp alla tags på likadant sätt som foodnames
+ReactDOM.render(<Applicaption />, document.getElementById('root'));
