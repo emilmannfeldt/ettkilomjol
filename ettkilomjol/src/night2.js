@@ -18,26 +18,17 @@ var fs = require('fs');
 
 //ta fram urls genom att:
 //1. Gå till en sida på koket.se
-//2. kör massa document.querySelector('a[rel="next"]').click();
-//3. samla alla hrefs genom Array.from(document.querySelectorAll('article.list-item.recipe .info .top h2 a')).map(a => a.href);
-//4. Höger klicka på resultatet och välj save as clobal variable
-//5. kör copy(NAMN PÅ VARIABEL);
-//6. CTRL+v här på urls parametern
+//2. kör: var interv=setInterval(function(){if(document.querySelector('li.next').offsetParent!=null){document.querySelector('a[rel="next"]').click();}else{console.log("done");clearInterval(interv);}},1000);
+//3. Vänta på att "done" har loggats i consolen.
+//4. kopiera alla hrefs genom copy(Array.from(document.querySelectorAll('article.list-item.recipe .info .top h2 a')).map(a => a.href));
+//5. CTRL+v här på urls parametern
+//6. kör node night2.js
+//7. resultatet sparas i react/test.txt
+
 //document.querySelector('a[rel="next"]').click();
 //Array.from(document.querySelectorAll('article.list-item.recipe .info .top h2 a')).map(a => a.href);
-let urls = [
-  "https://www.koket.se/sushi-med-gronsaker-och-quinoa",
-  "https://www.koket.se/birra-limone",
-  "https://www.koket.se/notter-med-honung-och-salt",
-  "https://www.koket.se/mandel-och-tomatsas",
-  "https://www.koket.se/jessica-frejs-pan-con-tomat",
-  "https://www.koket.se/farskostdipp-med-orter-och-brod",
-  "https://www.koket.se/sallad-med-getost-bacon-och-valnotter",
-  "https://www.koket.se/patatas-bravas-med-stekt-agg-och-aioli",
-  "https://www.koket.se/jessica-frejs-pimentos-padron",
-  "https://www.koket.se/smulpaj-med-lime-och-bjornbar",
-  "https://www.koket.se/pride-spett-med-regnbagslax"
-]
+//setInterval(function() {if(document.querySelector('li.next').offsetParent!=null)document.querySelector('a[rel="next"]').click();}, 1000);
+let urls = [];
 
 //testa gå mot localhost html med array data. eller testa gå mot en fil på github etc. hrefs.txt där istället på goto nedan.
 //alternativet är att ha hela texten här i filen eller en annan fil brevid
@@ -53,10 +44,12 @@ nightmare
 
   console.log("start" );
   //här kan jag bygga vilken lista jag vill med hrefs...
-
+  console.log("nr of urls: " + urls.length);
+  uniqurls = [...new Set(urls)]; 
+  console.log("uniq : "+ uniqurls.length);
   //here, we're going to use the vanilla JS way of executing a series of promises in a sequence.
   //for every href in hrefs,
-  return urls.reduce(function(accumulator, href){
+  return uniqurls.reduce(function(accumulator, href){
     //return the accumulated promise results, followed by...
     return accumulator.then(function(results){
       return nightmare.goto(href)
