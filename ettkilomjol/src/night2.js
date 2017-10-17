@@ -15,52 +15,48 @@ var fs = require('fs');
 //hur många .click kan jag göra här i början innan minnet tar slut? allokera mer minne? refuse image request
 
 //testa gå till en mindre sida och lägg 100 click. Vad händer när det itne går att klicka mer? crash?
+
+//ta fram urls genom att:
+//1. Gå till en sida på koket.se
+//2. kör massa document.querySelector('a[rel="next"]').click();
+//3. samla alla hrefs genom Array.from(document.querySelectorAll('article.list-item.recipe .info .top h2 a')).map(a => a.href);
+//4. Höger klicka på resultatet och välj save as clobal variable
+//5. kör copy(NAMN PÅ VARIABEL);
+//6. CTRL+v här på urls parametern
 //document.querySelector('a[rel="next"]').click();
 //Array.from(document.querySelectorAll('article.list-item.recipe .info .top h2 a')).map(a => a.href);
+let urls = [
+  "https://www.koket.se/sushi-med-gronsaker-och-quinoa",
+  "https://www.koket.se/birra-limone",
+  "https://www.koket.se/notter-med-honung-och-salt",
+  "https://www.koket.se/mandel-och-tomatsas",
+  "https://www.koket.se/jessica-frejs-pan-con-tomat",
+  "https://www.koket.se/farskostdipp-med-orter-och-brod",
+  "https://www.koket.se/sallad-med-getost-bacon-och-valnotter",
+  "https://www.koket.se/patatas-bravas-med-stekt-agg-och-aioli",
+  "https://www.koket.se/jessica-frejs-pimentos-padron",
+  "https://www.koket.se/smulpaj-med-lime-och-bjornbar",
+  "https://www.koket.se/pride-spett-med-regnbagslax"
+]
 
-
+//testa gå mot localhost html med array data. eller testa gå mot en fil på github etc. hrefs.txt där istället på goto nedan.
+//alternativet är att ha hela texten här i filen eller en annan fil brevid
 nightmare
 .goto('https://www.koket.se/mat/specialkost/raw-food')
-.click('a[rel="next"]').click('a[rel="next"]').click('a[rel="next"]').click('a[rel="next"]').click('a[rel="next"]').click('a[rel="next"]')
 .wait(1000)
 .evaluate(function(){
   console.log("click klar");
-  //using `Array.from` as the DOMList is not an array, but an array-like, sort of like `arguments`
-  //planning on using `Array.map()` in a moment
 
-  return Array.from(
-    //give me all of the elements where the href contains 'Property.aspx'
-    document.querySelectorAll('article.list-item.recipe .info .top h2 a'))
-    //pull the target hrefs for those anchors
-    .map(a => a.href);
 })
 .then(function(hrefs){
-  console.log("Antal hrefs:" + hrefs.length);
 
-  let unique = [...new Set(hrefs)]; 
 
-  console.log("Antal unika:" + unique.length);
- fs.readFile('C:/react/hrefs.txt', 'utf8', function (err,data) {
-  if (err) {
-    return console.log(err);
-  }
-  var result = JSON.parse(data);
-  console.log(result);
-
-  console.log(result[0].tags.snabbt);
-    console.log(result.length);
-
-});
+  console.log("start" );
   //här kan jag bygga vilken lista jag vill med hrefs...
-
-  //here, there are two options:
-  //  1. you could navigate to each link, get the information you need, then navigate back, or
-  //  2. you could navigate straight to each link and get the information you need.
-  //I'm going to go with #1 as that's how it was in your original script.
 
   //here, we're going to use the vanilla JS way of executing a series of promises in a sequence.
   //for every href in hrefs,
-  return unique.reduce(function(accumulator, href){
+  return urls.reduce(function(accumulator, href){
     //return the accumulated promise results, followed by...
     return accumulator.then(function(results){
       return nightmare.goto(href)
@@ -69,6 +65,7 @@ nightmare
           if(document.querySelector('.recipe-column-wrapper .endorsed-banner')){
             return;
           }
+
           let recipe = {};
           //title
           recipe.title = document.querySelector('.recipe-content-wrapper h1').innerHTML;
@@ -119,7 +116,7 @@ nightmare
         //lägg logik för validering.. om vissa saker saknas så hoppa över. om urlen redan finns hoppa över
         //automatisera denna inläsning. 
         //Alla recept som skrivs till filen ska se likadana ut oberoende av källa.
-
+          console.log(recipe);
 
           return recipe;
         })
@@ -146,6 +143,7 @@ nightmare
 
 
     fs.writeFile("C:/react/test.txt", JSON.stringify(resultArr), function(err) {
+
     if(err) {
         return console.log(err);
     }
