@@ -1,11 +1,30 @@
 var Nightmare = require('nightmare');
-var nightmare = Nightmare({ openDevTools: true, show: false })
+var nightmare = Nightmare({ openDevTools: true, show: false, webPreferences: {
+    images: false,
+  } })
+//images Boolean (optional) - Enables image support. Default is true.
+//webgl Boolean (optional) - Enables WebGL support. Default is true.
+
 var fs = require('fs');
 
+//använd /recept 
+//det är de senaste recepten
+//om jag kör detta en gång i veckan. kolla så att scriptet stannar när första receptet som är 8 dagar gammalt kommer
+//https://stackoverflow.com/questions/44605473/repeatedly-clicking-an-element-on-a-page-using-electron-nightarejs
+//^^ hur man kan loopa klickevent. kan jag köra min kod på "click done" eller loopa 100 itaget och ta bort de som är klara i domen.
+//hur många .click kan jag göra här i början innan minnet tar slut? allokera mer minne? refuse image request
+
+//testa gå till en mindre sida och lägg 100 click. Vad händer när det itne går att klicka mer? crash?
+//document.querySelector('a[rel="next"]').click();
+//Array.from(document.querySelectorAll('article.list-item.recipe .info .top h2 a')).map(a => a.href);
+
+
 nightmare
-.goto('https://www.koket.se/mat/typ-av-maltid/vardagsmiddag')
-.wait(2500)
+.goto('https://www.koket.se/mat/specialkost/raw-food')
+.click('a[rel="next"]').click('a[rel="next"]').click('a[rel="next"]').click('a[rel="next"]').click('a[rel="next"]').click('a[rel="next"]')
+.wait(1000)
 .evaluate(function(){
+  console.log("click klar");
   //using `Array.from` as the DOMList is not an array, but an array-like, sort of like `arguments`
   //planning on using `Array.map()` in a moment
 
@@ -16,6 +35,24 @@ nightmare
     .map(a => a.href);
 })
 .then(function(hrefs){
+  console.log("Antal hrefs:" + hrefs.length);
+
+  let unique = [...new Set(hrefs)]; 
+
+  console.log("Antal unika:" + unique.length);
+ fs.readFile('C:/react/hrefs.txt', 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  var result = JSON.parse(data);
+  console.log(result);
+
+  console.log(result[0].tags.snabbt);
+    console.log(result.length);
+
+});
+  //här kan jag bygga vilken lista jag vill med hrefs...
+
   //here, there are two options:
   //  1. you could navigate to each link, get the information you need, then navigate back, or
   //  2. you could navigate straight to each link and get the information you need.
@@ -23,7 +60,7 @@ nightmare
 
   //here, we're going to use the vanilla JS way of executing a series of promises in a sequence.
   //for every href in hrefs,
-  return hrefs.reduce(function(accumulator, href){
+  return unique.reduce(function(accumulator, href){
     //return the accumulated promise results, followed by...
     return accumulator.then(function(results){
       return nightmare.goto(href)
@@ -79,6 +116,10 @@ nightmare
             //unit
             //food
 
+        //lägg logik för validering.. om vissa saker saknas så hoppa över. om urlen redan finns hoppa över
+        //automatisera denna inläsning. 
+        //Alla recept som skrivs till filen ska se likadana ut oberoende av källa.
+
 
           return recipe;
         })
@@ -101,7 +142,6 @@ nightmare
 })
 .then(function (resultArr) {
   //if I haven't made a mistake above with the `Array.reduce`, `resultArr` should now contain all of your links' results
-  console.log('resultArr', resultArr);
   console.log(resultArr.length);
 
 
