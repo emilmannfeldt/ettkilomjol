@@ -25,7 +25,7 @@ let units = JSON.parse(localStorage.getItem('units')) || [];
 let tags = JSON.parse(localStorage.getItem('tags')) || [];
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let recipeCards = JSON.parse(localStorage.getItem('recipecards')) || [];
-let tagNames = ['efterrätt', 'förrätt', 'snabbt', 'glutenfri'];
+let tagNames = ['Efterrätt', 'Förrätt', 'Snabbt', 'Glutenfri'];
 
 
 const DAYS_TO_SAVE_LOCALSTORAGE = 1;
@@ -144,10 +144,7 @@ firebase.auth().onAuthStateChanged(function(user) {
       });
       localStorage.setItem('lastupdatedrecipecards', JSON.stringify(Date.now()));
     }
-    console.log("FOODNAMES");
-    console.log(foodNames);
-    console.log("UNITS");
-    console.log(units);
+
     // User is signed in.
   }
   else {

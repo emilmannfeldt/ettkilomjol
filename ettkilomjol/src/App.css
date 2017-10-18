@@ -101,6 +101,20 @@
   color: #ffffff !important;
 }
 
+.tag-chip {
+  margin-top: 4px !important;
+  margin-right: 4px !important;
+  background-color: rgba(255, 152, 0, 0.7) !important;
+}
+
+.tag-chip span {
+  color: #ffffff !important;
+}
+
+.tag-chip svg {
+  fill: #ffffff !important;
+}
+
 .ingredient-chip svg {
   fill: #ffffff !important;
 }

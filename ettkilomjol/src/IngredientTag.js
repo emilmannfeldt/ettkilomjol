@@ -37,7 +37,11 @@ class IngredientTag extends Component {
     },
     hide: {
       display: 'none',
+    },
+    show: {
+      display: 'inline-block',
     }
+
   };
 
 
@@ -99,10 +103,10 @@ class IngredientTag extends Component {
                     badgeContent={this.props.matchedIngredients.length+'/'+(this.props.matchedIngredients.length+this.props.missingIngredients.length)}
                     primary={true}
                     badgeStyle={this.styles.badge}>
-                    <IconButton onTouchTap={ this.handleTouchTap} style={this.props.missingIngredients.length === 0 ? this.styles.hide : ''}>
+                    <IconButton onTouchTap={ this.handleTouchTap} style={this.props.missingIngredients.length === 0 ? this.styles.hide : this.styles.show}>
                       <ShoppingBasketIcon />
                     </IconButton>
-                    <IconButton onTouchTap={ this.handleTouchTap} style={this.props.missingIngredients.length === 0 ? '' : this.styles.hide}>
+                    <IconButton onTouchTap={ this.handleTouchTap} style={this.props.missingIngredients.length === 0 ? this.styles.show : this.styles.hide}>
                       <RestaurantMenuIcon />
                     </IconButton>
                     <Popover

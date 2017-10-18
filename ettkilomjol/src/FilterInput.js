@@ -32,6 +32,7 @@ class FilterInput extends Component {
 
     newFilter.ingredients = this.state.ingredients;
     newFilter.tags = this.state.tags;
+    console.log("handlechange")
 
     this.props.onFilterChange(newFilter);
   }
@@ -63,6 +64,7 @@ class FilterInput extends Component {
 
   }
   addIngredient(ingredientName) {
+    console.log("ADD INGredient")
     let foundFood = false;
     let availibleFoods = this.getAutoCompletteFoods();
     for (var i = availibleFoods.length - 1; i >= 0; i--) {
@@ -83,11 +85,14 @@ class FilterInput extends Component {
       ingredients: newIngredients,
       searchText: '',
     });
+    console.log("ADD INGredient end")
+
     this.handleChange();
     //lägg till ingrediensen från state (setState )och kör handelChange
   }
 
   addTag(tagName) {
+    console.log("TAG TO ADD " + tagName);
     let foundTag = false;
     let availibleTags = this.getAutoCompletteTags();
     for (var i = availibleTags.length - 1; i >= 0; i--) {
@@ -113,6 +118,8 @@ class FilterInput extends Component {
   }
 
   getAutoCompletteFoods() {
+    console.log("autocomplettfoods?")
+
     Array.prototype.diff = function(a) {
       return this.filter(function(i) {
         return a.indexOf(i) < 0;
@@ -123,6 +130,8 @@ class FilterInput extends Component {
     //rensade local storage så fungerade det igen. men buggen kan återkomma.
     //den uppstod när jag varit borta länge
     return this.props.foods.diff(this.props.filter.ingredients);
+    console.log("autocomplettfoods?")
+
 
   }
 
@@ -160,8 +169,10 @@ class FilterInput extends Component {
         foundchip = true;
       }
     }
+    console.log("HANDLE" + foundchip);
     if (!foundchip) {
       for (var i = this.props.tags.length - 1; i >= 0; i--) {
+        console.log(searchText + " " + this.props.tags[i]);
         if (this.props.tags[i] === searchText) {
           this.addTag(searchText);
           foundchip = true;
@@ -178,12 +189,11 @@ class FilterInput extends Component {
   render() {
     let chips = [];
     for (let i = 0; i < this.props.filter.ingredients.length; i++) {
-      chips.push(<FilterChip key={ i } chipType={'ingredient'} text={ this.props.filter.ingredients[i] } onUserDelete={ this.deleteIngredient } />);
+      chips.push(<FilterChip key={chips.length} chipType={'ingredient'} text={ this.props.filter.ingredients[i] } onUserDelete={ this.deleteIngredient } />);
     }
     for (let i = 0; i < this.props.filter.tags.length; i++) {
-      chips.push(<FilterChip key={ i } chipType={'tag'} text={ this.props.filter.tags[i] } onUserDelete={ this.deleteTag} />);
+      chips.push(<FilterChip key={chips.length} chipType={'tag'} text={ this.props.filter.tags[i] } onUserDelete={ this.deleteTag} />);
     }
-
     let searchables = this.getAutoCompletteFoods().concat(this.getAutoCompletteTags());
 
 
