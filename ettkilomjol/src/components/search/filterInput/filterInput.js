@@ -29,7 +29,6 @@ class FilterInput extends Component {
     let newFilter = this.props.filter;
     newFilter.ingredients = this.state.ingredients;
     newFilter.tags = this.state.tags;
-    console.log("handlechange")
     this.props.onFilterChange(newFilter);
   }
 
@@ -58,7 +57,6 @@ class FilterInput extends Component {
   }
 
   addIngredient(ingredientName) {
-    console.log("ADD INGredient")
     let foundFood = false;
     let availibleFoods = this.getAutoCompletteFoods();
     for (var i = availibleFoods.length - 1; i >= 0; i--) {
@@ -78,12 +76,10 @@ class FilterInput extends Component {
       ingredients: newIngredients,
       searchText: '',
     });
-    console.log("ADD INGredient end")
     this.handleChange();
   }
 
   addTag(tagName) {
-    console.log("TAG TO ADD " + tagName);
     let foundTag = false;
     let availibleTags = this.getAutoCompletteTags();
     for (var i = availibleTags.length - 1; i >= 0; i--) {
@@ -107,14 +103,12 @@ class FilterInput extends Component {
   }
 
   getAutoCompletteFoods() {
-    console.log("autocomplettfoods?")
     Array.prototype.diff = function (a) {
       return this.filter(function (i) {
         return a.indexOf(i) < 0;
       });
     };
     return this.props.foods.diff(this.props.filter.ingredients);
-    console.log("autocomplettfoods?")
   }
 
   getAutoCompletteTags() {
@@ -148,10 +142,8 @@ class FilterInput extends Component {
         foundchip = true;
       }
     }
-    console.log("HANDLE" + foundchip);
     if (!foundchip) {
       for (var i = this.props.tags.length - 1; i >= 0; i--) {
-        console.log(searchText + " " + this.props.tags[i]);
         if (this.props.tags[i] === searchText) {
           this.addTag(searchText);
           foundchip = true;

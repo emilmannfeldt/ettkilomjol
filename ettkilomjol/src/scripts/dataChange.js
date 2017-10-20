@@ -74,8 +74,6 @@ class DataChange extends Component {
       recipeCard.ingredients = this.copyIngredients(recipe.ingredients);//problem de blir inte riktiga boject av recipe.tags etc?
       // recipeCard.ingredients = this.getFoods(); // skapa det i recipe först och sedan ta namnet in här bara.
       // recipeCard.recipeId = newPostKey;
-      // console.log(recipe);
-      // console.log(recipeCard);
       //testa firebase, tomma properties kommer de sparas ändå?
 
 

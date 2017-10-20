@@ -85,7 +85,6 @@ class RecipeList extends Component {
                 recipes.push(this.props.recipeCards[i]);
             }
         }
-        console.log("SORTING");
         recipes.sort(function (a, b) {
             return that.sortRecipeCards(a, b);
         });

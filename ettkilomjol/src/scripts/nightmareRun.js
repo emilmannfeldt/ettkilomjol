@@ -1,6 +1,6 @@
-    var fs = require('fs');
+var fs = require('fs');
 
-fs.readFile('C:/react/test.txt', 'utf8', function (err,data) {
+fs.readFile('C:/react/test.txt', 'utf8', function (err, data) {
   if (err) {
     return console.log(err);
   }
@@ -8,6 +8,6 @@ fs.readFile('C:/react/test.txt', 'utf8', function (err,data) {
   console.log(result);
 
   console.log(result[0].tags.snabbt);
-    console.log(result.length);
+  console.log(result.length);
 
 });
