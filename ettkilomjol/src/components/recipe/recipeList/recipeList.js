@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import './App.css'; //fixa en egen css för varje komponent?
-import RecipeCard from './RecipeCard';
-
+import './recipeList.css';
+import RecipeCard from '../recipeCard/recipeCard';
 
 class RecipeList extends Component {
     constructor(props) {
@@ -9,7 +8,6 @@ class RecipeList extends Component {
         this.state = {
             recipeCards: this.props.recipeCards,
         };
-
     }
 
     filterIsEmpty(filter) {
@@ -17,6 +15,7 @@ class RecipeList extends Component {
             return true;
         }
     }
+    
     runIngredientFilter(recipeIngredients, filterIngredients) {
         let ingredientHits = 0;
         for (let i = 0; i < filterIngredients.length; i++) {
@@ -26,6 +25,7 @@ class RecipeList extends Component {
         }
         return ingredientHits;
     }
+
     runFilter(recipe, filter) {
         if (this.filterIsEmpty(filter)) {
             return false;
@@ -39,15 +39,11 @@ class RecipeList extends Component {
         if (filter.ingredients.length > 10) {
             return ingredientHits > 1 || (ingredientHits === Object.keys(recipe.ingredients).length);
         }
-
         return ingredientHits > 0;
-
-
     }
 
     sortRecipeCards(a, b) {
         let filterIngredients = this.props.filter.ingredients;
-
         //return -1 om a är sämtre än b
         //return 1 om a är bättre än b
         //return 0 om de är lika
@@ -77,10 +73,7 @@ class RecipeList extends Component {
         }
         //Annars: Välj den med flest matchande ingredienser
         return ((ingredientHitsB - 0.1) / bIngredients) - ((ingredientHitsA - 0.1) / aIngredients);
-
     }
-
-
 
     render() {
 
@@ -93,19 +86,17 @@ class RecipeList extends Component {
             }
         }
         console.log("SORTING");
-        recipes.sort(function(a, b) {
+        recipes.sort(function (a, b) {
             return that.sortRecipeCards(a, b);
         });
         if (recipes.length > this.props.maxHits) {
             recipes.length = this.props.maxHits;
         }
 
-
-
-        return (<div>{recipes.map((recipe,index) =>
-        <RecipeCard key={index} filter={this.props.filter}
-                  recipe={recipe}/>
-      )}</div>);
+        return (<div>{recipes.map((recipe, index) =>
+            <RecipeCard key={index} filter={this.props.filter}
+                recipe={recipe} />
+        )}</div>);
     }
 }
 export default RecipeList;

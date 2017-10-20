@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import './App.css';
+import './bakeTime.css';
 import TimerIcon from 'material-ui/svg-icons/image/timer';
-
-
 
 class BakeTime extends Component {
     constructor(props) {
@@ -22,9 +20,8 @@ class BakeTime extends Component {
 
     render() {
         return (
-            <div><TimerIcon/> { this.timeString()}</div>
+            <div><TimerIcon /> {this.timeString()}</div>
         );
     }
-
 }
 export default BakeTime;

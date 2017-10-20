@@ -15,8 +15,6 @@ let SORTEDUNITS = [];
 
 
 
-
-
 class DataChange extends Component {
   constructor(props) {
     super(props);
@@ -28,15 +26,11 @@ class DataChange extends Component {
   }
 
   runDataChange() {
+
+
+    //firebase.database().ref("recipeCards").remove();
+    //firebase.database().ref("recipes").remove();
     return;
-    // for(let key in this.props.units[0]){
-    //   console.log(key);
-    //   for(let key2 in this.props.units[0][key]){
-    //     console.log(this.props.units[0][key][key2]);
-    //   }
-    // }
-      // firebase.database().ref("recipeCards").remove();
-      // firebase.database().ref("recipes").remove();
     let recipesRef = firebase.database().ref("recipes");
 
     for (let i = 0; i < 1000; i++) {
@@ -76,7 +70,7 @@ class DataChange extends Component {
       recipeCard.level = recipe.level;
       recipeCard.rating = recipe.rating;
       recipeCard.time = recipe.preptime + recipe.baketime + recipe.resttime;
-      recipeCard.tags = this.getTags(recipe); 
+      recipeCard.tags = this.getTags(recipe);
       recipeCard.ingredients = this.copyIngredients(recipe.ingredients);//problem de blir inte riktiga boject av recipe.tags etc?
       // recipeCard.ingredients = this.getFoods(); // skapa det i recipe först och sedan ta namnet in här bara.
       // recipeCard.recipeId = newPostKey;
@@ -87,11 +81,11 @@ class DataChange extends Component {
 
 
       let newKey = recipesRef.push().key;
-      recipeCard.recipeId=newKey;
-      firebase.database().ref("recipes/"+newKey).set(recipe); 
+      recipeCard.recipeId = newKey;
+      firebase.database().ref("recipes/" + newKey).set(recipe);
 
       console.log(newKey);
-      firebase.database().ref("recipeCards/"+newKey).set(recipeCard); 
+      firebase.database().ref("recipeCards/" + newKey).set(recipeCard);
       //fungerar men lite konstigt. timestamp på commentarer fugnerar intealls.
       //kommentarer samt recieppart på ingredienser finns inte? recipepart saknas på instructions ockås.
       //jag har githubpages men det fungerar inte med firebase verkar det som??+
@@ -100,45 +94,45 @@ class DataChange extends Component {
     }
 
   }
-  getImage(){
-    let images = ["http://i.imgur.com/bnk9xiJ.jpg","http://i.imgur.com/9vdMMbi.jpg","http://i.imgur.com/Sd7mc16.jpg","http://i.imgur.com/zQhbkgg.jpg","http://i.imgur.com/kia9DQ0.jpg","http://i.imgur.com/QQWAL3n.jpg",
-    "http://i.imgur.com/LXn8wNr.jpg","http://i.imgur.com/8JBzKgf.jpg","http://i.imgur.com/k7wSrvS.jpg","http://i.imgur.com/2DgWs7j.jpg","http://i.imgur.com/wZg9kZZ.jpg","http://i.imgur.com/TEV8CT3.jpg",
-    "http://i.imgur.com/IbQMQ1C.jpg","http://i.imgur.com/cZaSjfy.jpg","http://i.imgur.com/v5eBDLa.jpg","http://i.imgur.com/0XhVlLB.jpg","http://i.imgur.com/sb1iHC0.jpg","http://i.imgur.com/PVIFzlX.jpg","http://i.imgur.com/SsnG1el.jpg?1",
-    "http://i.imgur.com/AgOTYu5.jpg","http://i.imgur.com/44yh9WB.jpg","http://i.imgur.com/27exWsc.jpg","http://i.imgur.com/uxO0SJK.jpg"];
+  getImage() {
+    let images = ["http://i.imgur.com/bnk9xiJ.jpg", "http://i.imgur.com/9vdMMbi.jpg", "http://i.imgur.com/Sd7mc16.jpg", "http://i.imgur.com/zQhbkgg.jpg", "http://i.imgur.com/kia9DQ0.jpg", "http://i.imgur.com/QQWAL3n.jpg",
+      "http://i.imgur.com/LXn8wNr.jpg", "http://i.imgur.com/8JBzKgf.jpg", "http://i.imgur.com/k7wSrvS.jpg", "http://i.imgur.com/2DgWs7j.jpg", "http://i.imgur.com/wZg9kZZ.jpg", "http://i.imgur.com/TEV8CT3.jpg",
+      "http://i.imgur.com/IbQMQ1C.jpg", "http://i.imgur.com/cZaSjfy.jpg", "http://i.imgur.com/v5eBDLa.jpg", "http://i.imgur.com/0XhVlLB.jpg", "http://i.imgur.com/sb1iHC0.jpg", "http://i.imgur.com/PVIFzlX.jpg", "http://i.imgur.com/SsnG1el.jpg?1",
+      "http://i.imgur.com/AgOTYu5.jpg", "http://i.imgur.com/44yh9WB.jpg", "http://i.imgur.com/27exWsc.jpg", "http://i.imgur.com/uxO0SJK.jpg"];
     return images[Math.floor((Math.random() * images.length) + 0)];
 
   }
-  getInstructions(ingredients){
+  getInstructions(ingredients) {
     let instructions = [];
     let nrOfInstructions = Math.floor((Math.random() * 20) + 1);
-    if(nrOfInstructions>14){
+    if (nrOfInstructions > 14) {
       nrOfInstructions = Math.floor((Math.random() * 20) + 1);
     }
-    for(let i =0; i<nrOfInstructions; i++){
+    for (let i = 0; i < nrOfInstructions; i++) {
       let instruction = {};
       instruction.instruction = this.getIpsum(Math.floor((Math.random() * 30) + 3));
-      for(let j =0; j<instruction.instruction.length; j++){
-        if(Math.floor((Math.random() * 25) + 1)===2){
-          instruction.instruction = instruction.instruction.slice(0, j) + " " +ingredients[Math.floor((Math.random() * ingredients.length) + 0)].name +" "+ instruction.instruction.slice(j);
+      for (let j = 0; j < instruction.instruction.length; j++) {
+        if (Math.floor((Math.random() * 25) + 1) === 2) {
+          instruction.instruction = instruction.instruction.slice(0, j) + " " + ingredients[Math.floor((Math.random() * ingredients.length) + 0)].name + " " + instruction.instruction.slice(j);
         }
       }
-      instruction.order=i;
+      instruction.order = i;
       let recipeParts = [];
-      for(let j =0; j<ingredients.length; j++){
-        if(ingredients[j].hasOwnProperty("recipePart")){
+      for (let j = 0; j < ingredients.length; j++) {
+        if (ingredients[j].hasOwnProperty("recipePart")) {
           recipeParts.push(ingredients[j].recipePart);
         }
       }
-      for(let j =0; j<recipeParts.length; j++){
-        if(Math.floor((Math.random() * 2) + 1)===1){
-          instruction.recipePart= recipeParts[j];
+      for (let j = 0; j < recipeParts.length; j++) {
+        if (Math.floor((Math.random() * 2) + 1) === 1) {
+          instruction.recipePart = recipeParts[j];
 
           break;
         }
-        if(j+1===recipeParts.length){
+        if (j + 1 === recipeParts.length) {
           //sista loopen
-          if(Math.floor((Math.random() * 3) + 1)===1){
-            instruction.recipePart= "instruktion för potatismos";
+          if (Math.floor((Math.random() * 3) + 1) === 1) {
+            instruction.recipePart = "instruktion för potatismos";
 
             break;
           }
@@ -149,13 +143,13 @@ class DataChange extends Component {
     return instructions;
   }
 
-  getComments(votes){
+  getComments(votes) {
 
     let comments = [];
-    if (Math.floor((Math.random() * 2) + 1)===1) {
+    if (Math.floor((Math.random() * 2) + 1) === 1) {
       return comments;
     }
-    for(let i =0; i<votes; i++){
+    for (let i = 0; i < votes; i++) {
       let comment = {};
       comment.rating = Math.floor((Math.random() * 6) + 0);
       comment.comment = this.getIpsum(Math.floor((Math.random() * 50) + 5));
@@ -167,7 +161,7 @@ class DataChange extends Component {
 
   }
 
-  getQuote(){
+  getQuote() {
     if (Math.floor((Math.random() * 2) + 1)) {
       return null;
     }
@@ -198,18 +192,18 @@ class DataChange extends Component {
     //i min testdata har jag många svåra recept, jhag har taggat ner level lite för att få några lätta ändå
     let nrOfInstructions = recipe.instructions.length;
     let nrOfIngredients = recipe.ingredients.length;
-    let instructionLength=0;
+    let instructionLength = 0;
     let skillTime = recipe.baketime + recipe.preptime;
-    for(let i =0; i<nrOfInstructions; i++){
+    for (let i = 0; i < nrOfInstructions; i++) {
       instructionLength = instructionLength + recipe.instructions[i].instruction.length;
     }
-    instructionLength = instructionLength - nrOfInstructions*10;
+    instructionLength = instructionLength - nrOfInstructions * 10;
 
-    let levelIndex = skillTime/6 + (nrOfIngredients*8) + (instructionLength/14);
-    if(levelIndex<100){
+    let levelIndex = skillTime / 6 + (nrOfIngredients * 8) + (instructionLength / 14);
+    if (levelIndex < 100) {
       return 'lätt';
     }
-    if(levelIndex<200){
+    if (levelIndex < 200) {
       return 'medel';
     }
     return 'svår';
@@ -221,9 +215,9 @@ class DataChange extends Component {
     if (Math.floor((Math.random() * 5) + 1) === 1) {
       return dietry;
     }
-    for(let tag in dietaryDb){
-        if (Math.floor((Math.random() * 4) + 1) === 3) {
-            dietry[tag] = dietaryDb[tag];
+    for (let tag in dietaryDb) {
+      if (Math.floor((Math.random() * 4) + 1) === 3) {
+        dietry[tag] = dietaryDb[tag];
       }
     }
     return dietry;
@@ -235,25 +229,25 @@ class DataChange extends Component {
     if (Math.floor((Math.random() * 5) + 1) === 1) {
       return other;
     }
-    for(let tag in otherDb){
-        if (Math.floor((Math.random() * 4) + 1) === 3) {
-            other[tag] = otherDb[tag];
+    for (let tag in otherDb) {
+      if (Math.floor((Math.random() * 4) + 1) === 3) {
+        other[tag] = otherDb[tag];
       }
     }
     return other;
   }
   getDishtypeTag() {
-       let dishtype = {};
+    let dishtype = {};
     let dishtypeDb = this.props.tags[DISHTYPE];
     if (Math.floor((Math.random() * 5) + 1) === 1) {
       return dishtype;
     }
-    for(let tag in dishtypeDb){
-        if (Math.floor((Math.random() * 4) + 1) === 3) {
-            dishtype[tag] = dishtypeDb[tag];
-            if (Math.floor((Math.random() * 2) + 1) === 1) {
-              break;
-            }
+    for (let tag in dishtypeDb) {
+      if (Math.floor((Math.random() * 4) + 1) === 3) {
+        dishtype[tag] = dishtypeDb[tag];
+        if (Math.floor((Math.random() * 2) + 1) === 1) {
+          break;
+        }
       }
     }
     return dishtype;
@@ -266,54 +260,54 @@ class DataChange extends Component {
     if (Math.floor((Math.random() * 10) + 1) === 1) {
       return origin;
     }
-    for(let tag in originDb){
-        if (Math.floor((Math.random() * 3) + 1) === 3) {
-            origin[tag] = originDb[tag];
-            if (Math.floor((Math.random() * 2) + 1) === 1) {
-              break;
-            }
+    for (let tag in originDb) {
+      if (Math.floor((Math.random() * 3) + 1) === 3) {
+        origin[tag] = originDb[tag];
+        if (Math.floor((Math.random() * 2) + 1) === 1) {
+          break;
+        }
       }
     }
     return origin;
   }
 
-  getIngredients(){
+  getIngredients() {
     let ingredients = [];
     let nrOfIngredients = Math.floor((Math.random() * 12) + 1);
     let foods = [];
-    for(let i =0; i<nrOfIngredients; i++){
+    for (let i = 0; i < nrOfIngredients; i++) {
       let ingredient = {};
       let food = this.props.foods[Math.floor((Math.random() * this.props.foods.length) + 0)];
 
-      if(foods.indexOf(food)>-1){
+      if (foods.indexOf(food) > -1) {
         continue;
       }
       ingredient.name = food;
-      if(Math.floor((Math.random() * 5) + 1) > 2){
-        ingredient.amount = Math.floor((Math.random() * 100) + 1)/10;
+      if (Math.floor((Math.random() * 5) + 1) > 2) {
+        ingredient.amount = Math.floor((Math.random() * 100) + 1) / 10;
         ingredient.unit = this.getRandomUnit().name;
-        if(ingredient.unit==='g'){
-          ingredient.amount = ingredient.amount*10;
+        if (ingredient.unit === 'g') {
+          ingredient.amount = ingredient.amount * 10;
         }
-          ingredient = this.checkUnit(ingredient);
+        ingredient = this.checkUnit(ingredient);
       }
 
       foods.push(food);
       ingredients.push(ingredient);
     }
-    if(Math.floor((Math.random() * 3) + 1) === 3){
-      for(let j =0; j<ingredients.length; j++){
-        if(Math.floor((Math.random() * 2) + 1) === 1){
-              let start = Math.floor((Math.random() * 200) + 0);
-              ingredients[j].recipePart = this.state.ipsum.substring(start, Math.floor((Math.random() * 15) + start+5));
+    if (Math.floor((Math.random() * 3) + 1) === 3) {
+      for (let j = 0; j < ingredients.length; j++) {
+        if (Math.floor((Math.random() * 2) + 1) === 1) {
+          let start = Math.floor((Math.random() * 200) + 0);
+          ingredients[j].recipePart = this.state.ipsum.substring(start, Math.floor((Math.random() * 15) + start + 5));
 
         }
       }
     }
-    if(Math.floor((Math.random() * 3) + 1) === 3){
-      for(let j =0; j<ingredients.length; j++){
-        if(Math.floor((Math.random() * 2) + 1) === 1){
-              ingredients[j].comment = "tvättade";
+    if (Math.floor((Math.random() * 3) + 1) === 3) {
+      for (let j = 0; j < ingredients.length; j++) {
+        if (Math.floor((Math.random() * 2) + 1) === 1) {
+          ingredients[j].comment = "tvättade";
         }
       }
     }
@@ -321,14 +315,14 @@ class DataChange extends Component {
     return ingredients;
   }
 
-  getRandomUnit(){
-  let unitType = this.props.units[Math.floor((Math.random() * 2) + 0)];
-  let keys = Object.keys(unitType);
-  let unit = unitType[keys[keys.length * Math.random() << 0]];
-  return unit;
+  getRandomUnit() {
+    let unitType = this.props.units[Math.floor((Math.random() * 2) + 0)];
+    let keys = Object.keys(unitType);
+    let unit = unitType[keys[keys.length * Math.random() << 0]];
+    return unit;
 
   }
-  getRandomUser(){
+  getRandomUser() {
     let user = this.props.users[Math.floor((Math.random() * this.props.users.length) + 0)];
     return user.username;
   }
@@ -338,7 +332,7 @@ class DataChange extends Component {
     let tags = {};
 
     for (let prop in recipe.dietary) {
-      
+
       if (recipe.dietary.hasOwnProperty(prop)) {
 
         tags[prop] = recipe.dietary[prop];
@@ -372,9 +366,9 @@ class DataChange extends Component {
     return tags;
 
   }
-  copyIngredients(recipeIngredients){
-    let ingredients ={};
-    for(let i =0; i<recipeIngredients.length; i++){
+  copyIngredients(recipeIngredients) {
+    let ingredients = {};
+    for (let i = 0; i < recipeIngredients.length; i++) {
       ingredients[recipeIngredients[i].name] = true;
     }
     return ingredients;
@@ -385,7 +379,7 @@ class DataChange extends Component {
     let foodsRef = firebase.database().ref("foods");
     let nrOfIngredients = Math.floor((Math.random() * 20) + 1);
     foodsRef.once("value")
-      .then(function(snapshot) {
+      .then(function (snapshot) {
         let nrOfFoods = snapshot.numChildren();
         let foodsToAdd = [];
         let currentFoodNr = 0;
@@ -395,7 +389,7 @@ class DataChange extends Component {
             foodsToAdd.push(Math.floor((Math.random() * nrOfFoods) + 0));
           }
         }
-        snapshot.forEach(function(childSnapshot) {
+        snapshot.forEach(function (childSnapshot) {
           let food = childSnapshot.val();
 
           if (foodsToAdd.indexOf(currentFoodNr) > -1) {
@@ -408,94 +402,94 @@ class DataChange extends Component {
     return ingredients;
   }
 
- findLowerUnit(ingredient, selectedUnit){
-  let selectedRef = ingredient.amount*selectedUnit.ref;
-  let finalIngredient = ingredient;
-  let newUnit;
-  let unitsIndex;
-  if(selectedUnit.type ==='volume'){
-    unitsIndex=0;
-  }else if(selectedUnit.type ==='weight'){
-    unitsIndex=1;
-  }
-  for(let unit in this.props.units[unitsIndex]){
-    let curUnit = this.props.units[unitsIndex][unit];
-    if((selectedRef/curUnit.ref <curUnit.max)){
-      newUnit=curUnit;
-      break;
+  findLowerUnit(ingredient, selectedUnit) {
+    let selectedRef = ingredient.amount * selectedUnit.ref;
+    let finalIngredient = ingredient;
+    let newUnit;
+    let unitsIndex;
+    if (selectedUnit.type === 'volume') {
+      unitsIndex = 0;
+    } else if (selectedUnit.type === 'weight') {
+      unitsIndex = 1;
     }
-  }
-  finalIngredient.amount = selectedRef/newUnit.ref;
-  finalIngredient.unit = newUnit.name;
-  return finalIngredient;
-}
-
-
- findHigherUnit(ingredient, selectedUnit){
-  let selectedRef = ingredient.amount*selectedUnit.ref;
-  let finalIngredient = ingredient;
-  let newUnit;
-  let unitsIndex;
-  if(selectedUnit.type ==='volume'){
-    unitsIndex=0;
-  }else if(selectedUnit.type ==='weight'){
-    unitsIndex=1;
-  }
-  for(let unit in this.props.units[unitsIndex]){
-    let curUnit = this.props.units[unitsIndex][unit];
-    if((selectedRef/curUnit.ref <curUnit.max)){
-      newUnit=curUnit;
-      break;
+    for (let unit in this.props.units[unitsIndex]) {
+      let curUnit = this.props.units[unitsIndex][unit];
+      if ((selectedRef / curUnit.ref < curUnit.max)) {
+        newUnit = curUnit;
+        break;
+      }
     }
+    finalIngredient.amount = selectedRef / newUnit.ref;
+    finalIngredient.unit = newUnit.name;
+    return finalIngredient;
   }
-  finalIngredient.amount = selectedRef/newUnit.ref;
-  finalIngredient.unit = newUnit.name;
-  return finalIngredient;
-}
 
- checkUnit(ingredient){ //fortfarande lite konstigt här. det går att få resultat som 0.2kg, 5.25tsk
-  let foundUnit = {};
-  for(let i = 0; i<this.props.units.length; i++){
-      for(let unit in this.props.units[this.props.units[i]]){
+
+  findHigherUnit(ingredient, selectedUnit) {
+    let selectedRef = ingredient.amount * selectedUnit.ref;
+    let finalIngredient = ingredient;
+    let newUnit;
+    let unitsIndex;
+    if (selectedUnit.type === 'volume') {
+      unitsIndex = 0;
+    } else if (selectedUnit.type === 'weight') {
+      unitsIndex = 1;
+    }
+    for (let unit in this.props.units[unitsIndex]) {
+      let curUnit = this.props.units[unitsIndex][unit];
+      if ((selectedRef / curUnit.ref < curUnit.max)) {
+        newUnit = curUnit;
+        break;
+      }
+    }
+    finalIngredient.amount = selectedRef / newUnit.ref;
+    finalIngredient.unit = newUnit.name;
+    return finalIngredient;
+  }
+
+  checkUnit(ingredient) { //fortfarande lite konstigt här. det går att få resultat som 0.2kg, 5.25tsk
+    let foundUnit = {};
+    for (let i = 0; i < this.props.units.length; i++) {
+      for (let unit in this.props.units[this.props.units[i]]) {
         let curUnit = this.props.units[this.props.units[i]][unit];
-          if(curUnit.name === ingredient.unit){
-            foundUnit=curUnit;
-          }
-      } 
-  }
-  if(ingredient.amount>=foundUnit.max){
+        if (curUnit.name === ingredient.unit) {
+          foundUnit = curUnit;
+        }
+      }
+    }
+    if (ingredient.amount >= foundUnit.max) {
       ingredient = this.findHigherUnit(ingredient, foundUnit);
-  }
-  else if(ingredient.amount<=foundUnit.min){
+    }
+    else if (ingredient.amount <= foundUnit.min) {
       ingredient = this.findLowerUnit(ingredient, foundUnit);
-  }
+    }
     //här använder jag även lib fraction.js för att hantera decimaler till bråkdelar
     //avrunda till närmsta 1/16 del? 0.0625 
-  //http://stackoverflow.com/questions/1506554/how-to-round-a-decimal-to-the-nearest-fraction
+    //http://stackoverflow.com/questions/1506554/how-to-round-a-decimal-to-the-nearest-fraction
     //if decimaler finns så fixa fractions istället. 1/16 är det lägsta
-  ingredient.amount = this.closestDecimals(ingredient.amount);
-  return ingredient;
-}
- closestDecimals (num) {
-  let arr;
-  num = num.toFixed(3);
-  if(num>1){
-    arr = [0,0.25,0.33,0.5,0.66,0.75];
-  }else{
-     arr = [0,0.2,0.25,0.33,0.4,0.5,0.6,0.66,0.75,0.8];
+    ingredient.amount = this.closestDecimals(ingredient.amount);
+    return ingredient;
   }
-  let decimal = num - (Math.floor(num));
-  var curr = arr[0];
-  var diff = Math.abs (decimal - curr);
-  for (var val = 0; val < arr.length; val++) {
-    var newdiff = Math.abs (decimal - arr[val]);
-    if (newdiff < diff) {
-      diff = newdiff;
-      curr = arr[val];
+  closestDecimals(num) {
+    let arr;
+    num = num.toFixed(3);
+    if (num > 1) {
+      arr = [0, 0.25, 0.33, 0.5, 0.66, 0.75];
+    } else {
+      arr = [0, 0.2, 0.25, 0.33, 0.4, 0.5, 0.6, 0.66, 0.75, 0.8];
     }
+    let decimal = num - (Math.floor(num));
+    var curr = arr[0];
+    var diff = Math.abs(decimal - curr);
+    for (var val = 0; val < arr.length; val++) {
+      var newdiff = Math.abs(decimal - arr[val]);
+      if (newdiff < diff) {
+        diff = newdiff;
+        curr = arr[val];
+      }
+    }
+    return num - decimal + curr;
   }
-  return num - decimal + curr;
-}
 
 
 
@@ -503,21 +497,21 @@ class DataChange extends Component {
 
     return (
       <div>
-        
+
         <a href="https://tree.taiga.io/project/ettkilomjol-ett-kilo-mjol/">
           <IconButton tooltip="Project backlog">
-                      <DashboardIcon/>
-           </IconButton>
+            <DashboardIcon />
+          </IconButton>
         </a>
         <a href="https://github.com/emilmannfeldt/ettkilomjol">
           <IconButton tooltip="gitHub">
-          <CodeIcon/>
-           </IconButton>
+            <CodeIcon />
+          </IconButton>
         </a>
 
-        <RaisedButton disabled label="Run datachange" secondary={ true } onTouchTap={ this.runDataChange } />
+        <RaisedButton label="Run datachange" secondary={true} onTouchTap={this.runDataChange} />
       </div>
-      );
+    );
   }
 }
 export default DataChange;

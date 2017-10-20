@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Chip from 'material-ui/Chip';
-import './App.css';
-
+import './filterChip.css';
 
 class FilterChip extends Component {
   constructor(props) {
@@ -22,7 +21,6 @@ class FilterChip extends Component {
   }
 
   render() {
-
     let chipClass = "";
     let chiptype = this.props.chipType;
     if (this.props.chipType == 'ingredient') {
@@ -33,11 +31,10 @@ class FilterChip extends Component {
     }
 
     return (
-      <Chip key={ this.props.text } onRequestDelete={ this.handleDelete } className={chipClass}>
-        { this.props.text }
+      <Chip key={this.props.text} onRequestDelete={this.handleDelete} className={chipClass}>
+        {this.props.text}
       </Chip>
     );
   }
-
 }
 export default FilterChip;

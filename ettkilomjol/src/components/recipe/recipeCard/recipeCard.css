@@ -1,0 +1,79 @@
+.recipe-card-image {
+    display: block;
+    height: 0;
+    padding-bottom: 74.4%;
+    position: relative;
+    overflow: hidden;
+  
+  }
+  
+  .recipe-card-image img {
+    bottom: 0;
+    display: block;
+    height: auto;
+    left: 0;
+    position: absolute;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    -webkit-transition: transform .2s ease-in-out;
+    -moz-transition: transform .2s ease-in-out;
+    -o-transition: transform .2s ease-in-out;
+    transition: transform .2s ease-in-out;
+    top: 50%;
+    width: 100%;
+  
+  }
+  
+  .recipecard-content>div {
+    padding-bottom: 0 !important;
+  }
+  
+  .recipecard-title {
+    font-size: 12;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 8px;
+  }
+  
+  .recipe-card-info {
+    padding: 0 !important;
+  }
+  /* Extra small devices (phones, less than 768px) */
+
+/* No media query since this is the default in Bootstrap */
+
+/* Small devices (tablets, 768px and up) */
+
+@media (min-width: @screen-sm-min) {
+    .list-item {
+      min-height: 285px;
+    }
+  }
+  
+  /* Medium devices (desktops, 992px and up) */
+  
+  @media (min-width: @screen-md-min) {
+    .list-item {
+      min-height: 320px;
+    }
+  }
+  
+  /* Large devices (large desktops, 1200px and up)  //fixa maxwidth på allt så jag känner igen mig. */
+  
+  @media (min-width: @screen-lg-min) {
+    .list-item {
+      min-height: 360px;
+    }
+  }
+  
+  @media only screen and (max-device-width: 480px) {
+    .list-item {
+      width: 100%;
+    }
+  }

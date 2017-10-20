@@ -1,5 +1,6 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+.hidden {
+  display: none !important;
+}
+.app-stats {
+  opacity: 0.5;
 }
