@@ -6,8 +6,6 @@ fs.readFile('C:/react/test.txt', 'utf8', function (err, data) {
   }
   var result = JSON.parse(data);
   console.log(result);
-
-  console.log(result[0].tags.snabbt);
   console.log(result.length);
 
 });
