@@ -1166,15 +1166,16 @@ nightmare
               return;
             }
             //l sep är ett problem. replace &#8232; funkar inte
-            //får överväga att kanske ta bort allt inom paranteser och efter andra specialtecken (,:."") och "eller (dela i två?)" ta bort plural "er,ar,or"
-            //splita på mellanslag, om första delen innehåller en siffra /\d/.test lägg det i amount
-            //problemet blir vissa som har skrivit amount och unit i samma span som namnet^
+            //ta bort plural "er,ar,or"?
+            //IMPLEMENTERA DETTA-------------I CREATERECIPES.JS
+            //möjlig regel: Om ingrediensen slutar på er, ar, or. så kolla om det finns en exakt likadan i foods utan de två sista bokstäverna.
+            //Om det finns så spara ner ingrediensen som subString(-2 sista) och addera uses på befintlig.
+            //detta bör kanske vara ett separat jobb som körs när som för att rätta upp datat? annar är risken att det kommer in några plural innan första singular
+            //och vi aldrig får rätta till pluran som kom tidigare.
 
             //ha koll på om denna fix gör så att namnet blir lika med existerande food, isåfall plusa på uses
             //om jag fixar detta i efterhand så måste jag köra igenom alla foods/ och alla recipes/ingredients/
 
-            //Bygg ett jobb som rensar bort dåliga recept? alt. validerar i detta jobb
-            //recept med många konstiga ingredienser (långa namn, siffror i namn, specialtecken i namn,)
             let recipe = {};
             //title
             recipe.title = document.querySelector('.recipe-content-wrapper h1').innerHTML;
@@ -1222,11 +1223,15 @@ nightmare
             if (document.querySelector('.recipe-column-wrapper #ingredients-component')) {
               let ingredientsDom = document.querySelector('.recipe-column-wrapper #ingredients-component #ingredients').getElementsByTagName("li");
               let ingredients = [];
+              let ingredientNames = [];
               for (var i = 0; i < ingredientsDom.length; ++i) {
                 let ingredient = {};
                 let parts = ingredientsDom[i].getElementsByTagName("span");
-                let amount = parts[1].innerHTML;
                 ingredient.name = parts[2].innerHTML.charAt(0).toUpperCase() + parts[2].innerHTML.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g,'');
+                if(ingredientNames.indexOf(ingredient.name) > -1){
+                  continue;
+                }
+                let amount = parts[1].innerHTML;
                 if (amount.length > 0) {
                   let amountParts = amount.split(" ");
                   ingredient.amount = amountParts[0];
@@ -1238,6 +1243,7 @@ nightmare
                     }
                   }
                 }
+                ingredientNames.push(ingredient.name);
                 ingredients.push(ingredient);
               }
               recipe.ingredients = ingredients;
