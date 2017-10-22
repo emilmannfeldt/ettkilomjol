@@ -2,7 +2,7 @@ var firebase = require('firebase');
 var fs = require('fs');
 
 let config = {
-    apiKey: "AIzaSyCgKVqOu_D9jemhDwm5PC3Tll50T15OOlM",
+    apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
     authDomain: "ettkilomjol-10ed1.firebaseapp.com",
     databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
     storageBucket: "ettkilomjol-10ed1.appspot.com",
@@ -20,6 +20,7 @@ let existingTags = [];
 let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
+let log = [];
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -78,27 +79,27 @@ firebase.auth().onAuthStateChanged(function (user) {
 //ta bort bild
 //skapa night2.js för ica.se
 function createRecipes() {
-    fs.readFile('C:/react/testdata.json', 'utf8', function (err, data) {
+    fs.readFile('C:/react/senaste2017-10-22.json', 'utf8', function (err, data) {
         if (err) {
             return console.log(err);
         }
         let result = JSON.parse(data);
-        let validationMsgs = [];
-        console.log("lengths")
+
         let nrOfRecipesCreated = 0;
 
         for (let i = 0; i < result.length; i++) {
             let recipe = result[i];
             let msg = validateRecipe(recipe);
             if (msg.cause.length > 0) {
-                validationMsgs.push(msg);
-                console.log("Invalid recipe: " + msg.source);
+                log.push(msg);
                 continue;
             }
+            recipe.ingredients = checkGrammar(recipe.ingredients);
+            //continue;
             for (let f = 0; f < recipe.ingredients.length; f++) {
                 //capitalize first letter
                 if (!validateIngredient(recipe.ingredients[f])) {
-                    console.log("invalid ingredient:" + recipe.ingredients[f].name);
+                    log.push("invalid ingredient:" + recipe.ingredients[f].name);
                     continue;
                 }
                 let food = recipe.ingredients[f].name;
@@ -150,15 +151,16 @@ function createRecipes() {
             //recipesRef.push(recipe);
         }
 
-        console.log("input nr: " + result.length);
-        console.log("created recipes: " + nrOfRecipesCreated);
+        log.push("input nr: " + result.length);
+        log.push("created recipes: " + nrOfRecipesCreated);
 
 
-        fs.writeFile("C:/react/validation.json", JSON.stringify(validationMsgs), function (err) {
+        fs.writeFile("C:/react/log.json", JSON.stringify(log), function (err) {
             if (err) {
                 return console.log(err);
             }
-            console.log("logfile saved!");
+            log.push("logfile saved!");
+            console.log(log);
         });
     });
 }
@@ -207,4 +209,62 @@ function validateIngredient(ingredient) {
         return false;
     }
     return true;
+}
+function checkGrammar(ingredients) {
+    let finalIngredients = [];
+    for (let i = 0; i < ingredients.length; i++) {
+        let name = ingredients[i].name;
+        let lastTwo = name.slice(-2);
+        if (lastTwo === "or") {
+            let singular = name.slice(0, -2) + "a";
+            if (existingFoods.indexOf(singular) > -1) {
+                log.push("changed grammar from:" + ingredients[i].name + " to:" + singular);
+                ingredients[i].name = singular;
+                continue;
+            }
+        }
+        else if (lastTwo === "ar") {
+            let singular = name.slice(0, -2) + "e";
+            if (existingFoods.indexOf(singular) > -1) {
+                log.push("changed grammar from:" + ingredients[i].name + " to:" + singular);
+                ingredients[i].name = singular;
+                continue;
+            }
+            singular = name.slice(0, -2);
+            if (existingFoods.indexOf(singular) > -1) {
+                log.push("changed grammar from:" + ingredients[i].name + " to:" + singular);
+                ingredients[i].name = singular;
+                continue;
+            }
+            singular = name.slice(0, -3) + "el";
+            if (existingFoods.indexOf(singular) > -1) {
+                log.push("changed grammar from:" + ingredients[i].name + " to:" + singular);
+                ingredients[i].name = singular;
+                continue;
+            }
+        }
+        else if (lastTwo === "er") {
+            let singular = name.slice(0, -2);
+            if (existingFoods.indexOf(singular) > -1) {
+                log.push("changed grammar from:" + ingredients[i].name + " to:" + singular);
+                ingredients[i].name = singular;
+                continue;
+            }
+            singular = name.slice(0, -1);
+            if (existingFoods.indexOf(singular) > -1) {
+                log.push("changed grammar from:" + ingredients[i].name + " to:" + singular);
+                ingredients[i].name = singular;
+                continue;
+            }
+        }
+        else if (lastTwo.slice(-1) === "n") {
+            let singular = name.slice(0, -1);
+            if (existingFoods.indexOf(singular) > -1) {
+                log.push("changed grammar from:" + ingredients[i].name + " to:" + singular);
+                ingredients[i].name = singular;
+                continue;
+            }
+        }
+    }
+    return ingredients;
 }

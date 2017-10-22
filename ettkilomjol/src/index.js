@@ -19,7 +19,7 @@ let config = {
   storageBucket: "ettkilomjol-10ed1.appspot.com",
   messagingSenderId: "1028199106361"
 };
-if(location.hostname ==='localhost'){
+if (location.hostname === 'localhost') {
   config.apiKey = "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8";
 }
 firebase.initializeApp(config);
@@ -29,6 +29,8 @@ let units = JSON.parse(localStorage.getItem('units')) || [];
 let tagNames = JSON.parse(localStorage.getItem('tags')) || [];
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let recipes = JSON.parse(localStorage.getItem('recipes')) || [];
+let MIN_USES_FOOD = 2;
+let MIN_USES_TAG = 2;
 
 const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 
@@ -80,7 +82,9 @@ firebase.auth().onAuthStateChanged(function (user) {
       foodRef.orderByChild("uses").once("value", function (snapshot) {
         foodNames.length = 0;
         snapshot.forEach(function (child) {
-          foodNames.splice(0, 0, child.val().name);
+          if (child.val().uses >= MIN_USES_FOOD) {
+            foodNames.splice(0, 0, child.val().name);
+          }
         });
         localStorage.setItem('foodnames', JSON.stringify(foodNames));
       });
@@ -107,7 +111,9 @@ firebase.auth().onAuthStateChanged(function (user) {
       tagsRef.orderByChild("uses").once("value", function (snapshot) {
         tagNames.length = 0;
         snapshot.forEach(function (child) {
-          tagNames.splice(0, 0, child.val().name);
+          if (child.val().uses >= MIN_USES_TAG) {
+            tagNames.splice(0, 0, child.val().name);
+          }
         });
         localStorage.setItem('tagNames', JSON.stringify(tagNames));
       });

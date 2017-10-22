@@ -48,19 +48,21 @@ class RecipeList extends Component {
         //return -1 om a är sämtre än b
         //return 1 om a är bättre än b
         //return 0 om de är lika
-        let l = filterIngredients.length;
         let ingredientHitsA = 0;
         let ingredientHitsB = 0;
-        for (let i = 0; i < l; i++) {
-            if (a.ingredients.hasOwnProperty(filterIngredients[i])) {
+        for (let i = 0; i < a.ingredients.length; i++) {
+            if (filterIngredients.indexOf(a.ingredients[i].name) > -1) {
                 ingredientHitsA++;
             }
-            if (b.ingredients.hasOwnProperty(filterIngredients[i])) {
+        }
+        for (let i = 0; i < b.ingredients.length; i++) {
+            if (filterIngredients.indexOf(b.ingredients[i].name) > -1) {
                 ingredientHitsB++;
             }
         }
-        let aIngredients = Object.keys(a.ingredients).length;
-        let bIngredients = Object.keys(b.ingredients).length;
+
+        let aIngredients = a.ingredients.length;
+        let bIngredients = b.ingredients.length;
         let missingA = aIngredients - ingredientHitsA;
         let missingB = bIngredients - ingredientHitsB;
 
