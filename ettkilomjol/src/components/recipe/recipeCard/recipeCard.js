@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './recipeCard.css';
 import IngredientTag from '../ingredientTag/ingredientTag';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
+import { Card, CardText } from 'material-ui/Card';
 import BakeTime from '../bakeTime/bakeTime';
 
 class RecipeCard extends Component {
+  //onödigt med constructor om det bara är super(props)?
   constructor(props) {
     super(props);
   }
@@ -25,20 +25,20 @@ class RecipeCard extends Component {
   render() {
     let matchedIngredients = [];
     let missingIngredients = [];
-    for (let property in this.props.recipe.ingredients) {
-      if (this.props.recipe.ingredients.hasOwnProperty(property)) {
-        if (this.props.filter.ingredients.indexOf(property) > -1) {
-          matchedIngredients.push(property);
-        }
-        else {
-          missingIngredients.push(property);
-        }
+    for (let i = 0; i < this.props.recipe.ingredients.length; i++) {
+      let name = this.props.recipe.ingredients[i].name;
+      if (this.props.filter.ingredients.indexOf(name) > -1) {
+        matchedIngredients.push(name);
       }
+      else {
+        missingIngredients.push(name);
+      }
+
     }
 
     return (<div className="col-lg-4 col-md-4 col-sm-4 col-xs-6 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
       <div className="recipe-card-image">
-        <img src={this.props.recipe.image} />
+        <img src={this.props.recipe.image} alt="recipe" />
       </div>
       <CardText className="recipe-card-info">
         <div className="recipecard-title">{this.props.recipe.title} </div>

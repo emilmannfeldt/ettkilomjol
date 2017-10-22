@@ -6,7 +6,7 @@ class RecipeList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            recipeCards: this.props.recipeCards,
+            recipes: this.props.recipes,
         };
     }
 
@@ -15,11 +15,12 @@ class RecipeList extends Component {
             return true;
         }
     }
-    
+
     runIngredientFilter(recipeIngredients, filterIngredients) {
         let ingredientHits = 0;
-        for (let i = 0; i < filterIngredients.length; i++) {
-            if (recipeIngredients.hasOwnProperty(filterIngredients[i])) {
+        for (let i = 0; i < recipeIngredients.length; i++) {
+            let ing = recipeIngredients[i].name;
+            if (filterIngredients.indexOf(ing) > -1) {
                 ingredientHits++;
             }
         }
@@ -42,7 +43,7 @@ class RecipeList extends Component {
         return ingredientHits > 0;
     }
 
-    sortRecipeCards(a, b) {
+    sortRecipes(a, b) {
         let filterIngredients = this.props.filter.ingredients;
         //return -1 om a är sämtre än b
         //return 1 om a är bättre än b
@@ -79,14 +80,14 @@ class RecipeList extends Component {
 
         let that = this;
         let recipes = [];
-        let l = this.props.recipeCards.length;
+        let l = this.props.recipes.length;
         for (let i = 0; i < l; i++) {
-            if (this.runFilter(this.props.recipeCards[i], this.props.filter)) {
-                recipes.push(this.props.recipeCards[i]);
+            if (this.runFilter(this.props.recipes[i], this.props.filter)) {
+                recipes.push(this.props.recipes[i]);
             }
         }
         recipes.sort(function (a, b) {
-            return that.sortRecipeCards(a, b);
+            return that.sortRecipes(a, b);
         });
         if (recipes.length > this.props.maxHits) {
             recipes.length = this.props.maxHits;

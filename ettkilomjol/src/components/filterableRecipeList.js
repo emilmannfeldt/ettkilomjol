@@ -26,10 +26,10 @@ class FilterableRecipeList extends Component {
       <div className="container">
         <div className="row">
           <FilterBar onUserInput={this.handleFilterInput} tags={this.props.tags} foods={this.props.foods} filter={this.state.filter} />
-          <div className="col-md-12 app-stats">{this.props.recipeCards.length} recept i databasen</div>
+          <div className="col-md-12 app-stats">{this.props.recipes.length} recept i databasen</div>
         </div>
         <div className="row">
-          <RecipeList recipeCards={this.props.recipeCards} filter={this.state.filter} maxHits={240} />
+          <RecipeList recipes={this.props.recipes} filter={this.state.filter} maxHits={240} />
         </div>
       </div>
     );

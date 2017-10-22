@@ -121,7 +121,7 @@ class FilterInput extends Component {
   }
 
   suggestInputFilter(searchText, key) {
-    if (key.substring(0, 1).toLowerCase() == searchText.substring(0, 1).toLowerCase()) {
+    if (key.substring(0, 1).toLowerCase() === searchText.substring(0, 1).toLowerCase()) {
       return AutoComplete.caseInsensitiveFilter(searchText, key); //fnukar?
     }
     return false;
@@ -136,14 +136,14 @@ class FilterInput extends Component {
   handleNewRequest = (searchText) => {
     let foundchip = false;
     searchText = searchText.charAt(0).toUpperCase() + searchText.slice(1);
-    for (var i = this.props.foods.length - 1; i >= 0; i--) {
+    for (let i = this.props.foods.length - 1; i >= 0; i--) {
       if (this.props.foods[i] === searchText) {
         this.addIngredient(searchText);
         foundchip = true;
       }
     }
     if (!foundchip) {
-      for (var i = this.props.tags.length - 1; i >= 0; i--) {
+      for (let i = this.props.tags.length - 1; i >= 0; i--) {
         if (this.props.tags[i] === searchText) {
           this.addTag(searchText);
           foundchip = true;

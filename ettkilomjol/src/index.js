@@ -6,10 +6,12 @@ import './index.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import * as firebase from 'firebase';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import RaisedButton from 'material-ui/RaisedButton';
 
 injectTapEventPlugin();
 
+//browser key: AIzaSyCgKVqOu_D9jemhDwm5PC3Tll50T15OOlM
+//server key: AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8
+//https://stackoverflow.com/questions/35418143/how-to-restrict-firebase-data-modification
 let config = {
   apiKey: "AIzaSyCgKVqOu_D9jemhDwm5PC3Tll50T15OOlM",
   authDomain: "ettkilomjol-10ed1.firebaseapp.com",
@@ -17,13 +19,16 @@ let config = {
   storageBucket: "ettkilomjol-10ed1.appspot.com",
   messagingSenderId: "1028199106361"
 };
+if(location.hostname ==='localhost'){
+  config.apiKey = "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8";
+}
 firebase.initializeApp(config);
 
 let foodNames = JSON.parse(localStorage.getItem('foodnames')) || [];
 let units = JSON.parse(localStorage.getItem('units')) || [];
 let tagNames = JSON.parse(localStorage.getItem('tags')) || [];
 let users = JSON.parse(localStorage.getItem('users')) || [];
-let recipeCards = JSON.parse(localStorage.getItem('recipecards')) || [];
+let recipes = JSON.parse(localStorage.getItem('recipes')) || [];
 
 const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 
@@ -40,8 +45,7 @@ const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 window.onload = function () {
   firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
+
     // ...
   });
 };
@@ -68,7 +72,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     let unitsRef = firebase.database().ref("units");
     let tagsRef = firebase.database().ref("tags");
     let usersRef = firebase.database().ref("users");
-    let recipeCardsRef = firebase.database().ref("recipeCards");
+    let recipeRef = firebase.database().ref("recipes");
 
     if (foodNames.length < 1 || localIsOld('lastupdatedfoodnames')) {
       console.log("LOADING NEW FOODS");
@@ -121,16 +125,16 @@ firebase.auth().onAuthStateChanged(function (user) {
       });
       localStorage.setItem('lastupdatedusers', JSON.stringify(Date.now()));
     }
-    if (recipeCards.length < 1 || localIsOld('lastupdatedrecipecards')) {
-      console.log("LOADING NEW RECIPECARDS");
-      recipeCardsRef.once('value', function (snapshot) {
-        recipeCards.length = 0;
+    if (recipes.length < 1 || localIsOld('lastupdatedrecipes')) {
+      console.log("LOADING NEW RECIPES");
+      recipeRef.once('value', function (snapshot) {
+        recipes.length = 0;
         snapshot.forEach(function (child) {
-          recipeCards.push(child.val());
+          recipes.push(child.val());
         });
-        localStorage.setItem('recipecards', JSON.stringify(recipeCards));
+        localStorage.setItem('recipes', JSON.stringify(recipes));
       });
-      localStorage.setItem('lastupdatedrecipecards', JSON.stringify(Date.now()));
+      localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
     }
     // User is signed in.
   }
@@ -149,7 +153,7 @@ const Applicaption = () => (
   <MuiThemeProvider>
     <div>
       <DataChange foods={foodNames} tags={tagNames} units={units} users={users} />
-      <FilterableRecipeList tags={tagNames} foods={foodNames} recipeCards={recipeCards} />
+      <FilterableRecipeList tags={tagNames} foods={foodNames} recipes={recipes} />
     </div>
   </MuiThemeProvider>
 );

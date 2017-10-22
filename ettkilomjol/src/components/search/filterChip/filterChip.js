@@ -23,10 +23,10 @@ class FilterChip extends Component {
   render() {
     let chipClass = "";
     let chiptype = this.props.chipType;
-    if (this.props.chipType == 'ingredient') {
+    if (chiptype === 'ingredient') {
       chipClass = 'ingredient-chip';
     }
-    else if (this.props.chipType == 'tag') {
+    else if (chiptype === 'tag') {
       chipClass = 'tag-chip';
     }
 

@@ -11,7 +11,6 @@ const DIETARY = 0;
 const DISHTYPE = 1;
 const ORIGIN = 2;
 const OTHER = 3;
-let SORTEDUNITS = [];
 
 
 

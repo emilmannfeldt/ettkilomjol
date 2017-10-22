@@ -30,7 +30,9 @@ firebase.auth().signInAnonymously().catch(function (error) {
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-        //firebase.database().ref("recipes").remove();
+        firebase.database().ref("recipes").remove();
+        firebase.database().ref("foods").remove();
+        firebase.database().ref("tags").remove();
 
         recipesRef.once('value', function (snapshot) {
             snapshot.forEach(function (child) {
@@ -76,31 +78,32 @@ firebase.auth().onAuthStateChanged(function (user) {
 //ta bort bild
 //skapa night2.js för ica.se
 function createRecipes() {
-    fs.readFile('C:/react/recipes.json', 'utf8', function (err, data) {
+    fs.readFile('C:/react/testdata.json', 'utf8', function (err, data) {
         if (err) {
             return console.log(err);
         }
         let result = JSON.parse(data);
+        let validationMsgs = [];
         console.log("lengths")
+        let nrOfRecipesCreated = 0;
 
         for (let i = 0; i < result.length; i++) {
             let recipe = result[i];
-            if (!recipe) {
+            let msg = validateRecipe(recipe);
+            if (msg.cause.length > 0) {
+                validationMsgs.push(msg);
+                console.log("Invalid recipe: " + msg.source);
                 continue;
             }
-            if (existingRecipeSources.indexOf(recipe.source) > -1) {
-                console.log(recipe.source + " already exists");
-                continue;
-            }
-            console.log(recipe.source + " new recipe");
             for (let f = 0; f < recipe.ingredients.length; f++) {
                 //capitalize first letter
-
-                let food = recipe.ingredients[f].name.charAt(0).toUpperCase() + recipe.ingredients[f].name.slice(1).replace(/[.#$]/g,'');
-                console.log("checking food " + food);
+                if (!validateIngredient(recipe.ingredients[f])) {
+                    console.log("invalid ingredient:" + recipe.ingredients[f].name);
+                    continue;
+                }
+                let food = recipe.ingredients[f].name;
 
                 if (existingFoods.indexOf(food) > -1) {
-                    console.log("adding uses to " + food);
                     let databaseRef = firebase.database().ref('foods').child(food).child('uses');
                     databaseRef.transaction(function (uses) {
                         if (uses) {
@@ -109,8 +112,6 @@ function createRecipes() {
                         return (uses || 0) + 1;
                     });
                 } else {
-                    console.log("creating food " + food);
-
                     firebase.database().ref("foods/" + food).set({
                         name: food,
                         uses: 0
@@ -118,14 +119,11 @@ function createRecipes() {
                     existingFoods.push(food);
                 }
             }
-            console.log("tags " + recipe.tags)
 
             for (let property in recipe.tags) {
                 if (recipe.tags.hasOwnProperty(property)) {
                     let tag = property.charAt(0).toUpperCase() + property.slice(1);
-                    console.log("checking tag " + tag);
                     if (existingTags.indexOf(tag) > -1) {
-                        console.log("adding uses to " + tag);
                         let databaseRef = firebase.database().ref('tags').child(tag).child('uses');
                         databaseRef.transaction(function (uses) {
                             if (uses) {
@@ -134,24 +132,79 @@ function createRecipes() {
                             return (uses || 0) + 1;
                         });
                     } else {
-                        console.log("creating tag " + tag);
                         firebase.database().ref("tags/" + tag).set({
                             name: tag,
                             uses: 0
                         })
                         existingTags.push(tag);
                     }
-                    console.log("prop: " + property);
                 }
             }
+            nrOfRecipesCreated++;
             recipesRef.push(recipe);
+            existingRecipeSources.push(recipe.source);
             //save ingredients.name to foodRef (create if new, update uses if exists)
             //same for tags as for foods
             //någon validering? 
 
             //recipesRef.push(recipe);
         }
-        console.log(result.length);
 
+        console.log("input nr: " + result.length);
+        console.log("created recipes: " + nrOfRecipesCreated);
+
+
+        fs.writeFile("C:/react/validation.json", JSON.stringify(validationMsgs), function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("logfile saved!");
+        });
     });
+}
+function validateRecipe(recipe) {
+    let msg = { recipeSrc: "", cause: "" };
+    if (!recipe) {
+        msg.cause = "recipe is null";
+        return msg;
+    }
+    msg.recipeSrc = recipe.source;
+    if (existingRecipeSources.indexOf(recipe.source) > -1) {
+        msg.cause = "recipe already exists";
+        return msg;
+    }
+    let invalidIngredients = 0;
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        if (!validateIngredient(recipe.ingredients[i])) {
+            invalidIngredients++;
+        }
+    }
+    if ((recipe.ingredients.length / invalidIngredients) < 3) {
+        msg.cause = "recipe contains to many wierd ingredients";
+        return msg;
+    }
+
+    //recept med många konstiga ingredienser (långa namn, siffror i namn, specialtecken i namn,)
+    return msg;
+    //fortsätt med mer validering. 
+}
+
+function validateIngredient(ingredient) {
+    let nameLength = ingredient.name.length;
+    let nameWordCount = ingredient.name.split(" ").length;
+    let nameSpecialChars = ingredient.name.match(/^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/);
+    let containsNumbers = /\d/.test(ingredient.name);
+    if (nameLength > 40 || nameLength < 1) {
+        return false;
+    }
+    if (nameWordCount > 2) {
+        return false;
+    }
+    if (nameSpecialChars && nameSpecialChars.length > 0) {
+        return false;
+    }
+    if (containsNumbers) {
+        return false;
+    }
+    return true;
 }
