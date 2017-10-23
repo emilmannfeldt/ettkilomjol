@@ -21,6 +21,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
+let filename= "koket-vardagsmiddag-frukost-2017-10-23";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -31,9 +32,9 @@ firebase.auth().signInAnonymously().catch(function (error) {
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-        firebase.database().ref("recipes").remove();
-        firebase.database().ref("foods").remove();
-        firebase.database().ref("tags").remove();
+        //firebase.database().ref("recipes").remove();
+        //firebase.database().ref("foods").remove();
+        //firebase.database().ref("tags").remove();
 
         recipesRef.once('value', function (snapshot) {
             snapshot.forEach(function (child) {
@@ -79,7 +80,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 //ta bort bild
 //skapa night2.js för ica.se
 function createRecipes() {
-    fs.readFile('C:/react/senaste2017-10-22.json', 'utf8', function (err, data) {
+    fs.readFile('C:/react/'+filename+'.json', 'utf8', function (err, data) {
         if (err) {
             return console.log(err);
         }
@@ -155,7 +156,7 @@ function createRecipes() {
         log.push("created recipes: " + nrOfRecipesCreated);
 
 
-        fs.writeFile("C:/react/log.json", JSON.stringify(log), function (err) {
+        fs.writeFile("C:/react/"+filename+"-log.json", JSON.stringify(log), function (err) {
             if (err) {
                 return console.log(err);
             }
