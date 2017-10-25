@@ -26,7 +26,7 @@ class RecipeList extends Component {
         }
         return ingredientHits;
     }
-
+    
     runFilter(recipe, filter) {
         if (this.filterIsEmpty(filter)) {
             return false;
@@ -83,11 +83,13 @@ class RecipeList extends Component {
         let that = this;
         let recipes = [];
         let l = this.props.recipes.length;
+        //filtrera bort alla recipt  som inte ska vara med
         for (let i = 0; i < l; i++) {
             if (this.runFilter(this.props.recipes[i], this.props.filter)) {
                 recipes.push(this.props.recipes[i]);
             }
         }
+        //sortera recept
         recipes.sort(function (a, b) {
             return that.sortRecipes(a, b);
         });
