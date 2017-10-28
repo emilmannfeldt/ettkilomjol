@@ -8,19 +8,31 @@ class Time extends Component {
     }
 
     timeString() {
-        let hours = Math.floor(this.props.time / 60)
-        let minutes = this.props.time % 60;
-        if (hours > 0) {
-            return hours + " h " + minutes + " m";
-        }
-        else {
-            return minutes + " m";
-        }
-    }
+        //let hours = Math.floor(this.props.time / 60)
+        //let minutes = this.props.time % 60;
+        //if (hours > 0) {
+        //    return hours + " h " + minutes + " m";
+        //}
+        //else {
+        //    return minutes + " m";
+        //}
+        //}
 
+    }
     render() {
+        function clockTime(props) {
+            if (props.time) {
+                return <div><TimerIcon /> {props.time}</div>
+            }
+            else {
+                return <div>test</div>
+            }
+        }
+
         return (
-            <div><TimerIcon /> {this.timeString()}</div>
+
+            <div className={this.props.time ? '' : 'hidden'}> <TimerIcon /> { this.props.time } </div>
+
         );
     }
 }

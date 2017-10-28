@@ -159,7 +159,7 @@ class FilterInput extends Component {
   render() {
     let chips = [];
     for (let i = 0; i < this.props.filter.ingredients.length; i++) {
-      chips.push(<Filter-chip key={chips.length} chipType={'ingredient'} text={this.props.filter.ingredients[i]} onUserDelete={this.deleteIngredient} />);
+      chips.push(<FilterChip key={chips.length} chipType={'ingredient'} text={this.props.filter.ingredients[i]} onUserDelete={this.deleteIngredient} />);
     }
     for (let i = 0; i < this.props.filter.tags.length; i++) {
       chips.push(<FilterChip key={chips.length} chipType={'tag'} text={this.props.filter.tags[i]} onUserDelete={this.deleteTag} />);

@@ -34,12 +34,13 @@ class RecipeCard extends Component {
       else {
         missingIngredients.push(name);
       }
-
     }
 
-    return (<div className="col-lg-4 col-md-4 col-sm-4 col-xs-6 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
+    return (<div className="col-xs-12 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
       <CardText className="recipe-card-info">
-        <div className="recipecard-title"><h2>{this.props.recipe.title}</h2> </div>
+        <div className="recipecard-title"><h2>
+        <a target='_blank' href={this.props.recipe.source}>{this.props.recipe.title}</a>
+        </h2> </div>
         <div className="recipecard-author"><i>
         {this.props.recipe.author} 
         {this.props.recipe.createdFor || ''}
