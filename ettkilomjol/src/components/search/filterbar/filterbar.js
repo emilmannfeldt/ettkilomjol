@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './filterBar.css';
+import './filterbar.css';
 import FilterInput from '../filterInput/filterInput';
 
-class FilterBar extends Component {
+class Filterbar extends Component {
 
   render() {
 
@@ -13,4 +13,4 @@ class FilterBar extends Component {
     );
   }
 }
-export default FilterBar;
+export default Filterbar;

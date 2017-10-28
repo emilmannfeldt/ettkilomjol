@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './filterableRecipeList.css';
 import RecipeList from './recipe/recipeList/recipeList';
-import FilterBar from './search/filterBar/filterBar';
+import Filterbar from './search/filterbar/filterbar';
 
-class FilterableRecipeList extends Component {
+class FilterableRecipelist extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +25,7 @@ class FilterableRecipeList extends Component {
     return (
       <div className="container">
         <div className="row">
-          <FilterBar onUserInput={this.handleFilterInput} tags={this.props.tags} foods={this.props.foods} filter={this.state.filter} />
+          <Filterbar onUserInput={this.handleFilterInput} tags={this.props.tags} foods={this.props.foods} filter={this.state.filter} />
           <div className="col-md-12 app-stats">{this.props.recipes.length} recept i databasen</div>
         </div>
         <div className="row">
@@ -35,4 +35,4 @@ class FilterableRecipeList extends Component {
     );
   }
 }
-export default FilterableRecipeList;
+export default FilterableRecipelist;

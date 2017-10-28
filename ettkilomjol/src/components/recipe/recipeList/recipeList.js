@@ -26,7 +26,7 @@ class RecipeList extends Component {
         }
         return ingredientHits;
     }
-    
+
     runFilter(recipe, filter) {
         if (this.filterIsEmpty(filter)) {
             return false;
@@ -90,7 +90,7 @@ class RecipeList extends Component {
             }
         }
         //sortera recept
-        recipes.sort(function (a, b) {
+        recipes.sort(function(a, b) {
             return that.sortRecipes(a, b);
         });
         if (recipes.length > this.props.maxHits) {

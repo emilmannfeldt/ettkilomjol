@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import './recipeCard.css';
-import IngredientTag from '../ingredientTag/ingredientTag';
+import Time from './time/time';
+import Ingredients from './ingredients/ingredients';
 import { Card, CardText } from 'material-ui/Card';
-import BakeTime from '../bakeTime/bakeTime';
 
 class RecipeCard extends Component {
   //onödigt med constructor om det bara är super(props)?
+  //ha en state här som är true/false om detailview visas. 
+  //nvänd den för att visa mer/mindre i komponenterna
   constructor(props) {
     super(props);
   }
@@ -14,8 +16,7 @@ class RecipeCard extends Component {
     recipeCard: {
       margin: 4,
     },
-    wrapper: {
-    },
+    wrapper: {},
     title: {
       fontSize: 14,
       lineHeight: 1
@@ -37,14 +38,18 @@ class RecipeCard extends Component {
     }
 
     return (<div className="col-lg-4 col-md-4 col-sm-4 col-xs-6 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
-      <div className="recipe-card-image">
-        <img src={this.props.recipe.image} alt="recipe" />
-      </div>
       <CardText className="recipe-card-info">
-        <div className="recipecard-title">{this.props.recipe.title} </div>
-        <IngredientTag
+        <div className="recipecard-title"><h2>{this.props.recipe.title}</h2> </div>
+        <div className="recipecard-author"><i>
+        {this.props.recipe.author} 
+        {this.props.recipe.createdFor || ''}
+        - {this.props.recipe.created}
+        </i> </div>
+        <div className="recipecard-description">{this.props.recipe.description} </div>
+
+        <Ingredients
           matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} />
-        <BakeTime time={this.props.recipe.time} />
+        <Time time={this.props.recipe.time} />
       </CardText>
     </Card>
     </div>);

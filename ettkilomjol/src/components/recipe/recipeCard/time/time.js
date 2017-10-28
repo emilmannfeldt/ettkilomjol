@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './bakeTime.css';
+import './time.css';
 import TimerIcon from 'material-ui/svg-icons/image/timer';
 
-class BakeTime extends Component {
+class Time extends Component {
     constructor(props) {
         super(props);
     }
@@ -24,4 +24,4 @@ class BakeTime extends Component {
         );
     }
 }
-export default BakeTime;
+export default Time;

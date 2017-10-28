@@ -44,15 +44,15 @@ const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 //   });
 // }
 
-window.onload = function () {
-  firebase.auth().signInAnonymously().catch(function (error) {
+window.onload = function() {
+  firebase.auth().signInAnonymously().catch(function(error) {
     // Handle Errors here.
 
     // ...
   });
 };
 
-let localIsOld = function (localVar) {
+let localIsOld = function(localVar) {
   let yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - DAYS_TO_SAVE_LOCALSTORAGE);
   let storage = JSON.parse(localStorage.getItem(localVar)) || '';
@@ -68,7 +68,7 @@ let localIsOld = function (localVar) {
 // };
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
-firebase.auth().onAuthStateChanged(function (user) {
+firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     let foodRef = firebase.database().ref("foods");
     let unitsRef = firebase.database().ref("units");
@@ -79,9 +79,9 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (foodNames.length < 1 || localIsOld('lastupdatedfoodnames')) {
       console.log("LOADING NEW FOODS");
 
-      foodRef.orderByChild("uses").once("value", function (snapshot) {
+      foodRef.orderByChild("uses").once("value", function(snapshot) {
         foodNames.length = 0;
-        snapshot.forEach(function (child) {
+        snapshot.forEach(function(child) {
           if (child.val().uses >= MIN_USES_FOOD) {
             foodNames.splice(0, 0, child.val().name);
           }
@@ -93,11 +93,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 
     if (units.length < 1 || localIsOld('lastupdatedunits')) {
       console.log("LOADING NEW UNITS");
-      unitsRef.once("value", function (snapshot) {
+      unitsRef.once("value", function(snapshot) {
         units.length = 0;
-        snapshot.forEach(function (child) {
-          units = Object.keys(snapshot.val()).map(function (key) { return snapshot.val()[key]; });
-          units.sort(function (a, b) {
+        snapshot.forEach(function(child) {
+          units = Object.keys(snapshot.val()).map(function(key) { return snapshot.val()[key]; });
+          units.sort(function(a, b) {
             return a.ref - b.ref;
           });
         });
@@ -108,9 +108,9 @@ firebase.auth().onAuthStateChanged(function (user) {
 
     if (tagNames.length < 1 || localIsOld('lastupdatedtags')) {
       console.log("LOADING NEW TAGS");
-      tagsRef.orderByChild("uses").once("value", function (snapshot) {
+      tagsRef.orderByChild("uses").once("value", function(snapshot) {
         tagNames.length = 0;
-        snapshot.forEach(function (child) {
+        snapshot.forEach(function(child) {
           if (child.val().uses >= MIN_USES_TAG) {
             tagNames.splice(0, 0, child.val().name);
           }
@@ -122,9 +122,9 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
     if (users.length < 1 || localIsOld('lastupdatedusers')) {
       console.log("LOADING NEW USERS");
-      usersRef.once('value', function (snapshot) {
+      usersRef.once('value', function(snapshot) {
         users.length = 0;
-        snapshot.forEach(function (child) {
+        snapshot.forEach(function(child) {
           users.splice(0, 0, child.val());
         });
         localStorage.setItem('users', JSON.stringify(users));
@@ -133,9 +133,9 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
     if (recipes.length < 1 || localIsOld('lastupdatedrecipes')) {
       console.log("LOADING NEW RECIPES");
-      recipeRef.once('value', function (snapshot) {
+      recipeRef.once('value', function(snapshot) {
         recipes.length = 0;
-        snapshot.forEach(function (child) {
+        snapshot.forEach(function(child) {
           recipes.push(child.val());
         });
         localStorage.setItem('recipes', JSON.stringify(recipes));

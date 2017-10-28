@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './ingredientTag.css';
+import './ingredients.css';
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 import ShoppingBasketIcon from 'material-ui/svg-icons/action/shopping-basket';
@@ -9,7 +9,7 @@ import Popover from 'material-ui/Popover';
 import Divider from 'material-ui/Divider';
 import { List, ListItem } from 'material-ui/List';
 
-class IngredientTag extends Component {
+class Ingredients extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -116,4 +116,4 @@ class IngredientTag extends Component {
     </div>);
   }
 }
-export default IngredientTag;
+export default Ingredients;
