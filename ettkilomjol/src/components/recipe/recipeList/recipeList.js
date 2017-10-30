@@ -79,10 +79,11 @@ class RecipeList extends Component {
     }
 
     render() {
-
+        
         let that = this;
         let recipes = [];
         let l = this.props.recipes.length;
+        let isLoading = true;
         //filtrera bort alla recipt  som inte ska vara med
         for (let i = 0; i < l; i++) {
             if (this.runFilter(this.props.recipes[i], this.props.filter)) {
@@ -90,17 +91,17 @@ class RecipeList extends Component {
             }
         }
         //sortera recept
-        recipes.sort(function(a, b) {
+        recipes.sort(function (a, b) {
             return that.sortRecipes(a, b);
         });
         if (recipes.length > this.props.maxHits) {
             recipes.length = this.props.maxHits;
         }
-
-        return (<div>{recipes.map((recipe, index) =>
-            <RecipeCard key={index} filter={this.props.filter}
-                recipe={recipe} />
-        )}</div>);
+        return (
+            <div><div className="col-md-12 app-stats">{isLoading}</div>{recipes.map((recipe, index) =>
+                <RecipeCard key={index} filter={this.props.filter}
+                    recipe={recipe} />
+            )}</div>);
     }
 }
 export default RecipeList;

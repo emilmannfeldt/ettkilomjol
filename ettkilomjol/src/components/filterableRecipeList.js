@@ -26,7 +26,6 @@ class FilterableRecipelist extends Component {
       <div className="container">
         <div className="row">
           <Filterbar onUserInput={this.handleFilterInput} tags={this.props.tags} foods={this.props.foods} filter={this.state.filter} />
-          <div className="col-md-12 app-stats">{this.props.recipes.length} recept i databasen</div>
         </div>
         <div className="row">
           <RecipeList recipes={this.props.recipes} filter={this.state.filter} maxHits={240} />
