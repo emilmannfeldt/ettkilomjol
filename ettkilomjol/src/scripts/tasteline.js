@@ -17,9 +17,23 @@ var fs = require('fs');
 
 
 let urls = [
-    "http://www.tasteline.com/recept/pizza-con-uove-e-basilica/"
+    "http://www.tasteline.com/recept/veggieburger-med-raw-tabbouleh-och-tomat-och-paprikasas/",
+    "http://www.tasteline.com/recept/ugnsgrillade-kycklingben-med-mynta-och-avokado-och-mangosalsa/",
+    "http://www.tasteline.com/recept/pontus-frithiofs-kick-ass-burger/",
+    "http://www.tasteline.com/recept/kramig-potatis-och-kronartskockssallad-med-grillad-flaskytterfile/",
+    "http://www.tasteline.com/recept/apelsin-och-granatappelsallad/",
+    "http://www.tasteline.com/recept/sparris-med-hasselnotter-citron-och-pecoino/",
+    "http://www.tasteline.com/recept/jordgubbar-med-sotad-graddfil-marang-och-orter/",
+    "http://www.tasteline.com/recept/tagliatelle-alfredo-med-soltorkad-tomat-och-fejkon/",
+    "http://www.tasteline.com/recept/nasselgnocchi-med-bacon-bladspenat-och-pecorino/",
+    "http://www.tasteline.com/recept/risottor-med-havskrafta-brynt-smor-rostad-majs/",
+    "http://www.tasteline.com/recept/gronartssoppa-med-pepparrotscashew/",
+    "http://www.tasteline.com/recept/kalsallad-med-groddar/",
+    "http://www.tasteline.com/recept/wrap-med-mangosalsa/",
+    "http://www.tasteline.com/recept/acai-smoothie/",
+    "http://www.tasteline.com/recept/exotic-acai-bowl/"
 ];
-let filename = "tasteline-2017-11-05.json";
+let filename = "tasteline/tasteline-1-2017-10-31.json";
 
 nightmare
     .goto('http://www.tasteline.com/recept/')
@@ -96,35 +110,15 @@ nightmare
                         }
                         //denna är kvar att fixa till
                         //ingredients
-                        if (document.querySelector('.recipepage #ingredients-section .ingredients__content .ingredients__list .ingredients__list__item')) {
-                            let ingredientsDom = document.querySelector('.recipepage #ingredients-section .ingredients__content').getElementsByTagName("li");
+                        if (document.querySelector('.page-content .ingredient-group li')) {
+                            let ingredientsDom = document.querySelector('.page-content .ingredient-group').getElementsByTagName("li");
                             let ingredients = [];
                             let ingredientNames = [];
                             for (let i = 0; i < ingredientsDom.length; ++i) {
                                 let ingredient = {};
-                                let innerHtml = ingredientsDom[i].innerHTML;
-                                ingredient.amount = ingredientsDom[i].getElementsByTagName("span")[0].innerHTML.trim();
-                                if (ingredient.amount.indexOf("\/")) {
-                                    var y = ingredient.amount.split(' ');
-                                    if (y.length > 1) {
-                                        var z = y[1].split('/');
-                                        ingredient.amount = +y[0] + (z[0] / z[1]) + "";
-                                    }
-                                    else {
-                                        var z = y[0].split('/');
-                                        if (z.length > 1) {
-                                            ingredient.amount = z[0] / z[1] + "";
-                                        }
-                                        else {
-                                            ingredient.amount = z[0] + "";
-                                        }
-                                    }
-                                }
-                                let parts = innerHtml.slice(innerHtml.indexOf("</span>") + 7).split(" ");
-                                ingredient.unit = parts[1];
-
-                                let namepart = innerHtml.slice(innerHtml.indexOf(parts[2] === "st" ? parts[3] : parts[2])).trim();
-
+                                ingredient.amount = ingredientsDom[i].getElementsByClassName("quantity")[0].getAttribute('data-quantity');
+                                ingredient.unit = ingredientsDom[i].getElementsByClassName("unit")[0].getAttribute('data-unit-name');
+                                let namepart = ingredientsDom[i].getElementsByClassName("ingredient")[0].getElementsByTagName("span")[0].innerHTML.trim();
                                 ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim();
                                 if (ingredientNames.indexOf(ingredient.name) > -1) {
                                     continue;
@@ -137,58 +131,11 @@ nightmare
                             }
                             recipe.ingredients = ingredients;
                         }
-                        else if (document.querySelector('.recipepage #ingredients-section ul li span.ingredient')) {
-                            let ingredientsDom = document.querySelector('.recipepage #ingredients-section').getElementsByClassName("ingredient");
-                            let ingredients = [];
-                            let ingredientNames = [];
-                            for (let i = 0; i < ingredientsDom.length; ++i) {
-                                let ingredient = {};
-                                let ingredientDom = ingredientsDom[i];
-                                let innerText = ingredientDom.innerText;
-                                ingredient.amount = ingredientDom.getAttribute("data-amount");
-                                if (ingredient.amount === "0") {
-                                    ingredient.amount = "";
-                                }
-                                ingredient.unit = ingredientDom.getAttribute("data-type");
-                                let extraSliceIndex = 0;
-                                if (ingredient.unit.length > 0 && ingredient.amount.length > 0) {
-                                    extraSliceIndex = 1;
-                                }
-                                let namepart = innerText.slice(ingredient.amount.length + ingredient.unit.length + extraSliceIndex).trim();
-
-                                if (ingredient.unit.length > 0) {
-                                    namepart = innerText.slice(innerText.indexOf(ingredient.unit) + ingredient.unit.length + 1).trim();
-                                } else if (ingredient.amount.length > 0) {
-                                    if (ingredient.amount % 1 != 0) {
-                                        let parts = innerText.split(" ");
-                                        if (ingredient.amount > 1) {
-                                            namepart = innerText.slice(innerText.indexOf(parts[2])).trim();
-                                        } else {
-                                            namepart = innerText.slice(innerText.indexOf(parts[1])).trim();
-                                        }
-
-                                    } else {
-                                        namepart = innerText.slice(innerText.indexOf(ingredient.amount) + ingredient.amount.length + 1).trim();
-
-                                    }
-                                } else {
-                                    namepart = innerText.trim();
-                                }
-                                ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim();
-                                if (ingredientNames.indexOf(ingredient.name) > -1) {
-                                    continue;
-                                }
-
-                                ingredientNames.push(ingredient.name);
-                                ingredients.push(ingredient);
-                            }
-                            recipe.ingredients = ingredients;
-                        }
 
 
 
                         //difficulty
-                        let instructionsList = document.querySelector('.page-content .recipe-content .steps .step-group').getElementsByTagName("li");
+                        let instructionsList = document.querySelector('.page-content .recipe-content .steps').getElementsByTagName("li");
                         let nrOfIngredients = recipe.ingredients.length;
                         let instructionLength = 0;
                         for (let i = 0; i < instructionsList.length; i++) {

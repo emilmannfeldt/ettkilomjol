@@ -15,14 +15,15 @@ var fs = require('fs');
 //4. kör node set DEBUG=nightmare & node tasteline.js
 //5. kör node createRecipes.js och ange namnet på filen som skapades här
 
+//2285 i max now
 let urls = [
 ];
-for (let i = 1; i < 2285; i++) {
+for (let i = 2100; i < 2286; i++) {
     urls.push('http://www.tasteline.com/recept/?sida=' + i + '#sok');
 }
 
 
-let filename = "tasteline-hrefs-2017-10-30.json";
+let filename = "tasteline-hrefs-21-2286.json";
 
 nightmare
     .goto('http://www.tasteline.com/recept/')
@@ -58,7 +59,7 @@ nightmare
     .then(function (resultArr) {
         console.log(resultArr.length);
 
-        fs.writeFile("C:/react/" + filename, JSON.stringify(resultArr), function (err) {
+        fs.writeFile("C:/react/tasteline/" + filename, JSON.stringify(resultArr), function (err) {
 
             if (err) {
                 return console.log(err);
