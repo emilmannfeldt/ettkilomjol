@@ -41,19 +41,36 @@ class RecipeCard extends Component {
         <div className="recipecard-title"><h2>
         <a target='_blank' href={this.props.recipe.source}>{this.props.recipe.title}</a>
         </h2> </div>
-        <div className="recipecard-author"><i>
-        {this.props.recipe.author} 
-        {this.props.recipe.createdFor || ''}
-        - {this.props.recipe.created}
-        </i> </div>
-        <div className="recipecard-description">{this.props.recipe.description} </div>
-
-        <Ingredients
+        <div className="col-xs-12 recipecard-author">
+          <i>
+          {this.props.recipe.author} 
+          {this.props.recipe.createdFor || ''}
+          - {this.props.recipe.created}
+          </i>
+        </div>
+        <div className="col-xs-12 recipecard-description">{this.props.recipe.description} </div>
+        <div className ="col-xs-8">
+          <rating></rating>
+        </div>
+        <div className ="col-xs-4">
+          <save></save>
+        </div>
+        <div className ="col-xs-6">
+          <Time time={this.props.recipe.time} />
+          <level></level>
+        </div>
+        <div className="col-xs-6">
+          <Ingredients
           matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} />
-        <Time time={this.props.recipe.time} />
+        </div>
+        <div className="col-xs-6">
+          <tags></tags>
+        </div>
+          
       </CardText>
     </Card>
     </div>);
   }
 }
+//hur ska detta columnerna ändras i detail?? bootstrap 4?
 export default RecipeCard;
