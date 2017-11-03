@@ -105,7 +105,7 @@ function createRecipes() {
                 }
                 let food = recipe.ingredients[f].name;
 
-                if (existingFoods.indexOf(food) > -1) {
+                if (existingFoods.toLowerCase().indexOf(food.toLowerCase()) > -1) {
                     let databaseRef = firebase.database().ref('foods').child(food).child('uses');
                     databaseRef.transaction(function (uses) {
                         if (uses) {
@@ -126,11 +126,11 @@ function createRecipes() {
                 if (recipe.tags.hasOwnProperty(property)) {
                     //remove tags that already are ingredients
                     let tag = property.charAt(0).toUpperCase() + property.slice(1);
-                    if(existingFoods.indexOf(tag)> -1){
+                    if(existingFoods.toLowerCase().indexOf(tag.toLowerCase())> -1){
                         log.push("tag already exists as food: " + tag);                        
                         continue;
                     }
-                    if (existingTags.indexOf(tag) > -1) {
+                    if (existingTags.toLowerCase().indexOf(tag.toLowerCase()) > -1) {
                         let databaseRef = firebase.database().ref('tags').child(tag).child('uses');
                         databaseRef.transaction(function (uses) {
                             if (uses) {
