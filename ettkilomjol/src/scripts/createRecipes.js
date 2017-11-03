@@ -21,7 +21,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename= "koket-vardagsmiddag-frukost-2017-10-23";
+let filename= "tasteline/tasteline-1-2017-11-03";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -124,7 +124,12 @@ function createRecipes() {
 
             for (let property in recipe.tags) {
                 if (recipe.tags.hasOwnProperty(property)) {
+                    //remove tags that already are ingredients
                     let tag = property.charAt(0).toUpperCase() + property.slice(1);
+                    if(existingFoods.indexOf(tag)> -1){
+                        log.push("tag already exists as food: " + tag);                        
+                        continue;
+                    }
                     if (existingTags.indexOf(tag) > -1) {
                         let databaseRef = firebase.database().ref('tags').child(tag).child('uses');
                         databaseRef.transaction(function (uses) {
@@ -147,8 +152,7 @@ function createRecipes() {
             existingRecipeSources.push(recipe.source);
             //save ingredients.name to foodRef (create if new, update uses if exists)
             //same for tags as for foods
-            //någon validering? 
-
+            //någon validering?
             //recipesRef.push(recipe);
         }
 
@@ -156,7 +160,7 @@ function createRecipes() {
         log.push("created recipes: " + nrOfRecipesCreated);
 
 
-        fs.writeFile("C:/react/"+filename+"-log.json", JSON.stringify(log), function (err) {
+        fs.writeFile("C:/react/"+filename+"-LOG.json", JSON.stringify(log), function (err) {
             if (err) {
                 return console.log(err);
             }
@@ -182,7 +186,7 @@ function validateRecipe(recipe) {
             invalidIngredients++;
         }
     }
-    if ((recipe.ingredients.length / invalidIngredients) < 3) {
+    if ((recipe.ingredients.length / invalidIngredients) < 4) {
         msg.cause = "recipe contains to many wierd ingredients";
         return msg;
     }
