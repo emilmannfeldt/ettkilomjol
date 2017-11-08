@@ -26,6 +26,16 @@ class RecipeList extends Component {
         }
         return ingredientHits;
     }
+    runTagFilter(recipeTags, filterTags) {
+        let tagHits = 0;
+        for (let i = 0; i < recipeTags.length; i++) {
+            let ing = recipeTags[i].name;
+            if (filterTags.indexOf(ing) > -1) {
+                tagHits++;
+            }
+        }
+        return tagHits;
+    }
 
     runFilter(recipe, filter) {
         if (this.filterIsEmpty(filter)) {
@@ -34,6 +44,15 @@ class RecipeList extends Component {
         //filterar bort alla recept som inte har någon matchning alls. 
         //och om mer än 10/20 ingredienser angetts filtrera även bort alla som bara har 1/2 matchning med undantag för i fall där recept är kompletta
         let ingredientHits = this.runIngredientFilter(recipe.ingredients, filter.ingredients);
+
+        if (filter.tags.length > 0) {
+            let tagHits = this.runTagFilter(recipe.tags, filter.tags);
+            if (tagHits === 0 && ingredientHits !== Object.keys(recipe.ingredients).length) {
+                return false;
+            }
+
+        }
+
         if (filter.ingredients.length > 20) {
             return ingredientHits > 2 || (ingredientHits === Object.keys(recipe.ingredients).length);
         }
@@ -79,7 +98,7 @@ class RecipeList extends Component {
     }
 
     render() {
-        
+
         let that = this;
         let recipes = [];
         let l = this.props.recipes.length;
@@ -91,7 +110,7 @@ class RecipeList extends Component {
             }
         }
         //sortera recept
-        recipes.sort(function (a, b) {
+        recipes.sort(function(a, b) {
             return that.sortRecipes(a, b);
         });
         if (recipes.length > this.props.maxHits) {

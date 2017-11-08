@@ -41,6 +41,10 @@
   padding-top: 8px;
 }
 
+.recipecard-author {
+  text-align: center;
+}
+
 .recipe-card-info {
   padding: 0 !important;
 }
