@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './rating.css';
-import GradeIcon from 'material-ui/svg-icons/action/grade';
+import StarIcon from 'material-ui/svg-icons/toggle/star';
+
 
 class Rating extends Component {
     constructor(props) {

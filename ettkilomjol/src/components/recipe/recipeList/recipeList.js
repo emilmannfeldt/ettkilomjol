@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import './recipeList.css';
 import RecipeCard from '../recipeCard/recipeCard';
+import LinearProgress from 'material-ui/LinearProgress';
 
 class RecipeList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            recipes: this.props.recipes
+            recipes: this.props.recipes,
+            isLoading: false,
         };
     }
 
@@ -78,8 +80,10 @@ class RecipeList extends Component {
 
     }
     simpleFilter(length, hits) {
-        if (length > 3) {
-            return hits / length > 0.4;
+        if (length > 6) {
+            return hits / length > 0.2;
+        }else if (length > 3) {
+            return hits / length > 0.3;
         } else {
             return hits > 0;
         }
@@ -87,7 +91,28 @@ class RecipeList extends Component {
 
 
     sortRecipes(a, b) {
+        let filterTags = this.props.filter.tags;
         let filterIngredients = this.props.filter.ingredients;
+
+        let tagsHitsA = 0;
+        let tagsHitsB = 0;
+        for (let tag in a.tags) {
+            if (a.tags.hasOwnProperty(tag)) {
+                if (filterTags.indexOf(tag) > -1) {
+                    tagsHitsA++;
+                }
+            }
+        }
+        for (let tag in b.tags) {
+            if (b.tags.hasOwnProperty(tag)) {
+                if (filterTags.indexOf(tag) > -1) {
+                    tagsHitsB++;
+                }
+            }
+        }
+        if (filterIngredients.length === 0) {
+            return tagsHitsB - tagsHitsA;
+        }
         //return -1 om a är bättre
         //return 1 om b är bättre
         //return 0 om de är lika
@@ -106,20 +131,19 @@ class RecipeList extends Component {
 
         let aIngredients = a.ingredients.length;
         let bIngredients = b.ingredients.length;
-
+        let hitsA = ingredientHitsA + tagsHitsA;
+        let hitsB = ingredientHitsB + tagsHitsB;
         //om båda är full match: Välj den som har flest antal ingredienser
-        if (ingredientHitsA === ingredientHitsB) {
+        if (hitsA === hitsB) {
             return aIngredients - bIngredients;
         }
-        return ingredientHitsB - ingredientHitsA;
+        return hitsB - hitsA;
     }
 
     render() {
-
         let that = this;
         let recipes = [];
         let l = this.props.recipes.length;
-        let isLoading = true;
         let easterEgg = false;
         //filtrera bort alla recipt  som inte ska vara med
         if (this.props.filter.tags.indexOf("Gryta") > -1 &&
@@ -144,10 +168,8 @@ class RecipeList extends Component {
             recipes.length = this.props.maxHits;
         }
 
-
         return (
             <div><div className="col-md-12 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept i databasen' : ''}</div>
-
                 {easterEgg ? <img src="http://i.imgur.com/W43yLfJ.jpg" height="100%" width="100%"></img> : recipes.map((recipe, index) =>
                     <RecipeCard key={index} filter={this.props.filter}
                         recipe={recipe} />

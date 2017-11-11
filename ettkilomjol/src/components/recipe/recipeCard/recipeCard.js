@@ -89,8 +89,8 @@ class RecipeCard extends Component {
           <Ingredients
             matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} />
         </div>
-        <div className="col-xs-6">
-          <Tags matchedTags={matchedTags} />
+        <div className="col-xs-12">
+          <Tags matchedTags={matchedTags} recipeTags={this.props.recipe.tags}/>
         </div>
 
       </CardText>

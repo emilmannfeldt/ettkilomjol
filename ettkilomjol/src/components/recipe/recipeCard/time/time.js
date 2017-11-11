@@ -20,18 +20,10 @@ class Time extends Component {
 
     }
     render() {
-        function clockTime(props) {
-            if (props.time) {
-                return <div><TimerIcon /> {props.time}</div>
-            }
-            else {
-                return <div>test</div>
-            }
-        }
 
         return (
 
-            <div className={this.props.time ? '' : 'hidden'}> <TimerIcon /> { this.props.time } </div>
+            <div className={this.props.time ? 'recipecard-time' : 'hidden'}> <TimerIcon /> { this.props.time + " | "} </div>
 
         );
     }

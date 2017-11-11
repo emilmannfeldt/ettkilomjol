@@ -17,9 +17,7 @@ class Level extends Component {
         }
 
         return (
-            <div className="level-wrapper">
-                <span className="recipecard-level"> {level}</span>
-            </div>
+            <div className="recipecard-level"> {level}</div>
         );
     }
 }
