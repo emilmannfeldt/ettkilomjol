@@ -6,14 +6,18 @@ class RecipeList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            recipes: this.props.recipes,
+            recipes: this.props.recipes
         };
     }
 
     filterIsEmpty(filter) {
-        if (filter.ingredients.length < 1) {
-            return true;
+        if (filter.ingredients.length > 0) {
+            return false;
         }
+        if (filter.tags.length > 0) {
+            return false;
+        }
+        return true;
     }
 
     runIngredientFilter(recipeIngredients, filterIngredients) {
@@ -28,10 +32,11 @@ class RecipeList extends Component {
     }
     runTagFilter(recipeTags, filterTags) {
         let tagHits = 0;
-        for (let i = 0; i < recipeTags.length; i++) {
-            let ing = recipeTags[i].name;
-            if (filterTags.indexOf(ing) > -1) {
-                tagHits++;
+        for (let tag in recipeTags) {
+            if (recipeTags.hasOwnProperty(tag)) {
+                if (filterTags.indexOf(tag) > -1) {
+                    tagHits++;
+                }
             }
         }
         return tagHits;
@@ -41,31 +46,50 @@ class RecipeList extends Component {
         if (this.filterIsEmpty(filter)) {
             return false;
         }
-        //filterar bort alla recept som inte har någon matchning alls. 
-        //och om mer än 10/20 ingredienser angetts filtrera även bort alla som bara har 1/2 matchning med undantag för i fall där recept är kompletta
-        let ingredientHits = this.runIngredientFilter(recipe.ingredients, filter.ingredients);
 
+
+        //filterar bort alla recept som inte är tillräcklig matchning för att inte behöva sortera på tusentals recept. 
+        //lägg till easter egg. Om man sökt på tag: gryta, ing: söjabönor, vodka. och inget annat så redirecta till en rolig google bild? eller visa upp den nere
+        //i render här
+
+        //ändra så att recpeten måste ha minst en taghits om dett finns tags i filtret. annars är ju vegetarisk helt onödigt.
+        let tagHits = 0;
+        let ingredientHits = 0;
         if (filter.tags.length > 0) {
-            let tagHits = this.runTagFilter(recipe.tags, filter.tags);
-            if (tagHits === 0 && ingredientHits !== Object.keys(recipe.ingredients).length) {
+            tagHits = this.runTagFilter(recipe.tags, filter.tags);
+            if (tagHits === 0) {
                 return false;
             }
+        }
+        if (filter.ingredients.length > 0) {
+            ingredientHits = this.runIngredientFilter(recipe.ingredients, filter.ingredients);
+            if (ingredientHits === 0) {
+                return false;
+            }
+        }
+        if (ingredientHits === 0) {
+            return this.simpleFilter(filter.tags.length, tagHits);
+        }
+        if (tagHits === 0) {
+            return this.simpleFilter(filter.ingredients.length, ingredientHits) && ingredientHits / recipe.ingredients.length > 0.4;
+        }
+        //om det finns både tags och ingredients i filtret
+        return this.simpleFilter(filter.ingredients.length, ingredientHits) && this.simpleFilter(filter.tags.length, tagHits);
 
-        }
-
-        if (filter.ingredients.length > 20) {
-            return ingredientHits > 2 || (ingredientHits === Object.keys(recipe.ingredients).length);
-        }
-        if (filter.ingredients.length > 10) {
-            return ingredientHits > 1 || (ingredientHits === Object.keys(recipe.ingredients).length);
-        }
-        return ingredientHits > 0;
     }
+    simpleFilter(length, hits) {
+        if (length > 3) {
+            return hits / length > 0.4;
+        } else {
+            return hits > 0;
+        }
+    }
+
 
     sortRecipes(a, b) {
         let filterIngredients = this.props.filter.ingredients;
-        //return -1 om a är sämtre än b
-        //return 1 om a är bättre än b
+        //return -1 om a är bättre
+        //return 1 om b är bättre
         //return 0 om de är lika
         let ingredientHitsA = 0;
         let ingredientHitsB = 0;
@@ -82,19 +106,12 @@ class RecipeList extends Component {
 
         let aIngredients = a.ingredients.length;
         let bIngredients = b.ingredients.length;
-        let missingA = aIngredients - ingredientHitsA;
-        let missingB = bIngredients - ingredientHitsB;
 
         //om båda är full match: Välj den som har flest antal ingredienser
-        if (missingA === 0 && missingB === 0) {
-            return ingredientHitsB - ingredientHitsA;
-        }
-        //om båda har lika många matchningar: Välj den som saknar minst antal ingredienser
         if (ingredientHitsA === ingredientHitsB) {
-            return missingA - missingB;
+            return aIngredients - bIngredients;
         }
-        //Annars: Välj den med flest matchande ingredienser
-        return ((ingredientHitsB - 0.1) / bIngredients) - ((ingredientHitsA - 0.1) / aIngredients);
+        return ingredientHitsB - ingredientHitsA;
     }
 
     render() {
@@ -103,24 +120,38 @@ class RecipeList extends Component {
         let recipes = [];
         let l = this.props.recipes.length;
         let isLoading = true;
+        let easterEgg = false;
         //filtrera bort alla recipt  som inte ska vara med
+        if (this.props.filter.tags.indexOf("Gryta") > -1 &&
+            this.props.filter.tags.indexOf("Fest") > -1 &&
+            this.props.filter.tags.indexOf("Hemmagjord") > -1 &&
+            this.props.filter.tags.indexOf("Mustig") > -1 &&
+            this.props.filter.tags.length === 4 &&
+            this.props.filter.ingredients.indexOf("Sojabönor") > -1 &&
+            this.props.filter.ingredients.length === 1) {
+            easterEgg = true;
+        }
         for (let i = 0; i < l; i++) {
             if (this.runFilter(this.props.recipes[i], this.props.filter)) {
                 recipes.push(this.props.recipes[i]);
             }
         }
         //sortera recept
-        recipes.sort(function(a, b) {
+        recipes.sort(function (a, b) {
             return that.sortRecipes(a, b);
         });
         if (recipes.length > this.props.maxHits) {
             recipes.length = this.props.maxHits;
         }
+
+
         return (
-            <div><div className="col-md-12 app-stats">{isLoading}</div>{recipes.map((recipe, index) =>
-                <RecipeCard key={index} filter={this.props.filter}
-                    recipe={recipe} />
-            )}</div>);
+            <div><div className="col-md-12 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept i databasen' : ''}</div>
+
+                {easterEgg ? <img src="http://i.imgur.com/W43yLfJ.jpg" height="100%" width="100%"></img> : recipes.map((recipe, index) =>
+                    <RecipeCard key={index} filter={this.props.filter}
+                        recipe={recipe} />
+                )}</div>);
     }
 }
 export default RecipeList;

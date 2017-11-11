@@ -13,7 +13,23 @@ let foodRef = firebase.database().ref("foods");
 let unitsRef = firebase.database().ref("units");
 let tagRef = firebase.database().ref("tags");
 let recipesRef = firebase.database().ref("recipes");
+//AUTOMATISERA
+//börja med att merga ica.js med createrecipes.js 
+//man ska utifrån en url kunna skapa upp ett recept i databasen i ett ändå steg
+//om det lyckas så lägg till en knapp som gör detta
+//om det lyckas lägg till en textruta där man kan klistra in comma separerad string som prasas och används i scritpet
+//om det lyckas lägg till att den kollar på varje url och avgör vilken nightmarescript som ska köras
+//presentera resultatet för användaren. Hur många recept las till, och hela loggen antingen utskriven i alert eller nedladdad
+//https://stackoverflow.com/questions/11944932/how-to-download-a-file-with-node-js-without-using-third-party-libraries
 
+//lägg till createrecipe funktionerna createRecipes() där filen skapas just nu.
+// i .evaluate kan jag börja med en ifsats som avgör om hrefen är ica, taste eller koket. 
+//utmaningen är att se om detta går att köra i en reactkomponent? annars kanske den kan ligga som en .js utanför komponenten men frotfarande ha åtkomst till metoden?
+//typ som jag gjorde med angular i csri? declare var result = createRecipes(urls);
+//kan man få tillbaka ett svar på något sätt? eller se progress?
+//spara ner även recipes.json som tidigare till användaren?
+//om det inte går att automatisera i guit så fixa iaf så det endast finns en .js för allt.
+//som beskrivet ovan förutom att fortfarande använda urls arrayen och kör det i konsolen. spara ner log och recepten.json
 let existingRecipeSources = [];
 let existingFoods = [];
 let existingTags = [];
@@ -21,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename= "tasteline/tasteline-1-2017-11-03";
+let filename= "tasteline/tasteline-1part2-2017-11-11";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -105,7 +121,7 @@ function createRecipes() {
                 }
                 let food = recipe.ingredients[f].name;
 
-                if (existingFoods.toLowerCase().indexOf(food.toLowerCase()) > -1) {
+                if (existingFoods.indexOf(food) > -1) {
                     let databaseRef = firebase.database().ref('foods').child(food).child('uses');
                     databaseRef.transaction(function (uses) {
                         if (uses) {
@@ -126,11 +142,11 @@ function createRecipes() {
                 if (recipe.tags.hasOwnProperty(property)) {
                     //remove tags that already are ingredients
                     let tag = property.charAt(0).toUpperCase() + property.slice(1);
-                    if(existingFoods.toLowerCase().indexOf(tag.toLowerCase())> -1){
+                    if(existingFoods.indexOf(tag)> -1){
                         log.push("tag already exists as food: " + tag);                        
                         continue;
                     }
-                    if (existingTags.toLowerCase().indexOf(tag.toLowerCase()) > -1) {
+                    if (existingTags.indexOf(tag) > -1) {
                         let databaseRef = firebase.database().ref('tags').child(tag).child('uses');
                         databaseRef.transaction(function (uses) {
                             if (uses) {
@@ -158,14 +174,14 @@ function createRecipes() {
 
         log.push("input nr: " + result.length);
         log.push("created recipes: " + nrOfRecipesCreated);
-
+        console.log("input nr: " + result.length);
+        console.log("created recipes: " + nrOfRecipesCreated);
 
         fs.writeFile("C:/react/"+filename+"-LOG.json", JSON.stringify(log), function (err) {
             if (err) {
                 return console.log(err);
             }
             log.push("logfile saved!");
-            console.log(log);
         });
     });
 }

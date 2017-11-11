@@ -36,18 +36,57 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-top: 8px;
 }
 
 .recipecard-author {
   text-align: center;
 }
+.recipecard-description{
+  margin-top:1rem;
+}
 
 .recipe-card-info {
-  padding: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
+.recipecard-save-btn span{
+  text-transform: none !important;
+} 
+.recipecard-save-btn{
+  float: right;
+} 
+.save-icon__label {
+  padding-left: 8px;
+  color: #ec5050;
+  vertical-align: middle;
+  font-size: 15px;
+  font-size: .9375rem;
+  line-height: 20px;
+}
+.save-icon__button {
+  border: 1px solid #e1e1dc;
+  border-radius: 25px;
+  padding: 7px 14px;
+}
+.toggle-page-icon {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0;
+  position: relative;
+  right: 0;
+  vertical-align: top;
+  width: inherit;
+  height: 26px;
+  white-space: nowrap;
+}
+
+/* save buton
+border: 1px solid #e1e1dc;
+border-radius: 25px;
+padding: 7px 14px;
+
+
+*/
 
 /* Extra small devices (phones, less than 768px) */
 

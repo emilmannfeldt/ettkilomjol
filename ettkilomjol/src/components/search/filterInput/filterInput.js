@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import FilterChip from '../filterChip/filterChip';
 import './filterInput.css';
+import ClearIcon from 'material-ui/svg-icons/content/clear';
+import FlatButton from 'material-ui/FlatButton';
 
 class FilterInput extends Component {
   constructor(props) {
@@ -15,6 +17,7 @@ class FilterInput extends Component {
     this.handleUpdateInputText = this.handleUpdateInputText.bind(this);
     this.deleteIngredient = this.deleteIngredient.bind(this);
     this.deleteTag = this.deleteTag.bind(this);
+    this.clearFilter = this.clearFilter.bind(this);    
 
   }
 
@@ -133,6 +136,18 @@ class FilterInput extends Component {
     });
   };
 
+  clearFilter(){
+    this.setState({
+      ingredients: [],
+      tags: [],
+      searchText: ''
+    });
+    let newFilter = this.props.filter;
+    newFilter.ingredients = [];
+    newFilter.tags = [];
+    this.props.onFilterChange(newFilter);
+  }
+
   handleNewRequest = (searchText) => {
     let foundchip = false;
     searchText = searchText.charAt(0).toUpperCase() + searchText.slice(1);
@@ -173,6 +188,12 @@ class FilterInput extends Component {
         </div>
         <AutoComplete ref="filterSearchbar" searchText={this.state.searchText} floatingLabelText="Sök ingredienser & preferenser. T.ex. Ägg, Bacon, Lättlagat" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.handleUpdateInputText} dataSource={searchables}
           onNewRequest={this.handleNewRequest} maxSearchResults={5} fullWidth={true} />
+          {chips.length > 0 ? <FlatButton label="Rensa sökning"
+            className="filter-clear-btn"
+            onTouchTap={this.clearFilter}
+            secondary={false}
+            icon={<ClearIcon/>}
+            /> : ''} 
       </div>
     );
   }

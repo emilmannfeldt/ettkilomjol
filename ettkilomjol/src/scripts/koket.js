@@ -1,7 +1,7 @@
 var Nightmare = require('nightmare');
 var nightmare = Nightmare({
-  openDevTools: false, show: true, webPreferences: {
-    images: true,
+  openDevTools: false, show: false, webPreferences: {
+    images: false,
   }
 })
 
