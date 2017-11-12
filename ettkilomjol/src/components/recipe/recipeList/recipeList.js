@@ -70,27 +70,38 @@ class RecipeList extends Component {
             }
         }
         if (ingredientHits === 0) {
-            return this.simpleFilter(filter.tags.length, tagHits);
+            return this.simpleFilter(filter.tags.length, recipe.tags.length, tagHits);
         }
         if (tagHits === 0) {
-            return this.simpleFilter(filter.ingredients.length, ingredientHits) && ingredientHits / recipe.ingredients.length > 0.4;
+            return this.simpleFilter(filter.ingredients.length, recipe.ingredients.length, ingredientHits) && ingredientHits / recipe.ingredients.length > 0.2;
         }
         //om det finns både tags och ingredients i filtret
-        return this.simpleFilter(filter.ingredients.length, ingredientHits) && this.simpleFilter(filter.tags.length, tagHits);
+        return this.simpleFilter(filter.ingredients.length + filter.tags.length, recipe.ingredients.length + Object.keys(recipe.tags).length, ingredientHits + tagHits);
 
     }
-    simpleFilter(length, hits) {
-        if (length > 6) {
-            return hits / length > 0.2;
-        }else if (length > 3) {
-            return hits / length > 0.3;
+    simpleFilter(filterLength, recipeLength, hits) {
+        let keeper = false;
+        if (filterLength > 10) {
+            keeper = hits / filterLength > 0.24;
+        } else if (filterLength > 6) {
+            keeper = hits / filterLength > 0.3;
+        } else if (filterLength > 3) {
+            keeper = hits / filterLength > 0.38;
         } else {
-            return hits > 0;
+            keeper = hits > 0;
         }
+        if (!keeper) {
+            if (recipeLength > 20) {
+                keeper = hits / recipeLength > 0.8;
+            } else if (recipeLength > 10) {
+                keeper = hits / recipeLength > 0.7;
+            } else {
+                keeper = hits / recipeLength > 0.6;
+            }
+        }
+        return keeper;
     }
-
-
-    sortRecipes(a, b) {
+    sortOnRelevans(a, b) {
         let filterTags = this.props.filter.tags;
         let filterIngredients = this.props.filter.ingredients;
 
@@ -131,13 +142,28 @@ class RecipeList extends Component {
 
         let aIngredients = a.ingredients.length;
         let bIngredients = b.ingredients.length;
-        let hitsA = ingredientHitsA + tagsHitsA;
-        let hitsB = ingredientHitsB + tagsHitsB;
+        let hitsA = ingredientHitsA + (tagsHitsA * 0.6);
+        let hitsB = ingredientHitsB + (tagsHitsB * 0.6);
         //om båda är full match: Välj den som har flest antal ingredienser
         if (hitsA === hitsB) {
             return aIngredients - bIngredients;
         }
         return hitsB - hitsA;
+    }
+    sortOnBetyg(a, b) {
+        if (a.rating === b.rating) {
+            return b.votes - a.votes;
+        }
+        return b.rating - a.rating;
+    }
+
+    sortRecipes(a, b) {
+        if (this.props.filter.sort === 'Relevans') {
+            return this.sortOnRelevans(a, b);
+        } else if (this.props.filter.sort === 'Betyg') {
+            return this.sortOnBetyg(a, b);
+        }
+
     }
 
     render() {

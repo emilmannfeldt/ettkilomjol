@@ -37,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename= "tasteline/tasteline-2part2-2017-11-11";
+let filename= "ica/ICA-middag-fransk-2017-11-12";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -182,6 +182,12 @@ function createRecipes() {
                 return console.log(err);
             }
             log.push("logfile saved!");
+        });
+        fs.writeFile("C:/react/recipesbackup/"+filename+".json", JSON.stringify(result), function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            log.push("backup saved!");
         });
     });
 }

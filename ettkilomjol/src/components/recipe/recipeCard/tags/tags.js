@@ -13,7 +13,7 @@ class Tags extends Component {
         }
         for (let tag in this.props.recipeTags) {
             if (this.props.recipeTags.hasOwnProperty(tag)) {
-                tags.push(<span key={tag} className="recipecard-tag-unmatched">{tag}</span>);
+                tags.push(<span key={this.props.recipeKey + tag} className="recipecard-tag-unmatched">{tag}</span>);
             }
         }
 

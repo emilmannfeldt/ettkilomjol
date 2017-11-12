@@ -10,6 +10,7 @@ class FilterableRecipelist extends Component {
       filter: {
         ingredients: [],
         tags: [],
+        sort: 'Relevans'
       }
     };
     this.handleFilterInput = this.handleFilterInput.bind(this);
@@ -24,6 +25,11 @@ class FilterableRecipelist extends Component {
   render() {
     return (
       <div className="container">
+        <div className="row">
+          <div className="col-xs-12">
+            <h1></h1>
+          </div>
+        </div>
         <div className="row">
           <Filterbar onUserInput={this.handleFilterInput} tags={this.props.tags} foods={this.props.foods} filter={this.state.filter} />
         </div>

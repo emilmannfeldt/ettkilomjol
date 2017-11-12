@@ -4,3 +4,6 @@
 .app-stats {
   opacity: 0.5;
 }
+label{
+  font-weight: normal;
+}

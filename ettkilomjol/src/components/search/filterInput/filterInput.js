@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import FilterChip from '../filterChip/filterChip';
+import Sort from '../sort/sort';
+
 import './filterInput.css';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
 import FlatButton from 'material-ui/FlatButton';
@@ -11,14 +13,15 @@ class FilterInput extends Component {
     this.state = {
       ingredients: this.props.filter.ingredients,
       tags: this.props.filter.tags,
+      sort: 'Relevans',
       searchText: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleUpdateInputText = this.handleUpdateInputText.bind(this);
     this.deleteIngredient = this.deleteIngredient.bind(this);
     this.deleteTag = this.deleteTag.bind(this);
-    this.clearFilter = this.clearFilter.bind(this);    
-
+    this.clearFilter = this.clearFilter.bind(this);
+    this.handleNewSort = this.handleNewSort.bind(this);
   }
 
   styles = {
@@ -32,6 +35,7 @@ class FilterInput extends Component {
     let newFilter = this.props.filter;
     newFilter.ingredients = this.state.ingredients;
     newFilter.tags = this.state.tags;
+    newFilter.sort = this.state.sort;
     this.props.onFilterChange(newFilter);
   }
 
@@ -106,8 +110,8 @@ class FilterInput extends Component {
   }
 
   getAutoCompletteFoods() {
-    Array.prototype.diff = function(a) {
-      return this.filter(function(i) {
+    Array.prototype.diff = function (a) {
+      return this.filter(function (i) {
         return a.indexOf(i) < 0;
       });
     };
@@ -115,8 +119,8 @@ class FilterInput extends Component {
   }
 
   getAutoCompletteTags() {
-    Array.prototype.diff = function(a) {
-      return this.filter(function(i) {
+    Array.prototype.diff = function (a) {
+      return this.filter(function (i) {
         return a.indexOf(i) < 0;
       });
     };
@@ -136,16 +140,29 @@ class FilterInput extends Component {
     });
   };
 
-  clearFilter(){
+  clearFilter() {
     this.setState({
       ingredients: [],
       tags: [],
+      sort : 'Relevans',
       searchText: ''
     });
     let newFilter = this.props.filter;
     newFilter.ingredients = [];
     newFilter.tags = [];
+    newFilter.sort = 'Relevans';
+    
     this.props.onFilterChange(newFilter);
+  }
+  handleNewSort(value){
+    this.setState({
+      sort : value
+    });
+    let newFilter = this.props.filter;
+    newFilter.sort = value;
+
+    this.props.onFilterChange(newFilter);
+    
   }
 
   handleNewRequest = (searchText) => {
@@ -188,12 +205,16 @@ class FilterInput extends Component {
         </div>
         <AutoComplete ref="filterSearchbar" searchText={this.state.searchText} floatingLabelText="Sök ingredienser & preferenser. T.ex. Ägg, Bacon, Lättlagat" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.handleUpdateInputText} dataSource={searchables}
           onNewRequest={this.handleNewRequest} maxSearchResults={5} fullWidth={true} />
-          {chips.length > 0 ? <FlatButton label="Rensa sökning"
+        {chips.length > 0 ?
+           <FlatButton label="Rensa sökning"
             className="filter-clear-btn"
             onTouchTap={this.clearFilter}
             secondary={false}
-            icon={<ClearIcon/>}
-            /> : ''} 
+            icon={<ClearIcon />}
+          />
+          : ''}
+          <Sort onChange={this.handleNewSort} value={this.state.sort}/>
+
       </div>
     );
   }
