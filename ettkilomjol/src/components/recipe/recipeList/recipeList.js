@@ -173,12 +173,13 @@ class RecipeList extends Component {
         let easterEgg = false;
         //filtrera bort alla recipt  som inte ska vara med
         if (this.props.filter.tags.indexOf("Gryta") > -1 &&
-            this.props.filter.tags.indexOf("Fest") > -1 &&
+            this.props.filter.tags.indexOf("Påsk") > -1 &&
             this.props.filter.tags.indexOf("Hemmagjord") > -1 &&
             this.props.filter.tags.indexOf("Mustig") > -1 &&
             this.props.filter.tags.length === 4 &&
             this.props.filter.ingredients.indexOf("Sojabönor") > -1 &&
-            this.props.filter.ingredients.length === 1) {
+            this.props.filter.ingredients.indexOf("Ägg") > -1 &&
+            this.props.filter.ingredients.length === 2) {
             easterEgg = true;
         }
         for (let i = 0; i < l; i++) {
