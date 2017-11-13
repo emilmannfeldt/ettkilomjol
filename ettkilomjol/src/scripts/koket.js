@@ -76,7 +76,7 @@ nightmare
             $('.category-touch-scroll .btn.green-btn.category').each(function () {
               let t = $(this).text().split('/');
               for (let i = 0; i < t.length; i++) {
-                tags[t[i].charAt(0).toUpperCase() + t[i].slice(1)] = true;
+                tags[t[i].charAt(0).toUpperCase() + t[i].slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
               }
             })
             recipe.tags = tags;

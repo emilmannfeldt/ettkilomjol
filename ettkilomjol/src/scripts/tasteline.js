@@ -950,6 +950,7 @@ nightmare
                                 t = t + "FAILEDTAG";
                             }
                             tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
+                            
 
                         })
                         recipe.tags = tags;
