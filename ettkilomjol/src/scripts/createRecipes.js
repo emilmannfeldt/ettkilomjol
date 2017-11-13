@@ -37,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename= "ica/ICA-middag-fransk-2017-11-12";
+let filename= "tasteline/tasteline-9-2017-11-13";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
