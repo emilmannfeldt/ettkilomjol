@@ -37,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename= "tasteline/tasteline-9-2017-11-13";
+let filename = "koket/senaste-2017-11-16";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -96,7 +96,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 //ta bort bild
 //skapa night2.js för ica.se
 function createRecipes() {
-    fs.readFile('C:/react/'+filename+'.json', 'utf8', function (err, data) {
+    fs.readFile('C:/react/' + filename + '.json', 'utf8', function (err, data) {
         if (err) {
             return console.log(err);
         }
@@ -104,13 +104,93 @@ function createRecipes() {
 
         let nrOfRecipesCreated = 0;
 
+
+
         for (let i = 0; i < result.length; i++) {
             let recipe = result[i];
+
             let msg = validateRecipe(recipe);
             if (msg.cause.length > 0) {
                 log.push(msg);
                 continue;
             }
+            //time temporary
+/*             if (recipe.source.indexOf("www.ica.se") > -1) {
+                let timeString = recipe.time;
+                if (timeString.indexOf("MIN") > -1) {
+                    recipe.time = timeString.split(" ")[0] - 0;
+                } else if (timeString.indexOf("TIM")) {
+                    let parts = timeString.split(" ")[0].split("-");
+                    if (parts.length === 1) {
+                        recipe.time = (timeString.split(" ")[0] - 0)*60;
+                    } else {
+                        recipe.time = (((parts[0] - 0) + (parts[1] - 0)) / 2) * 60;
+                    }
+                } else {
+                    log.push("kunde inte förstå time ICA:" + recipe.time + ": recipe:" + recipe.source);
+                    continue;
+                }
+
+            } else if (recipe.source.indexOf("www.koket.se") > -1) {
+                let timenr = 0;
+                let timeString = recipe.time;
+                parts = timeString.replace("ca", '').replace(",", ".").trim().split(" ");
+                for (let j = 0; j < parts.length; j++) {
+                    if (Number.isInteger(parts[j] - 0) || parts[j].indexOf(".") > -1) {
+                        if (!parts[j + 1] || parts[j + 1].indexOf("min") > -1 || parts[j + 1].indexOf("m") > -1) {
+                            timenr += parts[j] - 0;
+                        } else if (parts[j + 1].indexOf("dagar") > -1 || parts[j + 1].indexOf("dygn") > -1) {
+                            timenr += parts[j] * 60 * 24;
+                        } else if (parts[j + 1].indexOf("h") > -1) {
+                            timenr += parts[j] * 60;
+                        } else {
+                            log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
+                            continue;
+                        }
+                        j++;
+                    } else {
+                        if (parts[j].indexOf("-") > -1) {
+                            let nrparts = parts[j].split("-");
+                            if (!parts[j + 1] || parts[j + 1].indexOf("m") > -1 || parts[j + 1].indexOf("min") > -1) {
+                                timenr += ((nrparts[0] - 0) + (nrparts[1] - 0)) / 2;
+                            } else if (parts[j + 1].indexOf("h") > -1) {
+                                timenr += (((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60;
+                            } else if (parts[j + 1].indexOf("d") > -1) {
+                                timenr += ((((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60) * 24;
+                            }
+                        } else if (parts[j].indexOf("h") > -1) {
+                            timenr += (parts[j].substring(0, parts[j].indexOf("h")) - 0) * 60;
+                        } else if (parts[j].indexOf("m") > -1) {
+                            timenr += parts[j].substring(0, parts[j].indexOf("m")) - 0;
+                        } else if (parts[j].indexOf("min") > -1) {
+                            timenr += parts[j].substring(0, parts[j].indexOf("min")) - 0;
+                        } else {
+                            log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
+                            continue;
+                        }
+                    }
+                }
+                if (timenr === 0) {
+                    log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
+                    continue;
+                }
+                recipe.time = timenr;
+
+
+            } else if (recipe.source.indexOf("http://www.tasteline.com") > -1) {
+                let timeString = recipe.time;
+                if (timeString.indexOf("minut") > -1) {
+                    recipe.time = timeString.split(" ")[0] - 0;
+                } else if (timeString.indexOf("timm") > -1) {
+                    recipe.time = (timeString.split(" ")[0] - 0) * 60;
+                } else {
+                    log.push("kunde inte förstå time TASTELINE:" + recipe.time + ": recipe:" + recipe.source);
+                    continue;
+                }
+
+            } */
+
+
             recipe.ingredients = checkGrammar(recipe.ingredients);
             //continue;
             for (let f = 0; f < recipe.ingredients.length; f++) {
@@ -142,8 +222,8 @@ function createRecipes() {
                 if (recipe.tags.hasOwnProperty(property)) {
                     //remove tags that already are ingredients
                     let tag = property.charAt(0).toUpperCase() + property.slice(1);
-                    if(existingFoods.indexOf(tag)> -1){
-                        log.push("tag already exists as food: " + tag);                        
+                    if (existingFoods.indexOf(tag) > -1) {
+                        log.push("tag already exists as food: " + tag);
                         continue;
                     }
                     if (existingTags.indexOf(tag) > -1) {
@@ -177,13 +257,13 @@ function createRecipes() {
         console.log("input nr: " + result.length);
         console.log("created recipes: " + nrOfRecipesCreated);
 
-        fs.writeFile("C:/react/"+filename+"-LOG.json", JSON.stringify(log), function (err) {
+        fs.writeFile("C:/react/" + filename + "-LOG.json", JSON.stringify(log), function (err) {
             if (err) {
                 return console.log(err);
             }
             log.push("logfile saved!");
         });
-        fs.writeFile("C:/react/recipesbackup/"+filename+".json", JSON.stringify(result), function (err) {
+        fs.writeFile("C:/react/recipesbackup/" + filename + ".json", JSON.stringify(result), function (err) {
             if (err) {
                 return console.log(err);
             }

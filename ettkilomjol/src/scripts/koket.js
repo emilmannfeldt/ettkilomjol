@@ -19,18 +19,8 @@ var fs = require('fs');
 //8. kör node datachange.js här alla recept läses in till firebase från textfilen
 //set DEBUG=nightmare & node night2.js
 let urls = [
-  "https://www.koket.se/lobster-rolls-a-la-catarina",
-  "https://www.koket.se/skumtoppar-med-blabar-och-vit-choklad",
-  "https://www.koket.se/creme-brulee-med-stjarnanis-rabarber-och-lakrits",
-  "https://www.koket.se/tonfisksallad-med-kokos-vit-sparris-och-ramslok",
-  "https://www.koket.se/syditaliensk-kyckling-med-bonstomp",
-  "https://www.koket.se/ananastarta-med-honungsrostade-valnotter-och-yoghurtfrosting",
-  "https://www.koket.se/volangbard-till-tarta-se-gor",
-  "https://www.koket.se/grillat-gronsaksknyte-med-myntahummus",
-  "https://www.koket.se/grillade-potatiskroketter-med-ortsmor",
-  "https://www.koket.se/tom-sjostedts-biff-rydberg-med-senapsyoghurt"
 ];
-let filename = "koketsenasteTEST.json";
+let filename = "koket/senaste-2017-11-16.json";
 nightmare
   .goto('https://www.koket.se/mat/specialkost/raw-food')
   .evaluate(function () {
@@ -112,7 +102,51 @@ nightmare
             //time
             if (document.querySelector('.recipe-content-wrapper .cooking-time')) {
               //koket.se använder flera olika format på tid så det är inte lätt att ta ut ett generellt värde
-              recipe.time = document.querySelector('.recipe-content-wrapper .cooking-time .time').innerHTML.replace(/(\r\n|\n|\r|)/gm, "").trim();
+              let timenr = 0;
+              let timeString = document.querySelector('.recipe-content-wrapper .cooking-time .time').innerHTML.replace(/(\r\n|\n|\r|)/gm, "").trim();
+              parts = timeString.replace("ca", '').replace(",", ".").trim().split(" ");
+              for (let j = 0; j < parts.length; j++) {
+                if (Number.isInteger(parts[j] - 0) || parts[j].indexOf(".") > -1) {
+                  if (!parts[j + 1] || parts[j + 1].indexOf("min") > -1 || parts[j + 1].indexOf("m") > -1) {
+                    timenr += parts[j] - 0;
+                  } else if (parts[j + 1].indexOf("dagar") > -1 || parts[j + 1].indexOf("dygn") > -1) {
+                    timenr += parts[j] * 60 * 24;
+                  } else if (parts[j + 1].indexOf("h") > -1) {
+                    timenr += parts[j] * 60;
+                  } else {
+                    return;
+                  }
+                  j++;
+                } else {
+                  if (parts[j].indexOf("-") > -1) {
+                    let nrparts = parts[j].split("-");
+                    if (!parts[j + 1] || parts[j + 1].indexOf("m") > -1 || parts[j + 1].indexOf("min") > -1) {
+                      timenr += ((nrparts[0] - 0) + (nrparts[1] - 0)) / 2;
+                    } else if (parts[j + 1].indexOf("h") > -1) {
+                      timenr += (((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60;
+                    } else if (parts[j + 1].indexOf("d") > -1) {
+                      timenr += ((((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60) * 24;
+                    }
+                  } else if (parts[j].indexOf("h") > -1) {
+                    timenr += (parts[j].substring(0, parts[j].indexOf("h")) - 0) * 60;
+                  } else if (parts[j].indexOf("m") > -1) {
+                    timenr += parts[j].substring(0, parts[j].indexOf("m")) - 0;
+                  } else if (parts[j].indexOf("min") > -1) {
+                    timenr += parts[j].substring(0, parts[j].indexOf("min")) - 0;
+                  } else {
+                    return;
+                  }
+                }
+              }
+              if (timenr === 0) {
+                return;
+              }
+              recipe.time = timenr;
+              if (recipe.time < 25) {
+                if (!tags.hasOwnProperty('Snabbt')) {
+                  tags["Snabbt"] = true;
+                }
+              }
             }
             //ingredients
             if (document.querySelector('.recipe-column-wrapper #ingredients-component')) {
@@ -171,7 +205,7 @@ nightmare
             //lägg logik för validering i inläsningen och inte här.. om vissa saker saknas så hoppa över. om urlen redan finns hoppa över..
             //automatisera denna inläsning. 
             //Alla recept som skrivs till filen ska se likadana ut oberoende av källa.
-            if (recipe.ingredients.length === 0) {
+            if (recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1)) {
               return;
             }
             return recipe;

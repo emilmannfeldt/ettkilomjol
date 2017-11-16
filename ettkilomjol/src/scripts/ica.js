@@ -19,153 +19,8 @@ var fs = require('fs');
 //8. kör node createRecipes.js och ange namnet på filen som skapades här
 
 
-let urls =[
-    "https://www.ica.se/recept/ratatouille-med-farsk-basilika-722461/",
-    "https://www.ica.se/recept/quiche-lorraine-722388/",
-    "https://www.ica.se/recept/coq-au-vin-722339/",
-    "https://www.ica.se/recept/moules-frites-med-musselsas-722232/",
-    "https://www.ica.se/recept/coeur-de-filet-provencale-722068/",
-    "https://www.ica.se/recept/coq-au-vin-721898/",
-    "https://www.ica.se/recept/gos-a-la-mornay-721784/",
-    "https://www.ica.se/recept/torsk-med-rokt-laxbrandade-719983/",
-    "https://www.ica.se/recept/fyllda-paprikor-med-sauce-verte-719660/",
-    "https://www.ica.se/recept/ratatouille-et-cote-de-porc-719663/",
-    "https://www.ica.se/recept/bavette-et-moules-au-safran-719662/",
-    "https://www.ica.se/recept/kycklingcasserole-med-dijon-och-haricots-verts-719659/",
-    "https://www.ica.se/recept/grillad-sallad-med-sparris-ratatouille-och-mozzarella-719077/",
-    "https://www.ica.se/recept/rodvinsbraserad-griskind-med-champinjoner-718216/",
-    "https://www.ica.se/recept/sydfransk-gronsakslasagne-718200/",
-    "https://www.ica.se/recept/schnitzel-provencale-718149/",
-    "https://www.ica.se/recept/ratatouille-med-vitlokscreme-1078/",
-    "https://www.ica.se/recept/skaldjurs-och-potatisgalette-4269/",
-    "https://www.ica.se/recept/soppa-provencale-2907/",
-    "https://www.ica.se/recept/fransk-bondsoppa-med-linser-och-rokt-flask-717937/",
-    "https://www.ica.se/recept/pot-au-feu-med-rimmad-kyckling-och-ortkram-713619/",
-    "https://www.ica.se/recept/ortbiffar-med-chevrecreme-244035/",
-    "https://www.ica.se/recept/torskfile-med-graslok-och-tomatsmorsas-70/",
-    "https://www.ica.se/recept/prinsens-crepes-715572/",
-    "https://www.ica.se/recept/moule-mariniere-musslor-i-vitt-vin-5148/",
-    "https://www.ica.se/recept/bouillabaisse-st-paul-637667/",
-    "https://www.ica.se/recept/bouillabaisse-med-apelsinaioli-och-ortkrutonger-714535/",
-    "https://www.ica.se/recept/gryta-pa-strimlat-flaskkott-och-provencalska-limabonor-657649/",
-    "https://www.ica.se/recept/biffar-med-kreolsk-sas-2590/",
-    "https://www.ica.se/recept/lammnavarin-fransk-lammgryta-713291/",
-    "https://www.ica.se/recept/kalkon-pot-au-feu-655180/",
-    "https://www.ica.se/recept/halstrad-makrill-med-ansjovisblomkal-1507/",
-    "https://www.ica.se/recept/flaskkotletter-med-senap-och-orter-2803/",
-    "https://www.ica.se/recept/fisk-med-hummer-a-larmoricaine-5117/",
-    "https://www.ica.se/recept/getostfyllda-lammfarsbiffar-med-ratatouille-1250/",
-    "https://www.ica.se/recept/crepes-med-adelost-3513/",
-    "https://www.ica.se/recept/filets-de-porc-a-la-moutarde-flaskfile-med-senapssas-5147/",
-    "https://www.ica.se/recept/flamberad-pepparbiff-2172/",
-    "https://www.ica.se/recept/galettes-comple-med-kassler-spenat-och-agg-713491/",
-    "https://www.ica.se/recept/brummers-kalvlever-med-bercy-sas-637846/",
-    "https://www.ica.se/recept/ciderbraserad-kotlett-med-apple-och-steklok-684315/",
-    "https://www.ica.se/recept/pot-au-feu-713118/",
-    "https://www.ica.se/recept/moule-mariniere-712962/",
-    "https://www.ica.se/recept/choucroute-med-lax-och-dillgradde-595810/",
-    "https://www.ica.se/recept/pot-eu-feu-pa-kyckling-med-rotfrukter-496986/",
-    "https://www.ica.se/recept/fransk-strimmelbiff-med-adelost-426823/",
-    "https://www.ica.se/recept/festkotlett-med-bearnaisesmor-381132/",
-    "https://www.ica.se/recept/lammkotletter-med-vitlokskram-och-lokpotatis-352480/",
-    "https://www.ica.se/recept/kotletter-med-fransk-bonsallad-360103/",
-    "https://www.ica.se/recept/provencalsk-potatissallad-717368/",
-    "https://www.ica.se/recept/skaldjurspanna-50326/",
-    "https://www.ica.se/recept/blakokt-regnbage-med-bladruvsas-1233/",
-    "https://www.ica.se/recept/vegogryta-fran-medelhavet-369475/",
-    "https://www.ica.se/recept/sydfranska-gronsaker-med-fisk-och-citron-668662/",
-    "https://www.ica.se/recept/sydfransk-kycklinggryta-713323/",
-    "https://www.ica.se/recept/ugnsbakad-sej-under-orttacke-med-ratatouille-714101/",
-    "https://www.ica.se/recept/sydfransk-lammlasagne-584423/",
-    "https://www.ica.se/recept/vegobouillabaisse-715262/",
-    "https://www.ica.se/recept/crepes-med-notter-och-bar-712550/",
-    "https://www.ica.se/recept/provensalsk-rotfruktssoppa-454032/",
-    "https://www.ica.se/recept/fransk-kottgryta-714282/",
-    "https://www.ica.se/recept/sydfransk-fisksoppa-713029/",
-    "https://www.ica.se/recept/rulle-pa-flask-lamm-och-linser-2019/",
-    "https://www.ica.se/recept/medelhavsfisk-714870/",
-    "https://www.ica.se/recept/fransk-gronsaksgryta-med-veggobiffar-663031/",
-    "https://www.ica.se/recept/grillad-kalkonfile-med-ratatoille-716120/",
-    "https://www.ica.se/recept/grillad-ryggbiff-med-sydfransk-bruschetta-715288/",
-    "https://www.ica.se/recept/medelhavsinspirerad-fiskgryta-380632/",
-    "https://www.ica.se/recept/fransk-ciderkyckling-med-varm-quinoasallad-717220/",
-    "https://www.ica.se/recept/primorsallad-med-varmrokt-lax-717532/",
-    "https://www.ica.se/recept/gratinee-a-loignon-gratinerad-loksoppa-5143/",
-    "https://www.ica.se/recept/egen-majonnas-713014/",
-    "https://www.ica.se/recept/vinbrasserad-tupp-coq-au-vin-717256/",
-    "https://www.ica.se/recept/kotlett-meuniere-med-romanesco-717323/",
-    "https://www.ica.se/recept/minutbiff-med-potatispure-aligot-och-bacon-717279/",
-    "https://www.ica.se/recept/chevrepotatisgratang-4199/",
-    "https://www.ica.se/recept/potatispate-bla-congo-162919/",
-    "https://www.ica.se/recept/klassiska-vinkokta-musslor-716893/",
-    "https://www.ica.se/recept/torsk-och-potatisbrandade-med-rokta-musslor-716928/",
-    "https://www.ica.se/recept/pumpapistou-och-halloumipasta-716927/",
-    "https://www.ica.se/recept/prinsens-crepes-716875/",
-    "https://www.ica.se/recept/oxfile-provencale-med-potatisbakelse-svamp-och-persiljekram-458618/",
-    "https://www.ica.se/recept/tonfisk-med-sardellvinagrett-och-nicoisegronsaker-380378/",
-    "https://www.ica.se/recept/langkokt-lammstek-i-olivolja-595581/",
-    "https://www.ica.se/recept/file-med-sydfranskt-gronsaksflarn-och-basilikasas-713277/",
-    "https://www.ica.se/recept/rostade-rodbetor-med-pocherat-agg-flask-och-getostdressing-714056/",
-    "https://www.ica.se/recept/grillad-entrecote-med-farsk-lok-haricots-verts-brynt-smor-och-dragon-715101/",
-    "https://www.ica.se/recept/kalkon-bourguignon-687782/",
-    "https://www.ica.se/recept/biff-provencale-med-tomater-650007/",
-    "https://www.ica.se/recept/citron-och-timjankyckling-i-lergryta-713396/",
-    "https://www.ica.se/recept/fransk-fisksoppa-715780/",
-    "https://www.ica.se/recept/fiskgratang-provencale-715722/",
-    "https://www.ica.se/recept/fransk-flaskgryta-med-senapssting-714312/",
-    "https://www.ica.se/recept/boeuf-bourguignon-med-foliebakade-gulbetor-714295/",
-    "https://www.ica.se/recept/torsk-nicoise-715556/",
-    "https://www.ica.se/recept/fransk-loksoppa-714748/",
-    "https://www.ica.se/recept/varm-agg-potatissallad-med-bacon-5308/",
-    "https://www.ica.se/recept/torskgratang-a-la-medelhavet-251/",
-    "https://www.ica.se/recept/lammfarsgratang-med-provencalska-gronsaker-91/",
-    "https://www.ica.se/recept/franska-omeletter-med-bonfras-370420/",
-    "https://www.ica.se/recept/fransk-appelomelett-4165/",
-    "https://www.ica.se/recept/falukorv-med-bocuses-makaronigratang-2726/",
-    "https://www.ica.se/recept/gratang-med-getost-2536/",
-    "https://www.ica.se/recept/risotto-med-omelettrullar-4874/",
-    "https://www.ica.se/recept/viltconsomme-med-svampfyllda-ravioli-344855/",
-    "https://www.ica.se/recept/fransk-soppa-2882/",
-    "https://www.ica.se/recept/franska-fyllda-tomater-675715/",
-    "https://www.ica.se/recept/skinkgryta-provencale-352063/",
-    "https://www.ica.se/recept/burgundisk-kyckling-1815/",
-    "https://www.ica.se/recept/kalvfrikasse-med-sparris-612693/",
-    "https://www.ica.se/recept/vinkokta-musslor-med-vitloksbrod-41/",
-    "https://www.ica.se/recept/fransk-lantgryta-604917/",
-    "https://www.ica.se/recept/fiskgryta-a-la-provencale-4560/",
-    "https://www.ica.se/recept/pot-au-feu-pa-kyckling-453589/",
-    "https://www.ica.se/recept/coq-au-vin-pa-kycklingfile-5111/",
-    "https://www.ica.se/recept/burgundisk-kottgryta-5129/",
-    "https://www.ica.se/recept/fransk-potatis-och-musselpanna-352321/",
-    "https://www.ica.se/recept/lattlagad-choucroute-5114/",
-    "https://www.ica.se/recept/eves-tomattarte-302613/",
-    "https://www.ica.se/recept/quiche-lorraine-870/",
-    "https://www.ica.se/recept/helstekt-entrecote-med-gronpeppar-och-citron-692647/",
-    "https://www.ica.se/recept/duchessetoppar-713057/",
-    "https://www.ica.se/recept/frise-azur-med-rokt-fisk-2878/",
-    "https://www.ica.se/recept/fransk-fiskbullssallad-2876/",
-    "https://www.ica.se/recept/burgundisk-oxfile-m-rotfruktspytt-3483/",
-    "https://www.ica.se/recept/klassisk-fransk-pumpasoppa-322367/",
-    "https://www.ica.se/recept/stekt-ankbrost-689152/",
-    "https://www.ica.se/recept/medelhavssoppa-289/",
-    "https://www.ica.se/recept/loksoppa-med-osttoast-374/",
-    "https://www.ica.se/recept/loksoppa-i-lergryta-411/",
-    "https://www.ica.se/recept/potatiskaka-med-getost-1218/",
-    "https://www.ica.se/recept/ljummen-korv-och-potatissallad-2729/",
-    "https://www.ica.se/recept/kycklingpate-268278/",
-    "https://www.ica.se/recept/confiterad-griskind-713275/",
-    "https://www.ica.se/recept/fransk-bondsallad-med-fiskpinnar-510343/",
-    "https://www.ica.se/recept/tapenadspatta-pa-plommontomathalvor-296861/",
-    "https://www.ica.se/recept/bondkyckling-med-potatis-rosmarin-och-vitlok-518781/",
-    "https://www.ica.se/recept/chorizo-med-fransk-potatissallad-253544/",
-    "https://www.ica.se/recept/biff-provencale-med-tomater-713124/",
-    "https://www.ica.se/recept/farserad-lammstek-med-champinjoner-1298/",
-    "https://www.ica.se/recept/annas-ostgratinerade-lok-och-potatissoppa-275462/",
-    "https://www.ica.se/recept/baconlindade-kycklinglarfile-med-barigoulekokta-rotfrukter-714061/",
-    "https://www.ica.se/recept/kyckling-cordon-bleu-med-fransk-sallad-637946/",
-    "https://www.ica.se/recept/lammgrillare-med-rotfrukter-i-dillpistou-714062/"
-  ];
-let filename = "ica/ICA-middag-fransk-2017-11-12.json";
+let urls =  [];
+let filename = "ica/TESTICA-middag-fransk-2017-11-12.json";
 
 nightmare
     .goto('https://www.ica.se/recept')
@@ -225,18 +80,10 @@ nightmare
                             recipe.description = document.querySelector('.recipepage p.recipe-preamble').innerHTML.replace(/(\r\n|\n|\r|<[^>]*>)/gm, "").replace(/  +/g, ' ').trim();
                         }
                         //time and difficulty
-                        if (document.querySelector('.recipepage .recipe-header__difficulty')) {
-                            let timeDiff = document.querySelector('.recipepage .recipe-header__difficulty').innerHTML.replace(/(\r\n|\n|\r|<[^>]*>)/gm, "").trim().split(" | ");
-                            let time = timeDiff[0];
+                        if (document.querySelector('.recipepage .recipe-meta.recipe-meta--header')) {
+                            let timeDiff = document.querySelector('.recipepage .recipe-meta.recipe-meta--header').innerHTML.replace(/(\r\n|\n|\r|<[^>]*>)/gm, "").trim().split(" | ");
                             let diff = timeDiff[1];
-                            let timeAmount = time.split(" ")[0];
-                            let timeUnit = time.split(" ")[1];
-                            if (timeUnit === "MIN" && timeAmount.split("-")[0] < 30 && (!timeAmount.split("-")[1] || timeAmount.split("-")[1] < 30)) {
-                                if (!tags.hasOwnProperty('Snabbt')) {
-                                    tags["Snabbt"] = true;
-                                }
-                            }
-                            recipe.time = time;
+                            //diff
                             if (diff === "Enkel") {
                                 recipe.level = 1;
                             } else if (diff === "Medel") {
@@ -245,6 +92,25 @@ nightmare
                                 recipe.level = 3;
                             } else {
                                 recipe.level = "FAILEDLEVEL"
+                            }
+                            //time
+                            let timeString = timeDiff[0];
+                            if (timeString.indexOf("MIN") > -1) {
+                                recipe.time = timeString.split(" ")[0] - 0;
+                            } else if (timeString.indexOf("TIM")) {
+                                let parts = timeString.split(" ")[0].split("-");
+                                if (parts.length === 1) {
+                                    recipe.time = (timeString.split(" ")[0] - 0) * 60;
+                                } else {
+                                    recipe.time = (((parts[0] - 0) + (parts[1] - 0)) / 2) * 60;
+                                }
+                            } else {
+                                return;
+                            }
+                            if (recipe.time < 25) {
+                                if (!tags.hasOwnProperty('Snabbt')) {
+                                    tags["Snabbt"] = true;
+                                }
                             }
                         }
                         //ingredients
@@ -256,23 +122,23 @@ nightmare
                                 let ingredient = {};
                                 let innerHtml = ingredientsDom[i].innerHTML;
                                 ingredient.amount = ingredientsDom[i].getElementsByTagName("span")[0].innerHTML.trim();
-                                if(ingredient.amount.indexOf("\/")){
+                                if (ingredient.amount.indexOf("\/")) {
                                     var y = ingredient.amount.split(' ');
-                                    if(y.length > 1){
+                                    if (y.length > 1) {
                                         var z = y[1].split('/');
                                         ingredient.amount = +y[0] + (z[0] / z[1]) + "";
                                     }
-                                    else{
+                                    else {
                                         var z = y[0].split('/');
-                                        if(z.length > 1){
-                                            ingredient.amount =z[0] / z[1] + "";
+                                        if (z.length > 1) {
+                                            ingredient.amount = z[0] / z[1] + "";
                                         }
-                                        else{
+                                        else {
                                             ingredient.amount = z[0] + "";
                                         }
                                     }
                                 }
-            
+
 
 
                                 let parts = innerHtml.slice(innerHtml.indexOf("</span>") + 7).split(" ");
@@ -348,7 +214,7 @@ nightmare
                             recipe.ingredients = ingredients;
                         }
 
-                        if (!recipe.ingredients || recipe.ingredients.length === 0) {
+                        if (!recipe.ingredients || recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1)) {
                             return;
                         }
                         return recipe;
