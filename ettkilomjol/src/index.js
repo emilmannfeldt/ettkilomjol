@@ -8,6 +8,7 @@ import * as firebase from 'firebase';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 injectTapEventPlugin();
+let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
 //browser key: AIzaSyCgKVqOu_D9jemhDwm5PC3Tll50T15OOlM
 //server key: AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8
@@ -61,7 +62,63 @@ let localIsOld = function (localVar) {
   }
   return false;
 }
+//testa mer. målet är att recipeRef.once bara ska köras första gången.
+//
+function getRecipesIndexedDB() {
+  let recipeRef = firebase.database().ref("recipes");
+  
+  let open = indexedDB.open("RecipeDatabase", 1);
+  open.onupgradeneeded = function (e) {
+    console.log("INDEXDB fanns inte")
+    var db = open.result;
+    var store = db.createObjectStore("RecipeStore"); 
+    console.log("LOADING NEW RECIPES");
+    recipeRef.once('value', function (snapshot) {
+      recipes.length = 0;
+      snapshot.forEach(function (child) {
+        recipes.push(child.val());
+        store.put(child.val());
+      });
+    });
+    localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
+  }
+  open.onsuccess = function () {
+    console.log("INDEXDB fanns")
 
+    // Start a new transaction
+    let db = open.result;
+    let tx = db.transaction("RecipeStore", "readwrite");
+    let store = tx.objectStore("RecipeStore");
+    let reloadedFromFirebase = false;
+    //if store is empty Add some data 
+    if (localIsOld('lastupdatedrecipes')) {
+      console.log("LOADING NEW RECIPES");
+      recipeRef.once('value', function (snapshot) {
+        recipes.length = 0;
+        snapshot.forEach(function (child) {
+          recipes.push(child.val());
+          store.put(child.val());
+        });
+      });
+      localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
+      reloadedFromFirebase = true;
+    }
+
+    // Query the data
+    if (!reloadedFromFirebase && recipes.length < 1) {
+      let recipedb = store.getAll();
+      recipedb.onsuccess = function () {
+        console.log(recipedb.result.length + " laddade");
+        recipes = recipedb.result;
+      };
+    }
+
+    // Close the db when the transaction is done
+    tx.oncomplete = function () {
+      db.close();
+    };
+  }
+}
 // let signOut = function() {
 //   // Sign out of Firebase.
 //   firebase.auth.signOut();
@@ -70,11 +127,13 @@ let localIsOld = function (localVar) {
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
+    getRecipesIndexedDB();
     let foodRef = firebase.database().ref("foods");
     let unitsRef = firebase.database().ref("units");
     let tagsRef = firebase.database().ref("tags");
     let usersRef = firebase.database().ref("users");
     let recipeRef = firebase.database().ref("recipes");
+
 
     if (foodNames.length < 1 || localIsOld('lastupdatedfoodnames')) {
       console.log("LOADING NEW FOODS");
