@@ -89,13 +89,15 @@ function getRecipesIndexedDB() {
 
         snapshot.forEach(function(child) {
           recipes.push(child.val());
-          let t = child.val();
-          let tx = db.transaction("RecipeStore", "readwrite");
-          let store = tx.objectStore("RecipeStore");
-          store.put(child.val());
           //första går bra att lägga till men när andra ska läggas till så är transaction finished??
           //måste jag köra transaction såhär på varje item?
         });
+
+        for(let i = 0; i<recipes.length; i++){
+          let tx = db.transaction("RecipeStore", "readwrite");
+          let store = tx.objectStore("RecipeStore");
+          store.put(recipes[i]);
+        }
         //tx.oncomplete = function() {
         //  db.close();
         //};
@@ -111,7 +113,10 @@ function getRecipesIndexedDB() {
       let recipedb = store.getAll();
       recipedb.onsuccess = function() {
         console.log(recipedb.result.length + " laddade");
-        recipes = recipedb.result;
+        for(let i = 0; i< recipedb.result.length; i++){
+          recipes.push(recipedb.result[i]);
+        }
+        //tar väldigt lång tid att komma till onsucess andra gången. Och det är endast 3-40 recept som finns i storen på getAll...
         //funkar men recipes som går in i filteredrecipescomponent är tom?
         //varför funkar det inte här men när det är helt ny store så funkar det.
         //behöver jag göra detta till en react component och använda state?

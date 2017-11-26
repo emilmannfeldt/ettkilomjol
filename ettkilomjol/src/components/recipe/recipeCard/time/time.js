@@ -8,22 +8,25 @@ class Time extends Component {
     }
 
     timeString() {
-        //let hours = Math.floor(this.props.time / 60)
-        //let minutes = this.props.time % 60;
-        //if (hours > 0) {
-        //    return hours + " h " + minutes + " m";
-        //}
-        //else {
-        //    return minutes + " m";
-        //}
-        //}
-
+        let hours = Math.floor(this.props.time / 60)
+        let minutes = this.props.time % 60;
+        if (hours > 0) {
+            if(minutes>0){
+                return hours + " h " + minutes + " m";
+            }
+            return hours + " h";
+        }
+        else {
+            return minutes + " m";
+        }
     }
+
+
     render() {
 
         return (
 
-            <div className={this.props.time ? 'recipecard-time' : 'hidden'}> <TimerIcon /> { this.props.time + " | "} </div>
+            <div className={this.props.time ? 'recipecard-time' : 'hidden'}> <TimerIcon /> {this.timeString() + " | "} </div>
 
         );
     }

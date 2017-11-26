@@ -167,6 +167,9 @@ class RecipeList extends Component {
         if(!a.time){
             return 1;
         }
+        if(a.time === b.time){
+            return a.level - b.level;
+        }
         return a.time - b.time;
     }
 
