@@ -157,11 +157,26 @@ class RecipeList extends Component {
         return b.rating - a.rating;
     }
 
+    sortOnTid(a, b) {
+        if(!b.time && !a.time){
+            return 0;
+        }
+        if(!b.time){
+            return -1;
+        }
+        if(!a.time){
+            return 1;
+        }
+        return a.time - b.time;
+    }
+
     sortRecipes(a, b) {
         if (this.props.filter.sort === 'Relevans') {
             return this.sortOnRelevans(a, b);
         } else if (this.props.filter.sort === 'Betyg') {
             return this.sortOnBetyg(a, b);
+        }else if (this.props.filter.sort === 'Snabbast'){
+            return this.sortOnTid(a, b);
         }
 
     }

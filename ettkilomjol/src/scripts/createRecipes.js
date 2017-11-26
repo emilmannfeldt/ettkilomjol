@@ -37,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "koket/senaste-2017-11-16";
+let filename = "recipesbackup/tasteline/tasteline-13-2017-11-16";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -115,7 +115,7 @@ function createRecipes() {
                 continue;
             }
             //time temporary
-/*             if (recipe.source.indexOf("www.ica.se") > -1) {
+/*              if (recipe.source.indexOf("www.ica.se") > -1) {
                 let timeString = recipe.time;
                 if (timeString.indexOf("MIN") > -1) {
                     recipe.time = timeString.split(" ")[0] - 0;
@@ -131,9 +131,9 @@ function createRecipes() {
                     continue;
                 }
 
-            } else if (recipe.source.indexOf("www.koket.se") > -1) {
+            } else if (recipe.source.indexOf("www.koket.se") > -1 && recipe.time) {
                 let timenr = 0;
-                let timeString = recipe.time;
+                let timeString = recipe.time+"";
                 parts = timeString.replace("ca", '').replace(",", ".").trim().split(" ");
                 for (let j = 0; j < parts.length; j++) {
                     if (Number.isInteger(parts[j] - 0) || parts[j].indexOf(".") > -1) {
@@ -145,7 +145,7 @@ function createRecipes() {
                             timenr += parts[j] * 60;
                         } else {
                             log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
-                            continue;
+                            break;
                         }
                         j++;
                     } else {
@@ -166,18 +166,18 @@ function createRecipes() {
                             timenr += parts[j].substring(0, parts[j].indexOf("min")) - 0;
                         } else {
                             log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
-                            continue;
+                            break;
                         }
                     }
                 }
-                if (timenr === 0) {
+                if (timenr === 0 || !Number.isInteger(timenr)) {
                     log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
                     continue;
                 }
                 recipe.time = timenr;
 
 
-            } else if (recipe.source.indexOf("http://www.tasteline.com") > -1) {
+            } else if (recipe.source.indexOf("http://www.tasteline.com") > -1 && recipe.time) {
                 let timeString = recipe.time;
                 if (timeString.indexOf("minut") > -1) {
                     recipe.time = timeString.split(" ")[0] - 0;
@@ -188,7 +188,7 @@ function createRecipes() {
                     continue;
                 }
 
-            } */
+            }  */
 
 
             recipe.ingredients = checkGrammar(recipe.ingredients);

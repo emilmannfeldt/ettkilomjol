@@ -36,6 +36,7 @@ class Sort extends Component {
             >
                 <MenuItem value={'Relevans'} primaryText="Relevans" />
                 <MenuItem value={'Betyg'} primaryText="Betyg" />
+                <MenuItem value={'Snabbast'} primaryText="Snabbast" />
             </SelectField>
         );
     }
