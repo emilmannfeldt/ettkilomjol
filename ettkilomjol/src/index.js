@@ -30,10 +30,10 @@ let units = JSON.parse(localStorage.getItem('units')) || [];
 let tagNames = JSON.parse(localStorage.getItem('tagNames')) || [];
 let users = JSON.parse(localStorage.getItem('users')) || [];
 let recipes = [];
-let MIN_USES_FOOD = 10;
+let MIN_USES_FOOD = 5;
 let MIN_USES_TAG = 4;
 
-const DAYS_TO_SAVE_LOCALSTORAGE = 2;
+const DAYS_TO_SAVE_LOCALSTORAGE = 14;
 
 // let createUser = function(email, password) {
 //   firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
@@ -131,7 +131,7 @@ function getRecipesIndexedDB() {
 //   // Sign out of Firebase.
 //   firebase.auth.signOut();
 // };
-
+//testa indexdb, funkar det? gå tillbaka till localcache... Snygga till cards
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {

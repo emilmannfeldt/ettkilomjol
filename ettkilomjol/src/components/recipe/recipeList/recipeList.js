@@ -173,6 +173,13 @@ class RecipeList extends Component {
         return a.time - b.time;
     }
 
+    sortOnAntalIngredienserAsc(a, b) {
+        if(a.ingredients.length === b.ingredients.length){
+            return this.sortOnBetyg(a, b);
+        }
+        return a.ingredients.length - b.ingredients.length;
+    }
+
     sortRecipes(a, b) {
         if (this.props.filter.sort === 'Relevans') {
             return this.sortOnRelevans(a, b);
@@ -180,6 +187,8 @@ class RecipeList extends Component {
             return this.sortOnBetyg(a, b);
         }else if (this.props.filter.sort === 'Snabbast'){
             return this.sortOnTid(a, b);
+        }else if (this.props.filter.sort === 'Ingredienser'){
+            return this.sortOnAntalIngredienserAsc(a, b);
         }
 
     }
