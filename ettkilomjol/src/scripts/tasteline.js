@@ -129,7 +129,7 @@ nightmare
                             recipe.ingredients = ingredients;
                         }
 
-                        if (!recipe.ingredients || recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1)) {
+                        if (!recipe.ingredients || recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1) || !recipe.votes || (recipe.votes && recipe.votes < 2)) {
                             return;
                         }
 

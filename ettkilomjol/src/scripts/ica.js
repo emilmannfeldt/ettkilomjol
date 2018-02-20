@@ -213,8 +213,8 @@ nightmare
                             }
                             recipe.ingredients = ingredients;
                         }
-
-                        if (!recipe.ingredients || recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1)) {
+                        //kan detta brytas ut till valideringsfunktion?
+                        if (!recipe.ingredients || recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1) || !recipe.votes || (recipe.votes && recipe.votes < 2)) {
                             return;
                         }
                         return recipe;

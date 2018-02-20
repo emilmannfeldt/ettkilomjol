@@ -34,15 +34,26 @@ firebase.auth().onAuthStateChanged(function (user) {
             console.log("fetching recipes");
 
             snapshot.forEach(function (child) {
-                urls.push(child.val().source);
+                if(child.val().votes < 2){
+                    urls.push(child.key);
+                    recipesRef.child(child.key).remove();
+                }
             });
             console.log("recipes fetched");
             //vet inte om det går att göra såhär för att läsa in sources och sen köra nightmare.
             //kanske måste fixa en .json med alla sources och läsa den
             //då blir det precis som webscrapers-scripten. kanske bara kan ta 1k itagedt. 
             console.time('someFunction');
-            updateRecipes();
+            //updateRecipes();
             console.timeEnd('someFunction');
+            fs.writeFile("C:/react/updateRating-LOG1" + urls.length + ".json", JSON.stringify(urls), function (err) {
+
+                if (err) {
+                    return console.log(err);
+                }
+
+                console.log("The file was saved!");
+            });
 
 
 

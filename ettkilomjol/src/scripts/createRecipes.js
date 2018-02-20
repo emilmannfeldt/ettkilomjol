@@ -288,7 +288,7 @@ function validateRecipe(recipe) {
             invalidIngredients++;
         }
     }
-    if ((recipe.ingredients.length / invalidIngredients) < 4) {
+    if ((recipe.ingredients.length / invalidIngredients) < 5) {
         msg.cause = "recipe contains to many wierd ingredients";
         return msg;
     }

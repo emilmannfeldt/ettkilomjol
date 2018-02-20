@@ -8,7 +8,9 @@ import Rating from './rating/rating';
 import FavoriteIcon from 'material-ui/svg-icons/action/favorite-border';
 import FlatButton from 'material-ui/FlatButton';
 
-import Ingredients from './ingredients/ingredients';
+import Ingredientlist from './ingredientlist/ingredientlist';
+import IngredientProgress from './ingredientProgress/ingredientProgress';
+
 import { Card, CardText } from 'material-ui/Card';
 
 class RecipeCard extends Component {
@@ -17,7 +19,16 @@ class RecipeCard extends Component {
   //nvänd den för att visa mer/mindre i komponenterna
   constructor(props) {
     super(props);
+    this.state = {
+      expanded: false,
+    };
+    this.toggleIngredientlist = this.toggleIngredientlist.bind(this);
+
   }
+  //if expanded visa ännu en komponent (lista med ingredienser)
+  //stäng alla andra expanded när denna blir true?
+  //det som nu är ingredients kan duppliceras till ingredientlist
+
 
   styles = {
     recipeCard: {
@@ -30,6 +41,12 @@ class RecipeCard extends Component {
     }
   };
 
+  toggleIngredientlist(){
+    this.setState({
+      expanded: !this.state.expanded,
+    });
+  }
+
   render() {
     let matchedIngredients = [];
     let missingIngredients = [];
@@ -38,7 +55,7 @@ class RecipeCard extends Component {
     for (let i = 0; i < this.props.recipe.ingredients.length; i++) {
       let name = this.props.recipe.ingredients[i].name;
       if (this.props.filter.ingredients.indexOf(name) > -1) {
-        matchedIngredients.push(name);
+        matchedIngredients.push(this.props.recipe.ingredients[i]);
       }
       else {
         missingIngredients.push(name);
@@ -51,12 +68,29 @@ class RecipeCard extends Component {
         }
       }
     }
+    function IngredientlistComponent(props) {
+      const render = props.render;
+      if (render) {
+        return (<div className="col-xs-6"><Ingredientlist ingredients={props.ingredients}/></div>);
+      } else {
+        return (<div className="hidden"/>);
+      }
+
+    }
 
     return (<div className="col-xs-12 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
       <CardText className="recipe-card-info row">
-        <div className="recipecard-title col-xs-12"><h2>
+        <div className="recipecard-title col-xs-12">
           <a target='_blank' href={this.props.recipe.source}>{this.props.recipe.title}</a>
-        </h2> </div>
+          <FlatButton
+            href="https://github.com/callemall/material-ui"
+            target="_blank"
+            label="Spara"
+            className="recipecard-save-btn"
+            secondary={true}
+            icon={<FavoriteIcon/>}
+          />
+        </div>
         <div className="col-xs-12 recipecard-author">
           <i>
             {this.props.recipe.author}
@@ -71,24 +105,16 @@ class RecipeCard extends Component {
           votes={this.props.recipe.votes}
           />
         </div>
-        <div className="col-xs-4">
-          <FlatButton
-            href="https://github.com/callemall/material-ui"
-            target="_blank"
-            label="Spara"
-            className="recipecard-save-btn"
-            secondary={true}
-            icon={<FavoriteIcon/>}
-          />
-        </div>
         <div className="col-xs-6">
           <Time time={this.props.recipe.time} />
           <Level index={this.props.recipe.level} />
         </div>
         <div className="col-xs-6">
-          <Ingredients
-            matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} />
+          <IngredientProgress
+            matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist}/>
         </div>
+        <IngredientlistComponent
+            ingredients={this.props.recipe.ingredients} render={this.state.expanded}/>
         <div className="col-xs-12">
           <Tags matchedTags={matchedTags} recipeTags={this.props.recipe.tags} recipeKey={this.props.recipe.source}/>
         </div>
