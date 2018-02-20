@@ -71,7 +71,7 @@ class RecipeCard extends Component {
     function IngredientlistComponent(props) {
       const render = props.render;
       if (render) {
-        return (<div className="col-xs-6"><Ingredientlist ingredients={props.ingredients}/></div>);
+        return (<div><Ingredientlist ingredients={props.ingredients} missing={props.missing}/></div>);
       } else {
         return (<div className="hidden"/>);
       }
@@ -80,16 +80,9 @@ class RecipeCard extends Component {
 
     return (<div className="col-xs-12 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
       <CardText className="recipe-card-info row">
-        <div className="recipecard-title col-xs-12">
-          <a target='_blank' href={this.props.recipe.source}>{this.props.recipe.title}</a>
-          <FlatButton
-            href="https://github.com/callemall/material-ui"
-            target="_blank"
-            label="Spara"
-            className="recipecard-save-btn"
-            secondary={true}
-            icon={<FavoriteIcon/>}
-          />
+        <div className="recipecard-title col-xs-12"><h2>
+          <a target='_blank' href={this.props.recipe.source}>{this.props.recipe.title}</a></h2>
+          
         </div>
         <div className="col-xs-12 recipecard-author">
           <i>
@@ -98,6 +91,11 @@ class RecipeCard extends Component {
             {this.props.recipe.created ? ' - ' + this.props.recipe.created : ''}
           </i>
         </div>
+        <FlatButton
+            label="Spara"
+            className="recipecard-save-btn"
+            secondary={true}
+            icon={<FavoriteIcon/>}/>
         <div className="col-xs-12 recipecard-description">{this.props.recipe.description} </div>
         <div className="col-xs-8">
           <Rating
@@ -113,8 +111,10 @@ class RecipeCard extends Component {
           <IngredientProgress
             matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist}/>
         </div>
+        <div className="col-md-6 col-xs-12 ingredient-list">
         <IngredientlistComponent
-            ingredients={this.props.recipe.ingredients} render={this.state.expanded}/>
+            ingredients={this.props.recipe.ingredients} missing={missingIngredients} render={this.state.expanded}/>
+        </div>
         <div className="col-xs-12">
           <Tags matchedTags={matchedTags} recipeTags={this.props.recipe.tags} recipeKey={this.props.recipe.source}/>
         </div>

@@ -34,8 +34,8 @@ class IngredientProgress extends Component {
 <FlatButton onTouchTap={this.props.toggleIngredientlist}
             target="_blank"
             label="Se ingredienser"
-            className="recipecard-save-btn"
-            secondary={true}
+            className="recipecard-expand-btn"
+            primary={true}
             icon={<ShoppingBasketIcon/>}
           />
     </div>);

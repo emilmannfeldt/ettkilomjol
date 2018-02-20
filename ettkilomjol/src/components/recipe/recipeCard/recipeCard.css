@@ -32,17 +32,9 @@
 }
 
 .recipecard-title {
-  font-size: 2.4rem;
+  font-size: 12;
   text-align: center;
   text-overflow: ellipsis;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  
-
-}
-.recipecard-title a {
-  margin-left: 9.7rem;
-
 }
 
 .recipecard-author {
@@ -66,7 +58,7 @@
   text-transform: none !important;
 } 
 .recipecard-save-btn{
-  float: right;
+  float: right;  
 } 
 .save-icon__label {
   padding-left: 8px;
@@ -95,11 +87,20 @@
 h2{
   font-size: 2.4rem;
 }
+.ingredient-list{
+  float:right;
+}
 @media (max-width: 767px) {
   h2 {
     font-size: 2rem;
-  }
+  } 
 }
+@media (min-width: 1200px) {
+  .recipecard-save-btn{
+    margin-top: -7rem !important;
+  } 
+}
+
 
 /* save buton
 border: 1px solid #e1e1dc;
