@@ -34,10 +34,10 @@ firebase.auth().onAuthStateChanged(function (user) {
             console.log("fetching recipes");
 
             snapshot.forEach(function (child) {
-                if(child.val().votes < 2){
-                    urls.push(child.key);
-                    recipesRef.child(child.key).remove();
-                }
+                //if(child.val().source.indexOf("tastelineasdfdfsfsdf.com")> -1){
+                  //  urls.push(child.val().source);
+                    //recipesRef.child(child.key).remove();
+                //}
             });
             console.log("recipes fetched");
             //vet inte om det går att göra såhär för att läsa in sources och sen köra nightmare.

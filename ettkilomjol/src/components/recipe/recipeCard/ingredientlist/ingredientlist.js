@@ -50,6 +50,8 @@ class Ingredientlist extends Component {
       let missing = props.missing;
       //försöker sortra så att de ingredienser som saknas hamnar sists/först den lyckas flytta men inte tillräckligt bra
       //https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value-in-javascript
+      //väldigt många ingredienser ser ut som "1 odefinierad Olja"
+      //ser ut att bli "amount 1 och unit oidentifierad om det bara finns ett namn"
       let prev = ingredients[0].name;
       for(let i = 0; i<ingredients.length; i++){
           ingredients[i].missing=missing.indexOf(ingredients[i].name) > -1;
