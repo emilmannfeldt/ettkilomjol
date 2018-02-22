@@ -172,6 +172,12 @@ nightmare
                     }
                   }
                 }
+                if(ingredient.amount.trim()==""){
+                  delete ingredient.amount;
+                }
+                if(ingredient.unit.trim()==""){
+                    delete ingredient.unit;
+                }
                 ingredientNames.push(ingredient.name);
                 ingredients.push(ingredient);
               }
@@ -205,7 +211,7 @@ nightmare
             //lägg logik för validering i inläsningen och inte här.. om vissa saker saknas så hoppa över. om urlen redan finns hoppa över..
             //automatisera denna inläsning. 
             //Alla recept som skrivs till filen ska se likadana ut oberoende av källa.
-            if (recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1) || !recipe.votes || (recipe.votes && recipe.votes < 2)) {
+            if (recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1)) {
               return;
             }
             return recipe;

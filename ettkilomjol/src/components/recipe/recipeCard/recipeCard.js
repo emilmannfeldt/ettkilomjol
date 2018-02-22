@@ -23,6 +23,8 @@ class RecipeCard extends Component {
       expanded: false,
     };
     this.toggleIngredientlist = this.toggleIngredientlist.bind(this);
+    this.closeIngredientlist = this.closeIngredientlist.bind(this);
+
 
   }
   //if expanded visa ännu en komponent (lista med ingredienser)
@@ -44,6 +46,12 @@ class RecipeCard extends Component {
   toggleIngredientlist(){
     this.setState({
       expanded: !this.state.expanded,
+    });
+  }
+
+  closeIngredientlist(){
+    this.setState({
+      expanded: false,
     });
   }
 

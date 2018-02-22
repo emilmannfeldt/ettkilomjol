@@ -32,8 +32,8 @@ let users = JSON.parse(localStorage.getItem('users')) || [];
 //möjligt att jag i framtiden bygger om så att det finns "searchableRecipe" som bara innehåller de sökbara attributen. Ingredienser, tags, time, level, och sen körs frågor till firebase för att hämta hela recpeten för de som blir träff.
 // Kan dock bli mer krävande i mb/user?
 let recipes = [];
-let MIN_USES_FOOD = 2;
-let MIN_USES_TAG = 5;
+let MIN_USES_FOOD = 3;
+let MIN_USES_TAG = 6;
 
 const DAYS_TO_SAVE_LOCALSTORAGE = 14;
 

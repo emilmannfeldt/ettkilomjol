@@ -28,7 +28,7 @@ class FilterInput extends Component {
     chipWrapper: {
       display: 'flex',
       flexWrap: 'wrap',
-    },
+    }
   };
 
   handleChange() {
@@ -203,8 +203,8 @@ class FilterInput extends Component {
         <div className="chip-wrapper">
           {chips}
         </div>
-        <AutoComplete ref="filterSearchbar" searchText={this.state.searchText} floatingLabelText="Sök ingredienser & preferenser. T.ex. Ägg, Bacon, Lättlagat" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.handleUpdateInputText} dataSource={searchables}
-          onNewRequest={this.handleNewRequest} maxSearchResults={5} fullWidth={true} />
+        <AutoComplete ref="filterSearchbar" searchText={this.state.searchText} floatingLabelText="Sök ingredienser & preferenser" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.handleUpdateInputText} dataSource={searchables}
+          onNewRequest={this.handleNewRequest} maxSearchResults={6} fullWidth={true}/>
         {chips.length > 0 ?
            <FlatButton label="Rensa sökning"
             className="filter-clear-btn"

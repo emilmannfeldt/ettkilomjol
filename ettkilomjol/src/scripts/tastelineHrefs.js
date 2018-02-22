@@ -9,21 +9,22 @@ var fs = require('fs');
 
 
 //ta fram urls genom att:
-//1. skapa ett script för att gå igenom alla http://www.tasteline.com/recept/?sida=2#sok där sida ökas på. Spara ner href från varje sida till en fil
-//2. paste in i urls
-//3. Sätt filename enligt "TASTELINE-RECEPTSRC-DATE.json"
-//4. kör node set DEBUG=nightmare & node tasteline.js
-//5. kör node createRecipes.js och ange namnet på filen som skapades här
+//1. Kolla vilka sidor under http://www.tasteline.com/recept/?sida=2303#sok som är aktuella
+//   Nya recept hamnar på de första sidorna sorterat på "bäst träff". Kolla detta ganeom att se vilken den senaste max sidan var här nedan. kolla vilken som är maxsidan nu. 
+//   Mellanskillnaden av detta t.ex. 10 så ska söksida 1-10 köras här nedan. Kolla extra att den senaste nyaste hrefen är med på sidan som det körs till eller sidan efter.
+//2. Hoppa alltid över första sidan då det inte hunnit fått betyg, av samma anledning köra igenom lite överlappande för att se om man fångar upp något receipt som fått betyg som inte hade betyg senast.
+//2303 i max now
+// antal recept 27625
 
-//2285 i max now
+//2-100 kan köras en gång i månaden
 let urls = [
 ];
-for (let i = 2100; i < 2286; i++) {
+for (let i = 2; i < 100; i++) {
     urls.push('http://www.tasteline.com/recept/?sida=' + i + '#sok');
 }
 
 
-let filename = "tasteline-hrefs-21-2286.json";
+let filename = "Newtasteline-hrefs-10-2018-02-22.json";
 
 nightmare
     .goto('http://www.tasteline.com/recept/')

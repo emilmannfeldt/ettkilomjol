@@ -1,9 +1,6 @@
-.ingredient-badge {
-    padding: 16px 16px 0px 0px !important;
-  }
 .add-shopingcart-btn button{
   float:right;
 }
-.matched-ingredients-list {}
-
-.missing-ingredients-list {}
+.ingredient-text{
+  margin-top:1em;
+}

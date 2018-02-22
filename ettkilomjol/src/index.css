@@ -3,6 +3,7 @@
 }
 .app-stats {
   opacity: 0.5;
+  text-align:right;
 }
 label{
   font-weight: normal;

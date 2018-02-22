@@ -37,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "tasteline/tasteline-1-2018-02-21";
+let filename = "koket/koket-senaste-2017-10-22";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -109,10 +109,19 @@ function createRecipes() {
         for (let i = 0; i < result.length; i++) {
             let recipe = result[i];
 
+  
             let msg = validateRecipe(recipe);
             if (msg.cause.length > 0) {
                 log.push(msg);
                 continue;
+            }
+            for(let h = 0; h<recipe.ingredients.length; h++){
+                if(recipe.ingredients[h].unit.trim()==""){
+                    delete recipe.ingredients[h].unit;
+                }
+                if(recipe.ingredients[h].amount.trim()==""){
+                    delete recipe.ingredients[h].amount;
+                }
             }
             //time temporary
 /*              if (recipe.source.indexOf("www.ica.se") > -1) {
@@ -290,6 +299,10 @@ function validateRecipe(recipe) {
     }
     if ((recipe.ingredients.length / invalidIngredients) < 5) {
         msg.cause = "recipe contains to many wierd ingredients";
+        return msg;
+    }
+    if(!recipe.votes || (recipe.votes && recipe.votes < 2)){
+        msg.cause = "recipe has less than 2 votes";
         return msg;
     }
 

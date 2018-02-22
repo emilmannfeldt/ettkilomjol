@@ -34,7 +34,7 @@ firebase.auth().onAuthStateChanged(function (user) {
             console.log("fetching recipes");
 
             snapshot.forEach(function (child) {
-                //if(child.val().source.indexOf("tastelineasdfdfsfsdf.com")> -1){
+                //if(child.val().source.indexOf("koket.se")> -1){
                   //  urls.push(child.val().source);
                     //recipesRef.child(child.key).remove();
                 //}
