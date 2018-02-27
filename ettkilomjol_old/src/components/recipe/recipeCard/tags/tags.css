@@ -1,0 +1,22 @@
+.recipecard-tag-matched{
+    background: #4e9a5d;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: 500;
+    height: auto;
+    margin: 0 3px 6px 0;
+    padding: 6px 10px;
+    display: inline-block;
+}
+.recipecard-tag-unmatched{
+    background: #4e9a5d7a;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: 500;
+    height: auto;
+    margin: 0 3px 6px 0;
+    padding: 6px 10px;
+    display: inline-block;
+}

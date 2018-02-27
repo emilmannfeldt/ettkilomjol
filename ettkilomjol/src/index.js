@@ -1,29 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FilterableRecipeList from './components/filterableRecipeList';
 import DataChange from './scripts/dataChange';
+import App from './components/app';
 import './index.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import * as firebase from 'firebase';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-
+import {firebaseApp} from './base';
 injectTapEventPlugin();
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
 //browser key: AIzaSyCgKVqOu_D9jemhDwm5PC3Tll50T15OOlM
 //server key: AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8
 //https://stackoverflow.com/questions/35418143/how-to-restrict-firebase-data-modification
-let config = {
-  apiKey: "AIzaSyCgKVqOu_D9jemhDwm5PC3Tll50T15OOlM",
-  authDomain: "ettkilomjol-10ed1.firebaseapp.com",
-  databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
-  storageBucket: "ettkilomjol-10ed1.appspot.com",
-  messagingSenderId: "1028199106361"
-};
-if (location.hostname === 'localhost') {
-  config.apiKey = "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8";
-}
-firebase.initializeApp(config);
 
 let foodNames = JSON.parse(localStorage.getItem('foodnames')) || [];
 let units = JSON.parse(localStorage.getItem('units')) || [];
@@ -48,7 +36,7 @@ const DAYS_TO_SAVE_LOCALSTORAGE = 14;
 // }
 
 window.onload = function() {
-  firebase.auth().signInAnonymously().catch(function(error) {
+  firebaseApp.auth().signInAnonymously().catch(function(error) {
     // Handle Errors here.
 
     // ...
@@ -67,7 +55,7 @@ let localIsOld = function(localVar) {
 //testa mer. målet är att recipeRef.once bara ska köras första gången.
 //
 function getRecipesIndexedDB() {
-  let recipeRef = firebase.database().ref("recipes");
+  let recipeRef = firebaseApp.database().ref("recipes");
   let open = indexedDB.open("RecipeDatabase", 1);
   let upgraded = false;
   open.onupgradeneeded = function(e) {
@@ -135,15 +123,14 @@ function getRecipesIndexedDB() {
 // };
 //testa indexdb, funkar det? gå tillbaka till localcache... Snygga till cards
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
-firebase.auth().onAuthStateChanged(function(user) {
+firebaseApp.auth().onAuthStateChanged(function(user) {
   if (user) {
     getRecipesIndexedDB();
-    let foodRef = firebase.database().ref("foods");
-    let unitsRef = firebase.database().ref("units");
-    let tagsRef = firebase.database().ref("tags");
-    let usersRef = firebase.database().ref("users");
-    let recipeRef = firebase.database().ref("recipes");
-
+    let foodRef = firebaseApp.database().ref("foods");
+    let unitsRef = firebaseApp.database().ref("units");
+    let tagsRef = firebaseApp.database().ref("tags");
+    let usersRef = firebaseApp.database().ref("users");
+    let recipeRef = firebaseApp.database().ref("recipes");
 
     if (foodNames.length < 1 || localIsOld('lastupdatedfoodnames')) {
       console.log("LOADING NEW FOODS");
@@ -215,10 +202,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 //visa detaljer på recipe blir nog en route till /recipe med <recipe id={-Kgkgdfir24j} /> och sen i den recipe komponenten får jag göra anropp till firebase för att hämta hela receptet på det id.
 const Applicaption = () => (
   <MuiThemeProvider>
-    <div>
-      <DataChange foods={foodNames} tags={tagNames} units={units} users={users} />
-      <FilterableRecipeList tags={tagNames} foods={foodNames} recipes={recipes} />
-    </div>
+    <App foods={foodNames} tags={tagNames} units={units} users={users} recipes={recipes}></App>
   </MuiThemeProvider>
 );
 ReactDOM.render(<Applicaption />, document.getElementById('root'));

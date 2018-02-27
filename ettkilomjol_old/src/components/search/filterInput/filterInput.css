@@ -1,0 +1,6 @@
+.filter-clear-btn span{
+    text-transform: none !important;
+  } 
+.filter-clear-btn{
+  vertical-align: top;
+}
