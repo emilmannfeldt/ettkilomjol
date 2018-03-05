@@ -6,7 +6,7 @@
     width: 10.5rem;
     position: relative;
     display: inline-block;
-    margin-right: 1rem;
+    margin-right: 0.5rem;
     padding: 0;
 }
 .rating-wrapper-top {
@@ -24,3 +24,7 @@
       display: block;
       z-index: 0;
     }
+.rating-votes{
+    top: -0.1rem;
+    position: relative;
+}

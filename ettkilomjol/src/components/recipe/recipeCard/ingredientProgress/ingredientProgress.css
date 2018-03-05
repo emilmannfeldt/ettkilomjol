@@ -1,5 +1,7 @@
 .recipecard-expand-btn{
-float:Right;
+  float:Right;
+  margin-right: -1.6rem !important;
+  min-width: 16rem !important;
 }
 .recipecard-expand-btn span{
   text-transform: none !important;

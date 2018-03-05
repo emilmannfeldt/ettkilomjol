@@ -61,8 +61,8 @@ class Ingredientlist extends Component {
       let listItems;
       listItems = ingredients.map((ingredient, index) =>
         <div key={index}>
-          <div className="col-xs-10 ingredient-text">{(ingredient.amount ? ingredient.amount + " " : "") + (ingredient.unit ? ingredient.unit + " " : "") + ingredient.name}</div>
-          <div className="col-xs-2 add-shopingcart-btn">
+          <div className="col-xs-10 no-gutter ingredient-text">{(ingredient.amount ? ingredient.amount + " " : "") + (ingredient.unit ? ingredient.unit + " " : "") + ingredient.name}</div>
+          <div className="col-xs-2 no-gutter add-shopingcart-btn">
             <IconButton onTouchTap={console.log("ADDED: " + ingredient.name)} >
               {ingredient.missing ? <AddIcon /> : <DoneIcon />}
             </IconButton></div>

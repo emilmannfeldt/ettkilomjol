@@ -10,15 +10,18 @@ class Sort extends Component {
     styles = {
         menuStyle: {
             marginTop: 0,
-            
+            color: 'white',
+
         },
         root: {
             float: 'right',
             height: 60,
-            color: 'blue'
+            color: 'white',
+
         },
         floatingLabel: {
-            top: 22
+            top: 22,
+            color: 'white',
         }
     };
     handleChange = (event, index, value) => this.props.onChange(value);
@@ -30,6 +33,7 @@ class Sort extends Component {
                 selectedMenuItemStyle={{color:'rgb(0,188,212)'}}
                 floatingLabelStyle={this.styles.floatingLabel}
                 id="sortselect"
+                labelStyle={{ color: 'white' }}
                 floatingLabelText="Sortering"
                 value={this.props.value}
                 onChange={this.handleChange}

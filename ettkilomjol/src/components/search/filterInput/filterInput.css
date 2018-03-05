@@ -4,3 +4,6 @@
 .filter-clear-btn{
   vertical-align: top;
 }
+.c-autocomplete label, .c-autocomplete input {
+  color: white !important;
+}

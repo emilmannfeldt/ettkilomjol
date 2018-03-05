@@ -34,6 +34,11 @@ firebase.auth().onAuthStateChanged(function (user) {
             console.log("fetching recipes");
 
             snapshot.forEach(function (child) {
+                //skapa ett separat script för ingrediens / tag byte.
+                //input är vad som ska bytas ifrån och vad det ska bytas till samt om det gäller tags eller foods
+                //ändra glutenfritt till glutenfri
+                let recipe = child.val();
+
                 //if(child.val().source.indexOf("koket.se")> -1){
                   //  urls.push(child.val().source);
                     //recipesRef.child(child.key).remove();

@@ -1,4 +1,13 @@
 import React, { Component } from 'react';
+import './header.css';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/more-vert';
+import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import RaisedButton from 'material-ui/RaisedButton';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 
 class Header extends Component {
   constructor(props) {
@@ -23,8 +32,31 @@ class Header extends Component {
 
   render() {
     return (
-    <div>
-</div>
+      <div>
+      <div className="headerImageContainer parallax lazyloaded">
+                    <img className="lazyNoscriptActive" src="../img/food-salad-restaurant-person.jpg" id="headerimage"/>
+      </div>
+      <Toolbar>
+        <ToolbarGroup firstChild={true}>
+        <ToolbarTitle className="toolbar-title" text="Ett kilo mjöl" />
+        </ToolbarGroup>
+        <ToolbarGroup>
+          <FontIcon className="muidocs-icon-custom-sort" />
+          <ToolbarSeparator />
+          <RaisedButton className="login-btn" label="Logga in" primary={true} />
+          <IconMenu
+            iconButtonElement={
+              <IconButton touch={true}>
+                <NavigationExpandMoreIcon />
+              </IconButton>
+            }
+          >
+            <MenuItem primaryText="Kontakta mig" />
+            <MenuItem primaryText="Om applikationen" />
+          </IconMenu>
+        </ToolbarGroup>
+      </Toolbar>
+      </div>
     );
   }
 }

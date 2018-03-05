@@ -105,21 +105,21 @@ class RecipeCard extends Component {
             secondary={true}
             icon={<FavoriteIcon/>}/>
         <div className="col-xs-12 recipecard-description">{this.props.recipe.description} </div>
-        <div className="col-xs-8">
+        <div className="col-xs-12">
           <Rating
           value={this.props.recipe.rating}
           votes={this.props.recipe.votes}
           />
         </div>
-        <div className="col-xs-6">
+        <div className="col-xs-4">
           <Time time={this.props.recipe.time} />
           <Level index={this.props.recipe.level} />
         </div>
-        <div className="col-xs-6">
+        <div className="col-md-8 col-xs-12">
           <IngredientProgress
             matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist}/>
         </div>
-        <div className="col-md-6 col-xs-12 ingredient-list">
+        <div className="col-md-8 col-xs-12 ingredient-list">
         <IngredientlistComponent
             ingredients={this.props.recipe.ingredients} missing={missingIngredients} render={this.state.expanded}/>
         </div>
