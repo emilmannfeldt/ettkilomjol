@@ -8,6 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import headerImg from './food-salad-restaurant-person.jpg'
 
 class Header extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class Header extends Component {
     return (
       <div>
       <div className="headerImageContainer parallax lazyloaded">
-                    <img className="lazyNoscriptActive" src="/img/food-salad-restaurant-person.jpg" id="headerimage"/>
+                    <img className="lazyNoscriptActive" src={headerImg} id="headerimage"/>
       </div>
       <Toolbar>
         <ToolbarGroup firstChild={true}>
