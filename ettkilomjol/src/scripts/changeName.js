@@ -17,6 +17,13 @@ var nightmare = Nightmare({
     }
 })
 var fs = require('fs');
+//alla olika creme fraiche, 
+//särskrivningar, gullök/gul lök. kolla upp vad som är korrekt/flest uses/enklast att söka fram i autopsuggester
+//strimlad kycklingfile / kycklingfile? foods som har ord som "strimlad" "krossad" "tärnad" "skalad" "hackad" "sköljd" "riven" etc framför sig
+//extra koll på dessa processord? om det finns en food som heter samma fast utan processordet så använd det foodet istället? Vilka processord funkar det säkert på?
+//ost/ riven ost? 
+//fixa bug med att bilden inte hittas på githubpages. lägga img katalogen i src? eller i resource katalog brevid src?
+ 
 let changeFrom = ["glutenfritt", "glutenfria"];
 let changeTo = ["glutenfri", "glutenfri"];
 let caseSensetive = false;
