@@ -49,6 +49,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                             //GÖR DETTA I CREATE RECIPES och sen läs om alla recept från backup json. Rensa alla recept, foods och tags
                             //Idag:
                             //1. Detta tillägg till createrecipes
+                            //1.a Fixa buggarna, bilden och nan time ica
                             //2. Bild och toolbar på plats 
                             //3. formspree för kontaktformulär feedback/buggrättning/förslag/vörigt
                             //

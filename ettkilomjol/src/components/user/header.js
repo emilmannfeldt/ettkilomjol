@@ -34,7 +34,7 @@ class Header extends Component {
     return (
       <div>
       <div className="headerImageContainer parallax lazyloaded">
-                    <img className="lazyNoscriptActive" src="../food-salad-restaurant-person.jpg" id="headerimage"/>
+                    <img className="lazyNoscriptActive" src="/img/food-salad-restaurant-person.jpg" id="headerimage"/>
       </div>
       <Toolbar>
         <ToolbarGroup firstChild={true}>
