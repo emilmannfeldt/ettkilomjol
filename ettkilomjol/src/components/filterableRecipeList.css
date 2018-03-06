@@ -1,0 +1,8 @@
+.filterbar-wrapper{
+    margin-top:5rem;
+}
+@media (min-width: 1200px) {
+    .filterbar-wrapper{
+        margin-top:10rem;
+    }
+  }

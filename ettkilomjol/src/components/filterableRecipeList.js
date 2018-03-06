@@ -25,15 +25,10 @@ class FilterableRecipelist extends Component {
   render() {
     return (
       <div className="container">
-        <div className="row">
-          <div className="col-xs-12">
-            <h1></h1>
-          </div>
-        </div>
-        <div className="row">
+        <div className="row filterbar-wrapper">
           <Filterbar onUserInput={this.handleFilterInput} tags={this.props.tags} foods={this.props.foods} filter={this.state.filter} />
         </div>
-        <div className="row">
+        <div className="row recipelist-wrapper">
           <RecipeList recipes={this.props.recipes} filter={this.state.filter} maxHits={240} />
         </div>
       </div>
