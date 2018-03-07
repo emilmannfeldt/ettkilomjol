@@ -5,7 +5,7 @@ import App from './components/app';
 import './index.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {firebaseApp} from './base';
+import { firebaseApp } from './base';
 injectTapEventPlugin();
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
@@ -22,7 +22,7 @@ let users = JSON.parse(localStorage.getItem('users')) || [];
 let recipes = [];
 let MIN_USES_FOOD = 3;
 let MIN_USES_TAG = 6;
-
+let MIN_ACCEPTED_RECIPES = 17000;
 const DAYS_TO_SAVE_LOCALSTORAGE = 14;
 
 // let createUser = function(email, password) {
@@ -35,15 +35,15 @@ const DAYS_TO_SAVE_LOCALSTORAGE = 14;
 //   });
 // }
 
-window.onload = function() {
-  firebaseApp.auth().signInAnonymously().catch(function(error) {
+window.onload = function () {
+  firebaseApp.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
 
     // ...
   });
 };
 
-let localIsOld = function(localVar) {
+let localIsOld = function (localVar) {
   let yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - DAYS_TO_SAVE_LOCALSTORAGE);
   let storage = JSON.parse(localStorage.getItem(localVar)) || '';
@@ -58,14 +58,14 @@ function getRecipesIndexedDB() {
   let recipeRef = firebaseApp.database().ref("recipes");
   let open = indexedDB.open("RecipeDatabase", 1);
   let upgraded = false;
-  open.onupgradeneeded = function(e) {
+  open.onupgradeneeded = function (e) {
     upgraded = true;
     console.log("INDEXDB upgrade")
     var db = open.result;
     var store = db.createObjectStore("RecipeStore", { keyPath: "source" });
     console.log("LOADING NEW RECIPES");
   }
-  open.onsuccess = function() {
+  open.onsuccess = function () {
     console.log("INDEXDB sucess")
 
     // Start a new transaction
@@ -74,16 +74,16 @@ function getRecipesIndexedDB() {
     //if store is empty Add some data 
     if (upgraded || localIsOld('lastupdatedrecipes')) {
       console.log("LOADING NEW RECIPES");
-      recipeRef.once('value', function(snapshot) {
+      recipeRef.once('value', function (snapshot) {
         recipes.length = 0;
 
-        snapshot.forEach(function(child) {
+        snapshot.forEach(function (child) {
           recipes.push(child.val());
           //första går bra att lägga till men när andra ska läggas till så är transaction finished??
           //måste jag köra transaction såhär på varje item?
         });
 
-        for(let i = 0; i<recipes.length; i++){
+        for (let i = 0; i < recipes.length; i++) {
           let tx = db.transaction("RecipeStore", "readwrite");
           let store = tx.objectStore("RecipeStore");
           store.put(recipes[i]);
@@ -101,10 +101,26 @@ function getRecipesIndexedDB() {
       let tx = db.transaction("RecipeStore", "readwrite");
       let store = tx.objectStore("RecipeStore");
       let recipedb = store.getAll();
-      recipedb.onsuccess = function() {
+      recipedb.onsuccess = function () {
         console.log(recipedb.result.length + " laddade");
-        for(let i = 0; i< recipedb.result.length; i++){
-          recipes.push(recipedb.result[i]);
+        if (recipedb.result.length < MIN_ACCEPTED_RECIPES) {
+          console.log("Backup read from firebase:"+ recipedb.result.length);
+          recipeRef.once('value', function (snapshot) {
+            recipes.length = 0;
+            snapshot.forEach(function (child) {
+              recipes.push(child.val());
+            });
+            for (let i = 0; i < recipes.length; i++) {
+              let tx = db.transaction("RecipeStore", "readwrite");
+              let store = tx.objectStore("RecipeStore");
+              store.put(recipes[i]);
+            }
+          });
+          localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
+        } else {
+          for (let i = 0; i < recipedb.result.length; i++) {
+            recipes.push(recipedb.result[i]);
+          }
         }
         //tar väldigt lång tid att komma till onsucess andra gången. Och det är endast 3-40 recept som finns i storen på getAll...
         //funkar men recipes som går in i filteredrecipescomponent är tom?
@@ -123,7 +139,7 @@ function getRecipesIndexedDB() {
 // };
 //testa indexdb, funkar det? gå tillbaka till localcache... Snygga till cards
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
-firebaseApp.auth().onAuthStateChanged(function(user) {
+firebaseApp.auth().onAuthStateChanged(function (user) {
   if (user) {
     getRecipesIndexedDB();
     let foodRef = firebaseApp.database().ref("foods");
@@ -135,9 +151,9 @@ firebaseApp.auth().onAuthStateChanged(function(user) {
     if (foodNames.length < 1 || localIsOld('lastupdatedfoodnames')) {
       console.log("LOADING NEW FOODS");
 
-      foodRef.orderByChild("uses").once("value", function(snapshot) {
+      foodRef.orderByChild("uses").once("value", function (snapshot) {
         foodNames.length = 0;
-        snapshot.forEach(function(child) {
+        snapshot.forEach(function (child) {
           if (child.val().uses >= MIN_USES_FOOD) {
             foodNames.splice(0, 0, child.val().name);
           }
@@ -149,11 +165,11 @@ firebaseApp.auth().onAuthStateChanged(function(user) {
 
     if (units.length < 1 || localIsOld('lastupdatedunits')) {
       console.log("LOADING NEW UNITS");
-      unitsRef.once("value", function(snapshot) {
+      unitsRef.once("value", function (snapshot) {
         units.length = 0;
-        snapshot.forEach(function(child) {
-          units = Object.keys(snapshot.val()).map(function(key) { return snapshot.val()[key]; });
-          units.sort(function(a, b) {
+        snapshot.forEach(function (child) {
+          units = Object.keys(snapshot.val()).map(function (key) { return snapshot.val()[key]; });
+          units.sort(function (a, b) {
             return a.ref - b.ref;
           });
         });
@@ -164,9 +180,9 @@ firebaseApp.auth().onAuthStateChanged(function(user) {
 
     if (tagNames.length < 1 || localIsOld('lastupdatedtags')) {
       console.log("LOADING NEW TAGS");
-      tagsRef.orderByChild("uses").once("value", function(snapshot) {
+      tagsRef.orderByChild("uses").once("value", function (snapshot) {
         tagNames.length = 0;
-        snapshot.forEach(function(child) {
+        snapshot.forEach(function (child) {
           if (child.val().uses >= MIN_USES_TAG) {
             tagNames.splice(0, 0, child.val().name);
           }
@@ -178,9 +194,9 @@ firebaseApp.auth().onAuthStateChanged(function(user) {
     }
     if (users.length < 1 || localIsOld('lastupdatedusers')) {
       console.log("LOADING NEW USERS");
-      usersRef.once('value', function(snapshot) {
+      usersRef.once('value', function (snapshot) {
         users.length = 0;
-        snapshot.forEach(function(child) {
+        snapshot.forEach(function (child) {
           users.splice(0, 0, child.val());
         });
         localStorage.setItem('users', JSON.stringify(users));
