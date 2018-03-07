@@ -13,6 +13,11 @@ let foodRef = firebase.database().ref("foods");
 let unitsRef = firebase.database().ref("units");
 let tagRef = firebase.database().ref("tags");
 let recipesRef = firebase.database().ref("recipes");
+let tagsFrom = ["glutenfritt", "glutenfria"];
+let tagsTo = ["glutenfri", "glutenfri"];
+let foodsFrom = ["gul lök"];
+let foodsTo = ["gullök"];
+let caseSensetive = false;
 //AUTOMATISERA
 //börja med att merga ica.js med createrecipes.js 
 //man ska utifrån en url kunna skapa upp ett recept i databasen i ett ändå steg
@@ -37,7 +42,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "koket/koket-senaste-2017-10-22";
+let filename = "ica/ICA-middag-vegetariskt-2017-11-12";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -124,21 +129,24 @@ function createRecipes() {
                 }
             }
             //time temporary
-/*              if (recipe.source.indexOf("www.ica.se") > -1) {
+            let timeNumber;
+              if (recipe.source.indexOf("www.ica.se") > -1) {
                 let timeString = recipe.time;
                 if (timeString.indexOf("MIN") > -1) {
-                    recipe.time = timeString.split(" ")[0] - 0;
+                    timeNumber = timeString.split(" ")[0] - 0;
                 } else if (timeString.indexOf("TIM")) {
                     let parts = timeString.split(" ")[0].split("-");
                     if (parts.length === 1) {
-                        recipe.time = (timeString.split(" ")[0] - 0)*60;
+                        timeNumber = (timeString.split(" ")[0] - 0)*60;
                     } else {
-                        recipe.time = (((parts[0] - 0) + (parts[1] - 0)) / 2) * 60;
+                        timeNumber = (((parts[0] - 0) + (parts[1] - 0)) / 2) * 60;
                     }
                 } else {
                     log.push("kunde inte förstå time ICA:" + recipe.time + ": recipe:" + recipe.source);
                     continue;
                 }
+                result[i].time = timeNumber;
+                recipe.time = timeNumber;
 
             } else if (recipe.source.indexOf("www.koket.se") > -1 && recipe.time) {
                 let timenr = 0;
@@ -183,24 +191,26 @@ function createRecipes() {
                     log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
                     continue;
                 }
-                recipe.time = timenr;
-
+                timeNumber = timenr;
+                result[i].time = timeNumber;
+                recipe.time = timeNumber;
 
             } else if (recipe.source.indexOf("http://www.tasteline.com") > -1 && recipe.time) {
                 let timeString = recipe.time;
                 if (timeString.indexOf("minut") > -1) {
-                    recipe.time = timeString.split(" ")[0] - 0;
+                    timeNumber = timeString.split(" ")[0] - 0;
                 } else if (timeString.indexOf("timm") > -1) {
-                    recipe.time = (timeString.split(" ")[0] - 0) * 60;
+                    timeNumber = (timeString.split(" ")[0] - 0) * 60;
                 } else {
                     log.push("kunde inte förstå time TASTELINE:" + recipe.time + ": recipe:" + recipe.source);
                     continue;
                 }
-
-            }  */
-
+                result[i].time = timeNumber;
+                recipe.time = timeNumber;
+            }  
 
             recipe.ingredients = checkGrammar(recipe.ingredients);
+            recipe = checkSpelling(recipe);
             //continue;
             for (let f = 0; f < recipe.ingredients.length; f++) {
                 //capitalize first letter
@@ -387,4 +397,7 @@ function checkGrammar(ingredients) {
         }
     }
     return ingredients;
+}
+function checkSpelling(recipe){
+    return recipe;
 }
