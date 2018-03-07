@@ -13,11 +13,6 @@ let foodRef = firebase.database().ref("foods");
 let unitsRef = firebase.database().ref("units");
 let tagRef = firebase.database().ref("tags");
 let recipesRef = firebase.database().ref("recipes");
-let tagsFrom = ["glutenfritt", "glutenfria"];
-let tagsTo = ["glutenfri", "glutenfri"];
-let foodsFrom = ["gul lök"];
-let foodsTo = ["gullök"];
-let caseSensetive = false;
 //AUTOMATISERA
 //börja med att merga ica.js med createrecipes.js 
 //man ska utifrån en url kunna skapa upp ett recept i databasen i ett ändå steg
@@ -42,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "ica/ICA-middag-vegetariskt-2017-11-12";
+let filename = "tasteline/Newtasteline-100-2018-02-22";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -106,112 +101,105 @@ function createRecipes() {
             return console.log(err);
         }
         let result = JSON.parse(data);
-
         let nrOfRecipesCreated = 0;
-
-
-
         for (let i = 0; i < result.length; i++) {
             let recipe = result[i];
-
-  
             let msg = validateRecipe(recipe);
             if (msg.cause.length > 0) {
                 log.push(msg);
                 continue;
             }
-            for(let h = 0; h<recipe.ingredients.length; h++){
-                if(recipe.ingredients[h].unit.trim()==""){
+            for (let h = 0; h < recipe.ingredients.length; h++) {
+                if (recipe.ingredients[h].unit && recipe.ingredients[h].unit.trim() == "") {
                     delete recipe.ingredients[h].unit;
                 }
-                if(recipe.ingredients[h].amount.trim()==""){
+                if (recipe.ingredients[h].amount && recipe.ingredients[h].amount.trim() == "") {
                     delete recipe.ingredients[h].amount;
                 }
             }
             //time temporary
-            let timeNumber;
-              if (recipe.source.indexOf("www.ica.se") > -1) {
-                let timeString = recipe.time;
-                if (timeString.indexOf("MIN") > -1) {
-                    timeNumber = timeString.split(" ")[0] - 0;
-                } else if (timeString.indexOf("TIM")) {
-                    let parts = timeString.split(" ")[0].split("-");
-                    if (parts.length === 1) {
-                        timeNumber = (timeString.split(" ")[0] - 0)*60;
-                    } else {
-                        timeNumber = (((parts[0] - 0) + (parts[1] - 0)) / 2) * 60;
-                    }
-                } else {
-                    log.push("kunde inte förstå time ICA:" + recipe.time + ": recipe:" + recipe.source);
-                    continue;
-                }
-                result[i].time = timeNumber;
-                recipe.time = timeNumber;
-
-            } else if (recipe.source.indexOf("www.koket.se") > -1 && recipe.time) {
-                let timenr = 0;
-                let timeString = recipe.time+"";
-                parts = timeString.replace("ca", '').replace(",", ".").trim().split(" ");
-                for (let j = 0; j < parts.length; j++) {
-                    if (Number.isInteger(parts[j] - 0) || parts[j].indexOf(".") > -1) {
-                        if (!parts[j + 1] || parts[j + 1].indexOf("min") > -1 || parts[j + 1].indexOf("m") > -1) {
-                            timenr += parts[j] - 0;
-                        } else if (parts[j + 1].indexOf("dagar") > -1 || parts[j + 1].indexOf("dygn") > -1) {
-                            timenr += parts[j] * 60 * 24;
-                        } else if (parts[j + 1].indexOf("h") > -1) {
-                            timenr += parts[j] * 60;
+            if (recipe.time && isNaN(recipe.time)) {
+                let timeNumber;
+                if (recipe.source.indexOf("www.ica.se") > -1) {
+                    let timeString = recipe.time;
+                    console.log(recipe.source);
+                    if (timeString.indexOf("MIN") > -1) {
+                        timeNumber = timeString.split(" ")[0] - 0;
+                    } else if (timeString.indexOf("TIM")) {
+                        let parts = timeString.split(" ")[0].split("-");
+                        if (parts.length === 1) {
+                            timeNumber = (timeString.split(" ")[0] - 0) * 60;
                         } else {
-                            log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
-                            break;
+                            timeNumber = (((parts[0] - 0) + (parts[1] - 0)) / 2) * 60;
                         }
-                        j++;
                     } else {
-                        if (parts[j].indexOf("-") > -1) {
-                            let nrparts = parts[j].split("-");
-                            if (!parts[j + 1] || parts[j + 1].indexOf("m") > -1 || parts[j + 1].indexOf("min") > -1) {
-                                timenr += ((nrparts[0] - 0) + (nrparts[1] - 0)) / 2;
+                        log.push("kunde inte förstå time ICA:" + recipe.time + ": recipe:" + recipe.source);
+                        continue;
+                    }
+                    result[i].time = timeNumber;
+                    recipe.time = timeNumber;
+
+                } else if (recipe.source.indexOf("www.koket.se") > -1 && recipe.time) {
+                    let timenr = 0;
+                    let timeString = recipe.time + "";
+                    parts = timeString.replace("ca", '').replace(",", ".").trim().split(" ");
+                    for (let j = 0; j < parts.length; j++) {
+                        if (Number.isInteger(parts[j] - 0) || parts[j].indexOf(".") > -1) {
+                            if (!parts[j + 1] || parts[j + 1].indexOf("min") > -1 || parts[j + 1].indexOf("m") > -1) {
+                                timenr += parts[j] - 0;
+                            } else if (parts[j + 1].indexOf("dagar") > -1 || parts[j + 1].indexOf("dygn") > -1) {
+                                timenr += parts[j] * 60 * 24;
                             } else if (parts[j + 1].indexOf("h") > -1) {
-                                timenr += (((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60;
-                            } else if (parts[j + 1].indexOf("d") > -1) {
-                                timenr += ((((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60) * 24;
+                                timenr += parts[j] * 60;
+                            } else {
+                                log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
+                                break;
                             }
-                        } else if (parts[j].indexOf("h") > -1) {
-                            timenr += (parts[j].substring(0, parts[j].indexOf("h")) - 0) * 60;
-                        } else if (parts[j].indexOf("m") > -1) {
-                            timenr += parts[j].substring(0, parts[j].indexOf("m")) - 0;
-                        } else if (parts[j].indexOf("min") > -1) {
-                            timenr += parts[j].substring(0, parts[j].indexOf("min")) - 0;
+                            j++;
                         } else {
-                            log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
-                            break;
+                            if (parts[j].indexOf("-") > -1) {
+                                let nrparts = parts[j].split("-");
+                                if (!parts[j + 1] || parts[j + 1].indexOf("m") > -1 || parts[j + 1].indexOf("min") > -1) {
+                                    timenr += ((nrparts[0] - 0) + (nrparts[1] - 0)) / 2;
+                                } else if (parts[j + 1].indexOf("h") > -1) {
+                                    timenr += (((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60;
+                                } else if (parts[j + 1].indexOf("d") > -1) {
+                                    timenr += ((((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60) * 24;
+                                }
+                            } else if (parts[j].indexOf("h") > -1) {
+                                timenr += (parts[j].substring(0, parts[j].indexOf("h")) - 0) * 60;
+                            } else if (parts[j].indexOf("m") > -1) {
+                                timenr += parts[j].substring(0, parts[j].indexOf("m")) - 0;
+                            } else if (parts[j].indexOf("min") > -1) {
+                                timenr += parts[j].substring(0, parts[j].indexOf("min")) - 0;
+                            } else {
+                                log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
+                                break;
+                            }
                         }
                     }
+                    if (timenr === 0 || !Number.isInteger(timenr)) {
+                        log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
+                        continue;
+                    }
+                    timeNumber = timenr;
+                    result[i].time = timeNumber;
+                    recipe.time = timeNumber;
+                } else if (recipe.source.indexOf("http://www.tasteline.com") > -1 && recipe.time) {
+                    let timeString = recipe.time;
+                    if (timeString.indexOf("minut") > -1) {
+                        timeNumber = timeString.split(" ")[0] - 0;
+                    } else if (timeString.indexOf("timm") > -1) {
+                        timeNumber = (timeString.split(" ")[0] - 0) * 60;
+                    } else {
+                        log.push("kunde inte förstå time TASTELINE:" + recipe.time + ": recipe:" + recipe.source);
+                        continue;
+                    }
+                    result[i].time = timeNumber;
+                    recipe.time = timeNumber;
                 }
-                if (timenr === 0 || !Number.isInteger(timenr)) {
-                    log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
-                    continue;
-                }
-                timeNumber = timenr;
-                result[i].time = timeNumber;
-                recipe.time = timeNumber;
-
-            } else if (recipe.source.indexOf("http://www.tasteline.com") > -1 && recipe.time) {
-                let timeString = recipe.time;
-                if (timeString.indexOf("minut") > -1) {
-                    timeNumber = timeString.split(" ")[0] - 0;
-                } else if (timeString.indexOf("timm") > -1) {
-                    timeNumber = (timeString.split(" ")[0] - 0) * 60;
-                } else {
-                    log.push("kunde inte förstå time TASTELINE:" + recipe.time + ": recipe:" + recipe.source);
-                    continue;
-                }
-                result[i].time = timeNumber;
-                recipe.time = timeNumber;
-            }  
-
+            }
             recipe.ingredients = checkGrammar(recipe.ingredients);
-            recipe = checkSpelling(recipe);
-            //continue;
             for (let f = 0; f < recipe.ingredients.length; f++) {
                 //capitalize first letter
                 if (!validateIngredient(recipe.ingredients[f])) {
@@ -219,7 +207,6 @@ function createRecipes() {
                     continue;
                 }
                 let food = recipe.ingredients[f].name;
-
                 if (existingFoods.indexOf(food) > -1) {
                     let databaseRef = firebase.database().ref('foods').child(food).child('uses');
                     databaseRef.transaction(function (uses) {
@@ -236,7 +223,6 @@ function createRecipes() {
                     existingFoods.push(food);
                 }
             }
-
             for (let property in recipe.tags) {
                 if (recipe.tags.hasOwnProperty(property)) {
                     //remove tags that already are ingredients
@@ -265,17 +251,12 @@ function createRecipes() {
             nrOfRecipesCreated++;
             recipesRef.push(recipe);
             existingRecipeSources.push(recipe.source);
-            //save ingredients.name to foodRef (create if new, update uses if exists)
-            //same for tags as for foods
-            //någon validering?
-            //recipesRef.push(recipe);
         }
 
         log.push("input nr: " + result.length);
         log.push("created recipes: " + nrOfRecipesCreated);
         console.log("input nr: " + result.length);
         console.log("created recipes: " + nrOfRecipesCreated);
-
         fs.writeFile("C:/react/" + filename + "-LOG.json", JSON.stringify(log), function (err) {
             if (err) {
                 return console.log(err);
@@ -311,7 +292,7 @@ function validateRecipe(recipe) {
         msg.cause = "recipe contains to many wierd ingredients";
         return msg;
     }
-    if(!recipe.votes || (recipe.votes && recipe.votes < 2)){
+    if (!recipe.votes || (recipe.votes && recipe.votes < 2)) {
         msg.cause = "recipe has less than 2 votes";
         return msg;
     }
@@ -397,7 +378,4 @@ function checkGrammar(ingredients) {
         }
     }
     return ingredients;
-}
-function checkSpelling(recipe){
-    return recipe;
 }

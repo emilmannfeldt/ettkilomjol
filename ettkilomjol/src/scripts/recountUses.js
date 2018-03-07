@@ -20,6 +20,8 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         firebase.database().ref("tags").remove();
         firebase.database().ref("foods").remove();
+        //firebase.database().ref("recipes").remove();
+
         recipesRef.once('value', function (snapshot) {
             snapshot.forEach(function (child) {
                 recipes.push(child.val());
