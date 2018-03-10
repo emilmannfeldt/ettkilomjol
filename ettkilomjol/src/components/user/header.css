@@ -1,6 +1,6 @@
 .headerImageContainer {
     position: relative;
-    top: 5.6rem;
+    top: 0;
     left: -1px;
     right: -1px;
     overflow: hidden;
@@ -29,15 +29,30 @@ img {
     height: auto;
 }
 .login-btn{
-    min-width: 10rem;
+    min-width: 10rem !important;
 }
 .toolbar-title{
+    color: rgba(255, 255, 255, 0.9) !important;
     margin-left: 1.5rem;
+    font-weight: 600;
+    font-size: 1.5em !important;
+}
+.toolbar-more-icon{
+    color: rgba(255, 255, 255, 0.9) !important;
 }
 @media (max-width: 599px){
     .headerImageContainer {
         height: 330px;
         margin-bottom: -330px;
+    }
+    .login-btn{
+        margin-right: 0px !important;
+        margin-left: 0px !important;
+    }
+    .toolbar-more-btn{
+        width: 1rem !important;
+        padding-right: 0px !important;
+        padding-left: 0.4rem !important;
     }
 }
 @media (max-width: 979px){

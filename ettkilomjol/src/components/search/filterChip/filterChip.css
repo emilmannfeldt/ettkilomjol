@@ -11,9 +11,9 @@
   }
   
   .tag-chip span, .ingredient-chip span {
-    color: #ffffff !important;
+    color: rgba(255, 255, 255, 0.9) !important;
   }
   
   .tag-chip svg, .ingredient-chip svg {
-    fill: #ffffff !important;
+    fill: rgba(255, 255, 255, 0.9) !important;
   }

@@ -5,5 +5,5 @@
   vertical-align: top;
 }
 .c-autocomplete label, .c-autocomplete input {
-  color: white !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }

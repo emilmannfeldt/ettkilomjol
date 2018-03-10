@@ -34,8 +34,8 @@ class Header extends Component {
   render() {
     return (
       <div>
-      <div className="headerImageContainer parallax lazyloaded">
-                    <img className="lazyNoscriptActive" src={headerImg} id="headerimage"/>
+      <div className="headerImageContainer">
+                    <img src={headerImg} id="headerimage"/>
       </div>
       <Toolbar>
         <ToolbarGroup firstChild={true}>
@@ -43,12 +43,11 @@ class Header extends Component {
         </ToolbarGroup>
         <ToolbarGroup>
           <FontIcon className="muidocs-icon-custom-sort" />
-          <ToolbarSeparator />
           <RaisedButton className="login-btn" label="Logga in" primary={true} />
           <IconMenu
             iconButtonElement={
-              <IconButton touch={true}>
-                <NavigationExpandMoreIcon />
+              <IconButton touch={true} className="toolbar-more-btn">
+                <NavigationExpandMoreIcon className="toolbar-more-icon"/>
               </IconButton>
             }
           >

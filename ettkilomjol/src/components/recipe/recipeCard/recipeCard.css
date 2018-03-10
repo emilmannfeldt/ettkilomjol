@@ -39,6 +39,7 @@
 
 .recipecard-author {
   text-align: center;
+  opacity: 0.6;
 }
 .recipecard-description{
   margin-top:1rem;
@@ -48,6 +49,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: justify;
+  line-height: 1.5;
 }
 
 .recipe-card-info {
@@ -84,11 +86,11 @@
   height: 26px;
   white-space: nowrap;
 }
-h2{
-  font-size: 2.4rem;
-}
 .ingredient-list{
   float:right;
+}
+h2{
+  font-size: 1.5em;
 }
 @media (max-width: 767px) {
   h2 {

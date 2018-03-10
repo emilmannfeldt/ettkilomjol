@@ -30,7 +30,7 @@ class FilterInput extends Component {
       flexWrap: 'wrap',
     },
     whitecolor: {
-      color: 'white',
+      color: 'rgba(255, 255, 255, 0.9)',
     }
   };
 
@@ -210,7 +210,7 @@ class FilterInput extends Component {
           onNewRequest={this.handleNewRequest} maxSearchResults={6} fullWidth={true}/ >
         {chips.length > 0 ?
            <FlatButton label="Rensa sökning"
-           style={{color: 'white'}}
+           style={{color: 'rgba(255, 255, 255, 0.9)'}}
             className="filter-clear-btn"
             onTouchTap={this.clearFilter}
             secondary={false}

@@ -93,11 +93,11 @@ class RecipeCard extends Component {
           
         </div>
         <div className="col-xs-12 recipecard-author">
-          <i>
+          <span>
             {this.props.recipe.author}
             {this.props.recipe.createdFor ? ', ' + this.props.recipe.createdFor : ''}
             {this.props.recipe.created ? ' - ' + this.props.recipe.created : ''}
-          </i>
+          </span>
         </div>
         <FlatButton
             label="Spara"
