@@ -37,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "tasteline/Newtasteline-100-2018-02-22";
+let filename = "mittkok/mittkok1_2018-03-15";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
