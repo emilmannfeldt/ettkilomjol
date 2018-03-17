@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import DataChange from './scripts/dataChange';
 import App from './components/app';
 import './index.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';

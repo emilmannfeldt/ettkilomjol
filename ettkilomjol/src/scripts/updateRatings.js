@@ -178,9 +178,7 @@ function updateRecipes() {
         });
         
     console.log("done");
-    firebase.app().delete().then(function () {
-        firebase.initializeApp(config);
-    });
+
     //downloads: 2.7gb
 
 }
