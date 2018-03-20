@@ -15,6 +15,7 @@ let tagRef = firebase.database().ref("tags");
 var fs = require('fs');
 let existingFoods = [];
 let existingTags = [];
+//fixa en array med tags som ska tas bort helt? "smarrigt"
 let tagsFrom = [""];
 let tagsTo = [""];
 let foodsFrom = [""];

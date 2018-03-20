@@ -37,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "mittkok/mittkok1_2018-03-15";
+let filename = "tasteline/tasteline-all";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -108,6 +108,9 @@ function createRecipes() {
             if (msg.cause.length > 0) {
                 log.push(msg);
                 continue;
+            }
+            if(recipe.title.indexOf("&amp;") > -1){
+                recipe.title = recipe.title.replace("&amp;","&");
             }
             for (let h = 0; h < recipe.ingredients.length; h++) {
                 if (recipe.ingredients[h].unit && recipe.ingredients[h].unit.trim() == "") {
@@ -199,6 +202,7 @@ function createRecipes() {
                     recipe.time = timeNumber;
                 }
             }
+
             recipe.ingredients = checkGrammar(recipe.ingredients);
             for (let f = 0; f < recipe.ingredients.length; f++) {
                 //capitalize first letter

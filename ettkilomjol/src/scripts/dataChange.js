@@ -47,9 +47,8 @@ function runRecipes() {
   recipesRef.once('value', function (snapshot) {
     snapshot.forEach(function (child) {
       let recipe = child.val();
-      if(recipe.source.indexOf("mittkok") > -1){
-        console.log(recipe.source + ": ---->" +child.key);
-        recipesRef.child(child.key).remove();
+      if(recipe.title.indexOf("&amp;") > -1){
+        console.log(recipe.title + ": ---->" +child.key);
 
       }
 
@@ -61,7 +60,7 @@ function runRecipes() {
     snapshot.forEach(function (child) {
       let tag = child.val();
       if (tag.name && tag.name !== tag.name.charAt(0).toUpperCase() + tag.name.slice(1)) {
-        //console.log(tag.name);
+        console.log(tag.name);
         //child.remove();
       }
 
@@ -73,7 +72,7 @@ function runRecipes() {
     snapshot.forEach(function (child) {
       let food = child.val();
       if (food.name && food.name !== food.name.charAt(0).toUpperCase() + food.name.slice(1)) {
-        //console.log(food.name);
+        console.log(food.name);
 
        //child.remove();
       }

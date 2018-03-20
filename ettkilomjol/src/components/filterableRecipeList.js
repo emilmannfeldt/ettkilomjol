@@ -31,6 +31,11 @@ class FilterableRecipelist extends Component {
         <div className="row recipelist-wrapper">
           <RecipeList recipes={this.props.recipes} filter={this.state.filter} maxHits={240} />
         </div>
+        //dessa ska bli riktiga componenter som syns när inga/få recept visas. tags kanske visas hela tiden
+        <div className="popular-tags">
+        </div>
+        <div className="helper">
+        </div>
       </div>
     );
   }

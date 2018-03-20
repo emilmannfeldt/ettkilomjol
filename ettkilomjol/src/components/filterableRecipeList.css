@@ -1,6 +1,9 @@
 .filterbar-wrapper{
     margin-top:5rem;
 }
+.recipelist-wrapper{
+    min-height: 26em;
+}
 @media (min-width: 1200px) {
     .filterbar-wrapper{
         margin-top:10rem;

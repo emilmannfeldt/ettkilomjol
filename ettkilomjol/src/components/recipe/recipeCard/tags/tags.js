@@ -12,7 +12,7 @@ class Tags extends Component {
             tags.push(<span key={this.props.matchedTags[i]} className="recipecard-tag-matched">{this.props.matchedTags[i]}</span>);
         }
         for (let tag in this.props.recipeTags) {
-            if (this.props.recipeTags.hasOwnProperty(tag)) {
+            if (this.props.recipeTags.hasOwnProperty(tag) && this.props.matchedTags.indexOf(tag) < 0) {
                 tags.push(<span key={this.props.recipeKey + tag} className="recipecard-tag-unmatched">{tag}</span>);
             }
         }
