@@ -15,7 +15,7 @@ let tagRef = firebase.database().ref("tags");
 var fs = require('fs');
 let existingFoods = [];
 let existingTags = [];
-let filename = "changeName";
+let filename = "foodsoveroneuse";
 let log = [];
 let foodLoaded = false;
 let tagLoaded = false;
@@ -44,49 +44,33 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 function runRecipes() {
-  recipesRef.once('value', function (snapshot) {
-    snapshot.forEach(function (child) {
-      let recipe = child.val();
-      if(recipe.title.indexOf("&amp;") > -1){
-        console.log(recipe.title + ": ---->" +child.key);
-
-      }
-
-    });
-
-
-  });
-  tagRef.once('value', function (snapshot) {
-    snapshot.forEach(function (child) {
-      let tag = child.val();
-      if (tag.name && tag.name !== tag.name.charAt(0).toUpperCase() + tag.name.slice(1)) {
-        console.log(tag.name);
-        //child.remove();
-      }
-
-    });
-
-
-  });
+  let namel = 0;
   foodRef.once('value', function (snapshot) {
     snapshot.forEach(function (child) {
       let food = child.val();
-      if (food.name && food.name !== food.name.charAt(0).toUpperCase() + food.name.slice(1)) {
-        console.log(food.name);
+      if (food.uses > 3) {
+        if(food.name.length > namel){
+          namel = food.name.length;
+          console.log(food.name)
+        }
+        
+        let pointer = "---------------------------------------------------->"
+        pointer = pointer.substring(food.name.length);
+        log.push(food.name + pointer + food.uses);
 
        //child.remove();
       }
 
     });
-
+    fs.writeFile("C:/react/datachange" + filename + "-LOG.json", JSON.stringify(log), function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      log.push("logfile saved!");
+    });
 
   });
-  fs.writeFile("C:/react/datachange" + filename + "-LOG.json", JSON.stringify(log), function (err) {
-    if (err) {
-      return console.log(err);
-    }
-    log.push("logfile saved!");
-  });
+
 
   console.log("done");
   console.log("recipes fetched");
