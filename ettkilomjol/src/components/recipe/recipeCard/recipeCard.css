@@ -86,6 +86,9 @@
   height: 26px;
   white-space: nowrap;
 }
+.recipecard-rating{
+  padding-bottom: 1em;
+}
 .ingredient-list{
   float:right;
 }
@@ -96,6 +99,12 @@ h2{
   h2 {
     font-size: 2rem;
   } 
+}
+@media (max-width: 991px){
+  .recipecard-ingredients{
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+  }
 }
 @media (min-width: 1200px) {
   .recipecard-save-btn{

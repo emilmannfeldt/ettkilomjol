@@ -1,0 +1,16 @@
+.quick-tag{
+  margin-top: 4px !important;
+  margin-right: 4px !important;
+  background-color: rgba(76, 175, 80, 0.7) !important;
+}
+.quick-tag span{
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.quick-tags-norecipes{
+  margin-top:16em;
+}
+@media (max-width: 767px){
+  .quick-tags-norecipes{
+    margin-top:1em;
+  }
+}

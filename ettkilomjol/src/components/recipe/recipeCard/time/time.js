@@ -21,7 +21,6 @@ class Time extends Component {
         }
     }
 
-
     render() {
 
         return (

@@ -1,11 +1,15 @@
 .filterbar-wrapper{
     margin-top:5rem;
 }
-.recipelist-wrapper{
-    min-height: 26em;
+
+.popular-tags{
+    min-height: 4em;
 }
-@media (min-width: 1200px) {
+@media (min-width: 1000px) {
     .filterbar-wrapper{
         margin-top:10rem;
+    }
+    .recipelist-wrapper{
+        min-height: 14em;
     }
   }
