@@ -18,6 +18,9 @@ let existingTags = [];
 //fixa en array med tags som ska tas bort helt? "smarrigt"
 let tagsFrom = [""];
 let tagsTo = [""];
+let foodChanges = [
+    {from: "test", to: "test2"},
+];
 let foodsFrom = [""];
 let foodsTo = [""];
 let filename = "changeName";
@@ -57,15 +60,27 @@ function runRecipes() {
             let recipe = child.val();
             let changesmade = false;
             let tagsToRemove = [];
+       //     for (let i = 0; i < recipe.ingredients.length; i++) {
+       //         let ingredientName = recipe.ingredients[i].name;
+       //         if (foodsFrom.indexOf(ingredientName) > -1) {
+       //             let newFoodName = foodsTo[foodsFrom.indexOf(ingredientName)];
+       //             recipe.ingredients[i].name = newFoodName;
+       //             changesmade = true;
+       //             log.push("From food:" + ingredientName + " toFood:" + newFoodName + " src:" + recipe.source + " key:" + child.key);
+       //         }
+       //     }
             for (let i = 0; i < recipe.ingredients.length; i++) {
                 let ingredientName = recipe.ingredients[i].name;
-                if (foodsFrom.indexOf(ingredientName) > -1) {
-                    let newFoodName = foodsTo[foodsFrom.indexOf(ingredientName)];
-                    recipe.ingredients[i].name = newFoodName;
-                    changesmade = true;
-                    log.push("From food:" + ingredientName + " toFood:" + newFoodName + " src:" + recipe.source + " key:" + child.key);
+                for(let j = 0; j < foodChanges.length; j++){
+                    let change = foodChanges[i];
+                    if(change.from === ingredientName){
+                        recipe.ingredients[i].name = change.to;
+                        changesmade = true;
+                        log.push("From food:" + ingredientName + " toFood:" + newFoodName + " src:" + recipe.source + " key:" + child.key);
+                    }
                 }
             }
+
             for (let property in recipe.tags) {
                 if (recipe.tags.hasOwnProperty(property)) {
                     let tagName = property;
@@ -91,21 +106,6 @@ function runRecipes() {
                 log.push(JSON.stringify(recipe));
                 recipeRef.update(recipe);
             }
-            //if(recipe.ingredients[i].name == changeFrom){
-            //GÖR DETTA I CREATE RECIPES och sen läs om alla recept från backup json. Rensa alla recept, foods och tags
-            //Idag:
-            //1. Detta tillägg till createrecipes
-            //1.a Fixa buggarna, bilden och nan time ica. detta innan omläsning
-            //1.b fixa bug med att bara en del recept läses in från indexdb ibland. 
-            //2. Bild och toolbar på plats 
-            //3. formspree för kontaktformulär feedback/buggrättning/förslag/vörigt
-            //
-            //update name
-            //save count to know how much to add to uses to the other food objekt
-            //se till så att receptet inte redan har den som de byter till, om den redan har det så ta bara bort, lägg inte till namnet eller uses.
-            //samma sak om ett recpet har t.ex två olika changefrom som ska bytas till samma changeto. gör bara det första bytet och det andra ska bara tas bort, 1 uses + inte 2
-            //after no food left with changeFrom name. remove changeFrom from firebase and update uses on changeTo
-            //}
         });
 
         fs.writeFile("C:/react/changesLog" + filename + "-LOG.json", JSON.stringify(log), function (err) {

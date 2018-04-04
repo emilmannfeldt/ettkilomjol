@@ -15,7 +15,7 @@ let tagRef = firebase.database().ref("tags");
 var fs = require('fs');
 let existingFoods = [];
 let existingTags = [];
-let filename = "foodslessthan4uses";
+let filename = "countingrecpie";
 let log = [];
 let foodLoaded = false;
 let tagLoaded = false;
@@ -27,7 +27,9 @@ firebase.auth().onAuthStateChanged(function (user) {
       console.log("startfood");
 
       snapshot.forEach(function (child) {
-        existingFoods.splice(0, 0, child.val().name);
+        if(child.val().uses == 0){
+          existingFoods.splice(0, 0, child.val().name);
+        }
       });
       console.log("fooddone");
 
@@ -53,28 +55,34 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 function runRecipes() {
+  //script för att  hitta alla recept som har någon ingrediens med ett visst antal uses
   let namel = 0;
-  foodRef.once('value', function (snapshot) {
+  let numberRec = 0;
+  recipesRef.once('value', function (snapshot) {
+    console.log("receipes hämtade");
     snapshot.forEach(function (child) {
-      let food = child.val();
-      if (food.uses < 4) {
-        if(food.name.length > namel){
-          namel = food.name.length;
-          console.log(food.name)
+      let busted = false;
+      let recipe = child.val();
+      console.log("recipe running:" + recipe.source);
+
+      for (let i = 0; i < recipe.ingredients.length; i++) {
+        let ingredient = recipe.ingredients[i].name;
+        if(existingFoods.indexOf(ingredient) > -1 ){
+          console.log("ingredient träff:" + ingredient);
+          let pointer = "---------------------------------------------------->"
+          pointer = pointer.substring(recipe.source.length);
+          log.push(recipe.source + pointer + ingredient);
+          numberRec = numberRec +1;
+          break;
         }
-        
-        let pointer = "---------------------------------------------------->"
-        pointer = pointer.substring(food.name.length);
-        log.push(food.name + pointer + food.uses);
-
-       //child.remove();
       }
-
     });
+    console.log("recipes: " + numberRec);
     fs.writeFile("C:/react/datachange" + filename + "-LOG.json", JSON.stringify(log), function (err) {
       if (err) {
         return console.log(err);
       }
+      console.log("logilfe save")
       log.push("logfile saved!");
     });
 
