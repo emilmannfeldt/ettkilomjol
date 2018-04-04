@@ -15,26 +15,35 @@ let tagRef = firebase.database().ref("tags");
 var fs = require('fs');
 let existingFoods = [];
 let existingTags = [];
-let filename = "foodsoveroneuse";
+let filename = "foodslessthan4uses";
 let log = [];
 let foodLoaded = false;
 let tagLoaded = false;
 firebase.auth().signInAnonymously().catch(function (error) { });
 firebase.auth().onAuthStateChanged(function (user) {
+  console.log("start");
   if (user) {
     foodRef.orderByChild("uses").once("value", function (snapshot) {
+      console.log("startfood");
+
       snapshot.forEach(function (child) {
         existingFoods.splice(0, 0, child.val().name);
       });
+      console.log("fooddone");
+
       foodLoaded = true;
       if (foodLoaded && tagLoaded) {
         runRecipes();
       }
     });
     tagRef.orderByChild("uses").once("value", function (snapshot) {
+      console.log("tagstart");
+
       snapshot.forEach(function (child) {
         existingTags.splice(0, 0, child.val().name);
       });
+      console.log("tagdone");
+
       tagLoaded = true;
       if (foodLoaded && tagLoaded) {
         runRecipes();
@@ -48,7 +57,7 @@ function runRecipes() {
   foodRef.once('value', function (snapshot) {
     snapshot.forEach(function (child) {
       let food = child.val();
-      if (food.uses > 3) {
+      if (food.uses < 4) {
         if(food.name.length > namel){
           namel = food.name.length;
           console.log(food.name)

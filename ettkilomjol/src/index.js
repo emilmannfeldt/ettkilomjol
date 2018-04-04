@@ -62,53 +62,40 @@ function getRecipesIndexedDB() {
     console.log("INDEXDB upgrade")
     var db = open.result;
     var store = db.createObjectStore("RecipeStore", { keyPath: "source" });
-    console.log("LOADING NEW RECIPES");
   }
   open.onsuccess = function () {
     console.log("INDEXDB sucess")
-
-    // Start a new transaction
     let db = open.result;
     let reloadedFromFirebase = false;
-    //if store is empty Add some data 
     if (upgraded || localIsOld('lastupdatedrecipes')) {
-      console.log("LOADING NEW RECIPES");
       recipeRef.once('value', function (snapshot) {
         recipes.length = 0;
-
         snapshot.forEach(function (child) {
           recipes.push(child.val());
-          //första går bra att lägga till men när andra ska läggas till så är transaction finished??
-          //måste jag köra transaction såhär på varje item?
         });
-
+        console.log(recipes.length + " Recept laddade från firebase");
         for (let i = 0; i < recipes.length; i++) {
           let tx = db.transaction("RecipeStore", "readwrite");
           let store = tx.objectStore("RecipeStore");
           store.put(recipes[i]);
         }
-        //tx.oncomplete = function() {
-        //  db.close();
-        //};
       });
       localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
       reloadedFromFirebase = true;
     }
 
-    // Query the data
     if (!reloadedFromFirebase && recipes.length < 1) {
       let tx = db.transaction("RecipeStore", "readwrite");
       let store = tx.objectStore("RecipeStore");
       let recipedb = store.getAll();
       recipedb.onsuccess = function () {
-        console.log(recipedb.result.length + " laddade");
         if (recipedb.result.length < MIN_ACCEPTED_RECIPES) {
-          console.log("Backup read from firebase:"+ recipedb.result.length);
           recipeRef.once('value', function (snapshot) {
             recipes.length = 0;
             snapshot.forEach(function (child) {
               recipes.push(child.val());
             });
+            console.log(recipes.length + " Recept laddade från firebase pga result endast var " + recipedb.result.length);
             for (let i = 0; i < recipes.length; i++) {
               let tx = db.transaction("RecipeStore", "readwrite");
               let store = tx.objectStore("RecipeStore");
@@ -120,6 +107,7 @@ function getRecipesIndexedDB() {
           for (let i = 0; i < recipedb.result.length; i++) {
             recipes.push(recipedb.result[i]);
           }
+          console.log(recipes.length + " Recept laddade från indexedDB");
         }
         //tar väldigt lång tid att komma till onsucess andra gången. Och det är endast 3-40 recept som finns i storen på getAll...
         //funkar men recipes som går in i filteredrecipescomponent är tom?
