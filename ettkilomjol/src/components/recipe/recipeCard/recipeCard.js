@@ -64,8 +64,7 @@ class RecipeCard extends Component {
       let name = this.props.recipe.ingredients[i].name;
       if (this.props.filter.ingredients.indexOf(name) > -1) {
         matchedIngredients.push(this.props.recipe.ingredients[i]);
-      }
-      else {
+      } else {
         missingIngredients.push(name);
       }
     }

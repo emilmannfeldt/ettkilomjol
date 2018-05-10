@@ -26,7 +26,7 @@ class RecipeList extends Component {
         let ingredientHits = 0;
         for (let i = 0; i < recipeIngredients.length; i++) {
             let ing = recipeIngredients[i].name;
-            if (filterIngredients.indexOf(ing) > -1) {
+            if (filterIngredients.indexOf(ing) > -1 ) {
                 ingredientHits++;
             }
         }

@@ -300,6 +300,13 @@ function validateRecipe(recipe) {
         msg.cause = "recipe has less than 2 votes";
         return msg;
     }
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        if (recipe.ingredients[i].name==="Förp") {
+            msg.cause = "recipe has faulty ingredient name:" + recipe.ingredients.name;
+            return msg;
+        }
+    }
+
 
     //recept med många konstiga ingredienser (långa namn, siffror i namn, specialtecken i namn,)
     return msg;
