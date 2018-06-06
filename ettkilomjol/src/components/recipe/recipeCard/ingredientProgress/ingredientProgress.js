@@ -26,9 +26,8 @@ class IngredientProgress extends Component {
   };
 
   render() {
+    //här måste vi ändra så att dubbletter av ingredient namn inte räjnas dubbel träff
     let progress = this.props.matchedIngredients.length / (this.props.matchedIngredients.length + this.props.missingIngredients.length) * 100;
-    //Ingredienserna ska visas på en progress component. Klickar man på den så ska man få se exakt vilka ingredienser som finns/saknas
-    //Det ska visas under prograssbaren. Animeras ner. en rad per ingrediens där man kan välja "add uingredient"
     return (<div>
 <LinearProgress mode="determinate" value={progress} onTouchTap={this.props.toggleIngredientlist}/>
 <FlatButton onTouchTap={this.props.toggleIngredientlist}

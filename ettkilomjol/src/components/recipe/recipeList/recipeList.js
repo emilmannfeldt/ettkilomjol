@@ -27,6 +27,7 @@ class RecipeList extends Component {
         for (let i = 0; i < recipeIngredients.length; i++) {
             let ing = recipeIngredients[i].name;
             if (filterIngredients.indexOf(ing) > -1 ) {
+                //här måste vi ändra så att dubbletter av ingredient namn inte räjnas dubbel träff
                 ingredientHits++;
             }
         }
@@ -129,6 +130,7 @@ class RecipeList extends Component {
         //return 0 om de är lika
         let ingredientHitsA = 0;
         let ingredientHitsB = 0;
+        //här måste vi ändra så att dubbletter av ingredient namn inte räjnas dubbel träff
         for (let i = 0; i < a.ingredients.length; i++) {
             if (filterIngredients.indexOf(a.ingredients[i].name) > -1) {
                 ingredientHitsA++;

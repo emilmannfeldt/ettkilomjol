@@ -33,6 +33,7 @@ const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 //   // ...
 //   });
 // }
+//https://www.npmjs.com/package/react-loading-animation
 
 window.onload = function () {
   firebaseApp.auth().signInAnonymously().catch(function (error) {
