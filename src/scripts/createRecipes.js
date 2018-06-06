@@ -37,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "tasteline/tasteline-all";
+let filename = "koket/koket";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.

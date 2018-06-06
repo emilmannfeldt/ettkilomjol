@@ -64,8 +64,8 @@ function runRecipes() {
       let busted = false;
       let recipe = child.val();
       let changesmade = false;
-      if(recipe.source.indexOf("www.koket.se")>-1){
-        recipesRef.child(child.key).remove();
+      if(recipe.source.indexOf("koket")>-1){
+        //recipesRef.child(child.key).remove();
         log.push("removed:" + recipe.source);
 
       }
