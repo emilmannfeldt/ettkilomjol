@@ -64,36 +64,16 @@ function runRecipes() {
       let busted = false;
       let recipe = child.val();
       let changesmade = false;
+      if(recipe.source.indexOf("www.koket.se")>-1){
+        recipesRef.child(child.key).remove();
+        log.push("removed:" + recipe.source);
+
+      }
       console.log("recipe running:" + recipe.source);
       for (let i = 0; i < recipe.ingredients.length; i++) {
-        let ingredient = recipe.ingredients[i];
-        if (ingredient.name.startsWith("Förp ") && (!ingredient.unit || ingredient.unit === "st")) {
-          log.push("ingred changed from:" + ingredient.unit + ingredient.name);
-          recipe.ingredients[i].name = ingredient.name.substring(5).trim();
-          recipe.ingredients[i].name = recipe.ingredients[i].name.charAt(0).toUpperCase() + recipe.ingredients[i].name.slice(1);
-          recipe.ingredients[i].unit = "förp";
-          changesmade = true;
-          log.push("to:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name + "source:" + recipe.source);
-        } else if (ingredient.name.startsWith("Port ")) {
-          log.push("ingred changed from:" + ingredient.unit + ingredient.name);
-          recipe.ingredients[i].name = ingredient.name.substring(5).trim();
-          recipe.ingredients[i].name = recipe.ingredients[i].name.charAt(0).toUpperCase() + recipe.ingredients[i].name.slice(1);
-          recipe.ingredients[i].unit = "port";
-          changesmade = true;
-          log.push("to:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name + "source:" + recipe.source);
-        } else if (ingredient.name.startsWith("Skivor ")) {
-          log.push("ingred changed from:" + ingredient.unit + ingredient.name);
-          recipe.ingredients[i].name = ingredient.name.substring(7).trim();
-          recipe.ingredients[i].name = recipe.ingredients[i].name.charAt(0).toUpperCase() + recipe.ingredients[i].name.slice(1);
-          recipe.ingredients[i].unit = "Skivor";
-          changesmade = true;
-          log.push("to:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name + "source:" + recipe.source);
-        }
+     
       }
-      if (changesmade) {
-        var recipeRef = recipesRef.child(child.key);
-        recipeRef.update(recipe);
-      }
+
 
     });
     console.log("recipes: " + numberRec);

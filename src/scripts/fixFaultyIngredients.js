@@ -18,7 +18,7 @@ var fs = require('fs');
 let existingFoods = [];
 let existingTags = [];
 let units = {};
-let filename = "countingrecpie";
+let filename = "fixFaultyIngredients";
 let log = [];
 let foodLoaded = false;
 let tagLoaded = false;
@@ -88,7 +88,7 @@ function runRecipes() {
       let ingredientToMerge = {};
       let ingredientIndexesToRemove = [];
       let ingredientsToSkip = [];
-
+      let deleteRecipe = false;
       //lägg till funktion för att slå ihop dubletter av ignredienser...
       //om de har olika units så kolla om det täcks av min unit converter
       //tänk på att det kan vara tre av samma och fler till och med
@@ -162,7 +162,7 @@ function runRecipes() {
           }else if (isSameUnitScale(ingredient.unit, ingredientToMerge.unit)) {
             let mergedIngredient = mergeUnits(ingredient, ingredientToMerge);
             if(mergedIngredient && mergedIngredient.unit && mergedIngredient.amount && mergedIngredient.name){
-              ingredient = mergedIngredient;
+              recipe.ingredients[i] = mergedIngredient;
               ingredientIndexesToRemove.push(ingredientToMerge.index);
               changesmade=true;
             }
@@ -171,6 +171,9 @@ function runRecipes() {
           }
           else {
             log.push("merge error:" + ingredientToMerge.unit + " " + recipe.ingredients[i].unit + "source:" + recipe.source);
+            if(ingredientToMerge.unit && recipe.ingredients[i].unit){
+              deleteRecipe = true;
+            }
             ingredientsToSkip.push(ingredientToMerge.index);
           }
 
@@ -185,18 +188,31 @@ function runRecipes() {
           ingredientsFound.push(ingredient.name);
         }
       }
-      for (let i = ingredientIndexesToRemove.length - 1; i >= 0; --i) {
-        recipe.ingredients.splice(ingredientIndexesToRemove[i], 1);
-        //flrändringads de andra indexarna nu då? tas fel bort? måste ta i rätt ordning? högst index först?
-      }
 
       if(ingredientsToSkip.length>0){
-        log.push("---------------------------------------------------------------------------------------------");
-        log.push("DELETING recipe>" + recipe.source);
-        log.push("IngredientsToSKip:" + JSON.stringify(ingredientsToSkip))
-        log.push("---------------------------------------------------------------------------------------------");
-        //recipesRef.child(child.key).remove();
+        //visa recept så är det ingrediensen i ingredientsSkip som har unit 
+        //och inte den som är undefined. kan jag fixa det?
+        //kanske använda en annan lista än ingredientsToSkip för att avgöra om receptet ska tas bort.
+        //skapa en variabel deleteRecipe längre upp och sätt den till true om det merge error units på båda ingredienserna
+
+        //ser bättre ut nu
+        //nytt fel https://www.koket.se/skinkstek-fran-as "ca 5" har kommit in som amount från koket.se
+        //skapa ärende på det och se över om det finns fler med ca i amount och hur det är möjligt??
+        //borde vara numeriskt
+        if(deleteRecipe){
+          log.push("---------------------------------------------------------------------------------------------");
+          log.push("DELETING recipe>" + recipe.source);
+          log.push("IngredientsToSKip:" + JSON.stringify(ingredientsToSkip))
+          log.push("---------------------------------------------------------------------------------------------");
+          recipesRef.child(child.key).remove();
+        }else{
+          log.push("skip DELETING recipe>" + recipe.source);
+        }
       }else if(changesmade) {
+        for (let i = ingredientIndexesToRemove.length - 1; i >= 0; --i) {
+          recipe.ingredients.splice(ingredientIndexesToRemove[i], 1);
+          //flrändringads de andra indexarna nu då? tas fel bort? måste ta i rätt ordning? högst index först?
+        }
         log.push("---------------------------------------------------------------------------------------------");
         log.push("changesmade:" + recipe.source);
         log.push(JSON.stringify(originRecipe.ingredients));
@@ -204,13 +220,11 @@ function runRecipes() {
         log.push(JSON.stringify(recipe.ingredients));
         log.push("---------------------------------------------------------------------------------------------");
 
-      //var recipeRef = recipesRef.child(child.key);
-      //recipeRef.update(recipe);
+      var recipeRef = recipesRef.child(child.key);
+      recipeRef.update(recipe);
       }
       function mergeUnits(ingredientA, ingredientB) {
         log.push("merging units ingredient A " + JSON.stringify(ingredientA) + "----------- INgredient B " + JSON.stringify(ingredientB));
-        //2msk + 1.5dl ska väl bli 1.8 och inte 1.75dl?
-        //lite konstiga conversions?
         let ingredientResult = {};
         ingredientResult.name = ingredientA.name;
         let foundUnitA;

@@ -3,20 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "esformatter-jsx": "7.4.1",
-    "gh-pages": "0.12.0",
+    "esformatter-jsx": "^7.4.1",
+    "gh-pages": "^0.12.0",
     "react-scripts": "0.8.5"
   },
   "dependencies": {
-    "@fortawesome/fontawesome": "1.1.4",
-    "firebase": "4.11.0",
-    "material-ui": "0.19.4",
-    "nightmare": "2.10.0",
-    "react": "15.4.2",
-    "react-bootstrap": "0.30.7",
-    "react-dom": "15.4.2",
-    "react-tap-event-plugin": "2.0.1",
-    "react-toolbox": "2.0.0-beta.12"
+    "@fortawesome/fontawesome": "^1.1.4",
+    "eslint": "^4.19.1",
+    "firebase": "^4.11.0",
+    "material-ui": "^0.19.4",
+    "nightmare": "^2.10.0",
+    "react": "^15.4.2",
+    "react-bootstrap": "^0.30.7",
+    "react-dom": "^15.4.2",
+    "react-tap-event-plugin": "^2.0.1",
+    "react-toolbox": "^2.0.0-beta.12"
   },
   "scripts": {
     "start": "react-scripts start",

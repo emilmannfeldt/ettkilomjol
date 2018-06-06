@@ -33,7 +33,7 @@ class FilterableRecipelist extends Component {
         <QuickTags onUserInput={this.handleFilterInput} tags={this.props.tags} filter={this.state.filter} filterIsEmpty={!this.state.filter.tags.length && !this.state.filter.ingredients.length}/>
         </div>
         <div className="row recipelist-wrapper">
-          <RecipeList recipes={this.props.recipes} filter={this.state.filter} maxHits={240} />
+          <RecipeList recipes={this.props.recipes} filter={this.state.filter} maxHits={100} />
         </div>
         <div className="row helper">
         </div>
