@@ -13,4 +13,4 @@ build/
 .DS_Store
 .env
 .firebaserc
-npm-debug.log*
+npm-debug.log
