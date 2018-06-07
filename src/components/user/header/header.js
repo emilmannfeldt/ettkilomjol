@@ -6,7 +6,7 @@ import FontIcon from 'material-ui/FontIcon';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from '@material-ui/core/Button';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import headerImg from './pexels-photo-262918.jpeg'
 
@@ -43,7 +43,9 @@ class Header extends Component {
         </ToolbarGroup>
         <ToolbarGroup>
           <FontIcon className="muidocs-icon-custom-sort" />
-          <RaisedButton className="login-btn" label="Logga in" primary={true} />
+          <Button variant="contained" className="login-btn" color="primary" >
+          Logga in
+          </Button>
           <IconMenu
             iconButtonElement={
               <IconButton touch={true} className="toolbar-more-btn">
