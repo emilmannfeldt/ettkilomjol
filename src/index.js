@@ -3,9 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './components/app';
 import './index.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import { firebaseApp } from './base';
-injectTapEventPlugin();
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
 //browser key: AIzaSyCgKVqOu_D9jemhDwm5PC3Tll50T15OOlM

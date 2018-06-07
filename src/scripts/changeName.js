@@ -759,14 +759,15 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 function runRecipes() {
-    console.log("logged in,");
+    console.log("start");
     recipesRef.once('value', function (snapshot) {
-        console.log("fetching recipes");
+        console.log("Recipes loaded");
         snapshot.forEach(function (child) {
             let usedTagsTo = [];
             let recipe = child.val();
             let changesmade = false;
             let tagsToRemove = [];
+            console.log("recipe running:" + recipe.source);
             for (let i = 0; i < recipe.ingredients.length; i++) {
                 let ingredientName = recipe.ingredients[i].name;
                 for (let j = 0; j < foodChanges.length; j++) {
@@ -799,7 +800,6 @@ function runRecipes() {
                         let change = tagChanges[j];
                         if (change.from === tagName) {
                             if (usedTagsTo.indexOf(change.to) > -1 || change.to === "DELETE") {
-                                console.log(tagName);
                                 delete recipe.tags[tagName];
                                 changesmade = true;
                                 log.push("From tag:" + change.from + " totag:" + change.to + " src:" + recipe.source + " key:" + child.key);
@@ -828,8 +828,7 @@ function runRecipes() {
             log.push("logfile saved!");
         });
 
-        console.log("done");
+        console.log("Success!");
     });
-    console.log("recipes fetched");
 
 }

@@ -30,6 +30,7 @@ firebase.auth().signInAnonymously().catch(function (error) {
 });
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+        console.log("Start");
         firebase.database().ref("tags").remove();
         //firebase.database().ref("recipes").remove();
         foodsRef.orderByChild("uses").once("value", function (snapshot) {
@@ -54,10 +55,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 function runRecipes() {
-    console.log("logged in,");
+    console.log("Recipes loaded");
     log.push("starting");
     for (let j = 0; j < recipes.length; j++) {
         recipe = recipes[j];
+        console.log("recipe running:" + recipe.source);
         for (let property in recipe.tags) {
             if (recipe.tags.hasOwnProperty(property)) {
                 let tag = property;
@@ -78,5 +80,5 @@ function runRecipes() {
         }
     }
     tagsRef.set(tags);
-    console.log("done");
+    console.log("Success!");
 }

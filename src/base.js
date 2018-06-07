@@ -7,7 +7,7 @@ let config = {
     storageBucket: "ettkilomjol-10ed1.appspot.com",
     messagingSenderId: "1028199106361"
   };
-  if (location.hostname === 'localhost') {
+  if (window.location.hostname === 'localhost') {
     config.apiKey = "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8";
   }
 const firebaseApp = firebase.initializeApp(config);

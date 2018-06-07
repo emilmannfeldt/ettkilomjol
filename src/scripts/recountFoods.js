@@ -30,6 +30,7 @@ firebase.auth().signInAnonymously().catch(function (error) {
 });
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+        console.log("Start");
         firebase.database().ref("foods").remove();
         recipesRef.once('value', function (snapshot) {
             snapshot.forEach(function (child) {
@@ -41,10 +42,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 function runRecipes() {
-    console.log("logged in,");
+    console.log("Recipes loaded");
     log.push("starting");
     for (let j = 0; j < recipes.length; j++) {
         recipe = recipes[j];
+        console.log("recipe running:" + recipe.source);
         for (let i = 0; i < recipe.ingredients.length; i++) {
             let food = recipe.ingredients[i].name;
             if (existingFoods.indexOf(food) > -1) {
@@ -62,5 +64,5 @@ function runRecipes() {
         }
     }
     foodsRef.set(foods);
-    console.log("done");
+    console.log("Success!");
 }

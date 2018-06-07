@@ -37,7 +37,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "koket/koket";
+let filename = "koket/langkok-2018-06-07";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -101,6 +101,7 @@ function createRecipes() {
             return console.log(err);
         }
         let result = JSON.parse(data);
+        console.log("input recipes: " + result.length);
         let nrOfRecipesCreated = 0;
         for (let i = 0; i < result.length; i++) {
             let recipe = result[i];
@@ -259,8 +260,9 @@ function createRecipes() {
 
         log.push("input nr: " + result.length);
         log.push("created recipes: " + nrOfRecipesCreated);
-        console.log("input nr: " + result.length);
         console.log("created recipes: " + nrOfRecipesCreated);
+        console.log("success!");
+
         fs.writeFile("C:/react/" + filename + "-LOG.json", JSON.stringify(log), function (err) {
             if (err) {
                 return console.log(err);

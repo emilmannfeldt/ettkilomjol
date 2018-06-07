@@ -29,14 +29,12 @@ firebase.auth().onAuthStateChanged(function (user) {
   console.log("start");
   if (user) {
     foodRef.orderByChild("uses").once("value", function (snapshot) {
-      console.log("startfood");
 
       snapshot.forEach(function (child) {
         if (child.val().uses == 0) {
           existingFoods.splice(0, 0, child.val().name);
         }
       });
-      console.log("fooddone");
 
       foodLoaded = true;
       if (foodLoaded && tagLoaded && unitsLoaded) {
@@ -44,13 +42,10 @@ firebase.auth().onAuthStateChanged(function (user) {
       }
     });
     tagRef.orderByChild("uses").once("value", function (snapshot) {
-      console.log("tagstart");
 
       snapshot.forEach(function (child) {
         existingTags.splice(0, 0, child.val().name);
       });
-      console.log("tagdone");
-
       tagLoaded = true;
       if (foodLoaded && tagLoaded && unitsLoaded) {
         runRecipes();
@@ -79,7 +74,7 @@ function runRecipes() {
   let namel = 0;
   let numberRec = 0;
   recipesRef.once('value', function (snapshot) {
-    console.log("receipes hämtade");
+    console.log("Receipes loaded");
     snapshot.forEach(function (child) {
       let busted = false;
       let recipe = child.val();
@@ -392,9 +387,4 @@ function runRecipes() {
     });
 
   });
-
-
-  console.log("done");
-  console.log("recipes fetched");
-
 }

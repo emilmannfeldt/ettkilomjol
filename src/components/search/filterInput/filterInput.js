@@ -212,7 +212,7 @@ class FilterInput extends Component {
            <FlatButton label="Rensa sökning"
            style={{color: 'rgba(255, 255, 255, 0.9)'}}
             className="filter-clear-btn"
-            onTouchTap={this.clearFilter}
+            onClick={this.clearFilter}
             secondary={false}
             icon={<ClearIcon />}
           />
