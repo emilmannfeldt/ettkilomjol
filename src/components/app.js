@@ -3,7 +3,15 @@ import FilterableRecipeList from './filterableRecipeList';
 import Filterbar from './search/filterbar/filterbar';
 import Header from './user/header/header';
 import Footer from './user/footer/footer';
-import {firebaseApp} from '../base';
+import { firebaseApp } from '../base';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  withRouter
+} from "react-router-dom";
+import Stats from './pages/stats';
 
 class App extends Component {
   constructor(props) {
@@ -17,19 +25,25 @@ class App extends Component {
 
   handleLogout() {
     this.setState({
-        loggedInUser: null,
-        authenticated: false,
+      loggedInUser: null,
+      authenticated: false,
     });
     firebaseApp.auth.signOut();
   }
 
   render() {
+
     return (
-    <div>
-        <Header onLogout={this.handleLogout} isAuthenticated={this.state.authenticated} loggedInUser={this.state.loggedInUser} />
-        <FilterableRecipeList tags={this.props.tags} foods={this.props.foods} recipes={this.props.recipes} />
-        <Footer/>
-    </div>
+      <Router>
+        <div>
+          <Header onLogout={this.handleLogout} isAuthenticated={this.state.authenticated} loggedInUser={this.state.loggedInUser} />
+          <Route exact path="/stats" render={()=><Stats tags={this.props.tags} foods={this.props.foods} recipes={this.props.recipes} />}/>
+          <Route exact path="/" render={()=><FilterableRecipeList tags={this.props.tags} foods={this.props.foods} recipes={this.props.recipes} />}/>
+          <Footer/>
+
+
+        </div>
+      </Router>
     );
   }
 }

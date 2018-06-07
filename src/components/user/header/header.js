@@ -34,9 +34,11 @@ class Header extends Component {
   render() {
     return (
       <div>
-      <div className="headerImageContainer">
-                    <img src={headerImg} id="headerimage"/>
-      </div>
+      {window.location.href.endsWith("/stats") ? 
+      null : <div className="headerImageContainer">
+              <img src={headerImg} id="headerimage"/>
+            </div>}
+
       <Toolbar>
         <ToolbarGroup firstChild={true}>
         <ToolbarTitle className="toolbar-title" text="Ett kilo mjöl" />

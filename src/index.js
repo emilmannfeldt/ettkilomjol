@@ -4,15 +4,17 @@ import App from './components/app';
 import './index.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { firebaseApp } from './base';
+import { PropagateLoader } from 'react-spinners';
+
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
 //browser key: AIzaSyCgKVqOu_D9jemhDwm5PC3Tll50T15OOlM
 //server key: AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8
 //https://stackoverflow.com/questions/35418143/how-to-restrict-firebase-data-modification
 
-let foodNames = JSON.parse(localStorage.getItem('foodnames')) || [];
+let foods = JSON.parse(localStorage.getItem('foods')) || [];
 let units = JSON.parse(localStorage.getItem('units')) || [];
-let tagNames = JSON.parse(localStorage.getItem('tagNames')) || [];
+let tags = JSON.parse(localStorage.getItem('tags')) || [];
 let users = JSON.parse(localStorage.getItem('users')) || [];
 //möjligt att jag i framtiden bygger om så att det finns "searchableRecipe" som bara innehåller de sökbara attributen. Ingredienser, tags, time, level, och sen körs frågor till firebase för att hämta hela recpeten för de som blir träff.
 // Kan dock bli mer krävande i mb/user?
@@ -53,6 +55,7 @@ let localIsOld = function (localVar) {
 //testa mer. målet är att recipeRef.once bara ska köras första gången.
 //
 function getRecipesIndexedDB() {
+
   let recipeRef = firebaseApp.database().ref("recipes");
   let open = indexedDB.open("RecipeDatabase", 1);
   let upgraded = false;
@@ -81,12 +84,16 @@ function getRecipesIndexedDB() {
       });
       localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
       reloadedFromFirebase = true;
+      hideSpinner();
+
+
     }
 
     if (!reloadedFromFirebase && recipes.length < 1) {
       let tx = db.transaction("RecipeStore", "readwrite");
       let store = tx.objectStore("RecipeStore");
       let recipedb = store.getAll();
+
       recipedb.onsuccess = function () {
         if (recipedb.result.length < MIN_ACCEPTED_RECIPES) {
           recipeRef.once('value', function (snapshot) {
@@ -94,6 +101,7 @@ function getRecipesIndexedDB() {
             snapshot.forEach(function (child) {
               recipes.push(child.val());
             });
+
             console.log(recipes.length + " Recept laddade från firebase pga result endast var " + recipedb.result.length);
             for (let i = 0; i < recipes.length; i++) {
               let tx = db.transaction("RecipeStore", "readwrite");
@@ -102,11 +110,15 @@ function getRecipesIndexedDB() {
             }
           });
           localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
+          hideSpinner();
         } else {
+
           for (let i = 0; i < recipedb.result.length; i++) {
             recipes.push(recipedb.result[i]);
           }
           console.log(recipes.length + " Recept laddade från indexedDB");
+          hideSpinner();
+
         }
         //tar väldigt lång tid att komma till onsucess andra gången. Och det är endast 3-40 recept som finns i storen på getAll...
         //funkar men recipes som går in i filteredrecipescomponent är tom?
@@ -119,6 +131,12 @@ function getRecipesIndexedDB() {
 
   }
 }
+
+function hideSpinner(){
+  document.querySelector(".spinner").style.display='none';
+  document.querySelector("#loading-text").style.display='none';
+
+}
 // let signOut = function() {
 //   // Sign out of Firebase.
 //   firebase.auth.signOut();
@@ -128,25 +146,26 @@ function getRecipesIndexedDB() {
 firebaseApp.auth().onAuthStateChanged(function (user) {
   if (user) {
     getRecipesIndexedDB();
+
     let foodRef = firebaseApp.database().ref("foods");
     let unitsRef = firebaseApp.database().ref("units");
     let tagsRef = firebaseApp.database().ref("tags");
     let usersRef = firebaseApp.database().ref("users");
     let recipeRef = firebaseApp.database().ref("recipes");
 
-    if (foodNames.length < 1 || localIsOld('lastupdatedfoodnames')) {
+    if (foods.length < 1 || localIsOld('lastupdatedfoods')) {
       console.log("LOADING NEW FOODS");
 
       foodRef.orderByChild("uses").once("value", function (snapshot) {
-        foodNames.length = 0;
+        foods.length = 0;
         snapshot.forEach(function (child) {
           if (child.val().uses >= MIN_USES_FOOD) {
-            foodNames.splice(0, 0, child.val().name);
+            foods.splice(0,0,child.val());
           }
         });
-        localStorage.setItem('foodnames', JSON.stringify(foodNames));
+        localStorage.setItem('foods', JSON.stringify(foods));
       });
-      localStorage.setItem('lastupdatedfoodnames', JSON.stringify(Date.now()));
+      localStorage.setItem('lastupdatedfoods', JSON.stringify(Date.now()));
     }
 
     if (units.length < 1 || localIsOld('lastupdatedunits')) {
@@ -164,16 +183,16 @@ firebaseApp.auth().onAuthStateChanged(function (user) {
       localStorage.setItem('lastupdatedunits', JSON.stringify(Date.now()));
     }
 
-    if (tagNames.length < 1 || localIsOld('lastupdatedtags')) {
+    if (tags.length < 1 || localIsOld('lastupdatedtags')) {
       console.log("LOADING NEW TAGS");
       tagsRef.orderByChild("uses").once("value", function (snapshot) {
-        tagNames.length = 0;
+        tags.length = 0;
         snapshot.forEach(function (child) {
           if (child.val().uses >= MIN_USES_TAG) {
-            tagNames.splice(0, 0, child.val().name);
+            tags.splice(0,0,child.val());
           }
         });
-        localStorage.setItem('tagNames', JSON.stringify(tagNames));
+        localStorage.setItem('tags', JSON.stringify(tags));
       });
 
       localStorage.setItem('lastupdatedtags', JSON.stringify(Date.now()));
@@ -189,6 +208,7 @@ firebaseApp.auth().onAuthStateChanged(function (user) {
       });
       localStorage.setItem('lastupdatedusers', JSON.stringify(Date.now()));
     }
+
     // User is signed in.
   }
   else {
@@ -204,7 +224,16 @@ firebaseApp.auth().onAuthStateChanged(function (user) {
 //visa detaljer på recipe blir nog en route till /recipe med <recipe id={-Kgkgdfir24j} /> och sen i den recipe komponenten får jag göra anropp till firebase för att hämta hela receptet på det id.
 const Applicaption = () => (
   <MuiThemeProvider>
-    <App foods={foodNames} tags={tagNames} units={units} users={users} recipes={recipes}></App>
+    <div>
+    <div className='spinner'>
+        <PropagateLoader
+          color={'#00bcd4'} 
+        />
+      </div>
+      <div className='spinner' id="loading-text">Fixa en snyggare info text hör. om de tar mer än x sekunder så rensa användarens cookies och ladda om? Någon som byter varannan sekund random från en array med text, typing? eller animering, : Letar recept på nätet, googlar vegansk bacon, ringer mannerström, sträcktittar masterchef, ringer mamma, undersöker linas matkassar, frågar grannen,</div>
+
+    <App foods={foods} tags={tags} units={units} users={users} recipes={recipes}></App>
+    </div>
   </MuiThemeProvider>
 );
 ReactDOM.render(<Applicaption />, document.getElementById('root'));

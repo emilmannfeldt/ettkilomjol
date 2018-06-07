@@ -118,7 +118,8 @@ class FilterInput extends Component {
         return a.indexOf(i) < 0;
       });
     };
-    return this.props.foods.diff(this.props.filter.ingredients);
+    let foodNames = this.props.foods.map(a => a.name);
+    return foodNames.diff(this.props.filter.ingredients);
   }
 
   getAutoCompletteTags() {
@@ -127,7 +128,8 @@ class FilterInput extends Component {
         return a.indexOf(i) < 0;
       });
     };
-    return this.props.tags.diff(this.props.filter.tags);
+    let tagNames = this.props.tags.map(a => a.name);
+    return tagNames.diff(this.props.filter.tags);
   }
 
   suggestInputFilter(searchText, key) {
@@ -172,14 +174,14 @@ class FilterInput extends Component {
     let foundchip = false;
     searchText = searchText.charAt(0).toUpperCase() + searchText.slice(1);
     for (let i = this.props.foods.length - 1; i >= 0; i--) {
-      if (this.props.foods[i] === searchText) {
+      if (this.props.foods[i].name === searchText) {
         this.addIngredient(searchText);
         foundchip = true;
       }
     }
     if (!foundchip) {
       for (let i = this.props.tags.length - 1; i >= 0; i--) {
-        if (this.props.tags[i] === searchText) {
+        if (this.props.tags[i].name === searchText) {
           this.addTag(searchText);
           foundchip = true;
         }

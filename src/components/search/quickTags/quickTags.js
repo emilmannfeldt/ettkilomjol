@@ -34,9 +34,9 @@ class QuickTags extends Component {
       tagsToDisplay = 8;
     }
     for (let i = 0; i < this.props.tags.length; i++) {
-      if(this.props.filter.tags.indexOf(this.props.tags[i]) < 0){
-        chips.push(<Chip key={chips.length}  onClick={() => this.addTag(this.props.tags[i])} className="quick-tag">
-          {this.props.tags[i]}
+      if(this.props.filter.tags.indexOf(this.props.tags[i].name) < 0){
+        chips.push(<Chip key={chips.length}  onClick={() => this.addTag(this.props.tags[i].name)} className="quick-tag">
+          {this.props.tags[i].name}
         </Chip>);
       }
       if(chips.length >= tagsToDisplay){
