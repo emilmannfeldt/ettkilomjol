@@ -5,6 +5,8 @@ import './index.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { firebaseApp } from './base';
 import { PropagateLoader } from 'react-spinners';
+import Typed from 'typed.js';
+
 
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
@@ -36,9 +38,17 @@ const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 //https://www.npmjs.com/package/react-loading-animation
 
 window.onload = function () {
+  var options = {
+    strings: ['Letar recept','Googlar..','Kollar masterchef','Ringer mamma','Chattar med Mannerström', 'Läser på mjölkpaketet','Frågar Siri','Dammar av kokboken','Ringer gatuköket','Surfar på onlinepizza'],
+    typeSpeed: 40,
+    backSpeed: 20,
+    backDelay: 300,
+    startDelay: 0,
+  }
+  var typed = new Typed("#loading-text", options);
   firebaseApp.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
-
+console.log("ERROR sign in anonymous" + error);
     // ...
   });
 };
@@ -55,21 +65,23 @@ let localIsOld = function (localVar) {
 //testa mer. målet är att recipeRef.once bara ska köras första gången.
 //
 function getRecipesIndexedDB() {
-
+  console.log("getRecipesIndexedDB");
   let recipeRef = firebaseApp.database().ref("recipes");
   let open = indexedDB.open("RecipeDatabase", 1);
   let upgraded = false;
   open.onupgradeneeded = function (e) {
+    console.log("onupgradeneeded");
     upgraded = true;
     console.log("INDEXDB upgrade")
     var db = open.result;
     var store = db.createObjectStore("RecipeStore", { keyPath: "source" });
   }
   open.onsuccess = function () {
-    console.log("INDEXDB sucess")
+    console.log("onsuccess");
     let db = open.result;
     let reloadedFromFirebase = false;
     if (upgraded || localIsOld('lastupdatedrecipes')) {
+      console.log("upgraded or localisold");
       recipeRef.once('value', function (snapshot) {
         recipes.length = 0;
         snapshot.forEach(function (child) {
@@ -85,23 +97,23 @@ function getRecipesIndexedDB() {
       localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
       reloadedFromFirebase = true;
       hideSpinner();
-
-
     }
 
     if (!reloadedFromFirebase && recipes.length < 1) {
+      console.log("inte hämtat från firebase och recepies är fortfarande tom");
       let tx = db.transaction("RecipeStore", "readwrite");
       let store = tx.objectStore("RecipeStore");
       let recipedb = store.getAll();
 
       recipedb.onsuccess = function () {
+        console.log("onsuccess connected to recipedb");
         if (recipedb.result.length < MIN_ACCEPTED_RECIPES) {
+          console.log("recipedb innehåller för få recept. hämtar från firebase");
           recipeRef.once('value', function (snapshot) {
             recipes.length = 0;
             snapshot.forEach(function (child) {
               recipes.push(child.val());
             });
-
             console.log(recipes.length + " Recept laddade från firebase pga result endast var " + recipedb.result.length);
             for (let i = 0; i < recipes.length; i++) {
               let tx = db.transaction("RecipeStore", "readwrite");
@@ -112,6 +124,7 @@ function getRecipesIndexedDB() {
           localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
           hideSpinner();
         } else {
+          console.log("Hämtar recept från indexDB");
 
           for (let i = 0; i < recipedb.result.length; i++) {
             recipes.push(recipedb.result[i]);
@@ -124,6 +137,7 @@ function getRecipesIndexedDB() {
         //funkar men recipes som går in i filteredrecipescomponent är tom?
         //varför funkar det inte här men när det är helt ny store så funkar det.
         //behöver jag göra detta till en react component och använda state?
+        console.log("recipedb success end");
       };
     }
 
@@ -135,7 +149,6 @@ function getRecipesIndexedDB() {
 function hideSpinner(){
   document.querySelector(".spinner").style.display='none';
   document.querySelector("#loading-text").style.display='none';
-
 }
 // let signOut = function() {
 //   // Sign out of Firebase.
@@ -215,7 +228,9 @@ firebaseApp.auth().onAuthStateChanged(function (user) {
     // No user is signed in.
     console.log("bye" + user);
   }
+  
 });
+
 //https://www.youtube.com/watch?v=_Fzl0Cim6F8
 //lägg till nav.js component. och routing här. Likt app.js i videon.
 //filterablerecipelist blir en route
@@ -230,7 +245,7 @@ const Applicaption = () => (
           color={'#00bcd4'} 
         />
       </div>
-      <div className='spinner' id="loading-text">Fixa en snyggare info text hör. om de tar mer än x sekunder så rensa användarens cookies och ladda om? Någon som byter varannan sekund random från en array med text, typing? eller animering, : Letar recept på nätet, googlar vegansk bacon, ringer mannerström, sträcktittar masterchef, ringer mamma, undersöker linas matkassar, frågar grannen,</div>
+      <div className='spinner' id="loading-text">Letar recept</div>
 
     <App foods={foods} tags={tags} units={units} users={users} recipes={recipes}></App>
     </div>
