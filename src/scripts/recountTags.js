@@ -17,6 +17,7 @@ var fs = require('fs');
 let existingFoods = [];
 let existingTags = [];
 let recipes = [];
+let removedTags = [];
 let foods = {};
 let tags = {};
 let filename = "test";
@@ -27,6 +28,7 @@ let recipeLoaded = false;
 //alt1. dela upp så man kör 1000 i taget i loopen
 //skriv om scriptet så att vi skapar ett stort tags och foods objekt i javascript här och sen lägger in den en gång i firebase när allt är klart
 firebase.auth().signInAnonymously().catch(function (error) {
+    console.log("error:" + error)
 });
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -35,8 +37,11 @@ firebase.auth().onAuthStateChanged(function (user) {
         //firebase.database().ref("recipes").remove();
         foodsRef.orderByChild("uses").once("value", function (snapshot) {
             snapshot.forEach(function (child) {
-                existingFoods.splice(0, 0, child.val().name);
+                if(child.val().uses > 1){
+                    existingFoods.splice(0, 0, child.val().name);
+                }
             });
+            console.log("foods:" + existingFoods.length);
             foodLoaded = true;
             if (foodLoaded && recipeLoaded) {
                 runRecipes();
@@ -59,11 +64,13 @@ function runRecipes() {
     log.push("starting");
     for (let j = 0; j < recipes.length; j++) {
         recipe = recipes[j];
-        console.log("recipe running:" + recipe.source);
         for (let property in recipe.tags) {
             if (recipe.tags.hasOwnProperty(property)) {
                 let tag = property;
                 if (existingFoods.indexOf(tag) > -1) {
+                    if(removedTags.indexOf(tag) == -1){
+                        removedTags.push(tag);
+                    }
                     continue;
                 } else {
                     if (existingTags.indexOf(tag) > -1) {
@@ -79,6 +86,8 @@ function runRecipes() {
             }
         }
     }
+    console.log(removedTags + "removed bcs its in foods")
+
     tagsRef.set(tags);
     console.log("Success!");
 }

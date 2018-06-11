@@ -30,14 +30,14 @@ let recipesRef = firebase.database().ref("recipes");
 //spara ner även recipes.json som tidigare till användaren?
 //om det inte går att automatisera i guit så fixa iaf så det endast finns en .js för allt.
 //som beskrivet ovan förutom att fortfarande använda urls arrayen och kör det i konsolen. spara ner log och recepten.json
-let existingRecipeSources = [];
+let existingRecipes = [];
 let existingFoods = [];
 let existingTags = [];
 let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "koket/langkok-2018-06-07";
+let filename = "mittkok/mittkok11_2018-06-11";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -54,7 +54,8 @@ firebase.auth().onAuthStateChanged(function (user) {
 
         recipesRef.once('value', function (snapshot) {
             snapshot.forEach(function (child) {
-                existingRecipeSources.push(child.val().source);
+                existingRecipes.push(child.val());
+
             });
             recipeLoaded = true;
             if (foodLoaded && tagLoaded && recipeLoaded) {
@@ -87,14 +88,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         console.log("bye" + user);
     }
 });
-//kolla in de konstiga foods. Sök på dem i recipe.json och för att hitta source. 
-//konstiga saker i foods...
-//Citron / person att pressa över. esacpe "/"?
-//kolla igenom all data lite snabbt. sen fortsätt med nedan för att fixa appen
-//koppla om webbappen till att gå mot recipes/ istället för recipecards
-//ändra baketime
-//ta bort bild
-//skapa night2.js för ica.se
 function createRecipes() {
     fs.readFile('C:/react/' + filename + '.json', 'utf8', function (err, data) {
         if (err) {
@@ -103,6 +96,8 @@ function createRecipes() {
         let result = JSON.parse(data);
         console.log("input recipes: " + result.length);
         let nrOfRecipesCreated = 0;
+        let nrOfRecipesUpdated = 0;
+        let final = [];
         for (let i = 0; i < result.length; i++) {
             let recipe = result[i];
             let msg = validateRecipe(recipe);
@@ -110,8 +105,8 @@ function createRecipes() {
                 log.push(msg);
                 continue;
             }
-            if(recipe.title.indexOf("&amp;") > -1){
-                recipe.title = recipe.title.replace("&amp;","&");
+            if (recipe.title.indexOf("&amp;") > -1) {
+                recipe.title = recipe.title.replace("&amp;", "&");
             }
             for (let h = 0; h < recipe.ingredients.length; h++) {
                 if (recipe.ingredients[h].unit && recipe.ingredients[h].unit.trim() == "") {
@@ -120,147 +115,41 @@ function createRecipes() {
                 if (recipe.ingredients[h].amount && recipe.ingredients[h].amount.trim() == "") {
                     delete recipe.ingredients[h].amount;
                 }
+                if(recipe.ingredients[h].amount && isNaN(recipe.ingredients[h].amount)){
+                    recipe.ingredients[h].amount = recipe.ingredients[h].amount.replace(",",".");
+                }
             }
             //time temporary
-            if (recipe.time && isNaN(recipe.time)) {
-                let timeNumber;
-                if (recipe.source.indexOf("www.ica.se") > -1) {
-                    let timeString = recipe.time;
-                    console.log(recipe.source);
-                    if (timeString.indexOf("MIN") > -1) {
-                        timeNumber = timeString.split(" ")[0] - 0;
-                    } else if (timeString.indexOf("TIM")) {
-                        let parts = timeString.split(" ")[0].split("-");
-                        if (parts.length === 1) {
-                            timeNumber = (timeString.split(" ")[0] - 0) * 60;
-                        } else {
-                            timeNumber = (((parts[0] - 0) + (parts[1] - 0)) / 2) * 60;
-                        }
-                    } else {
-                        log.push("kunde inte förstå time ICA:" + recipe.time + ": recipe:" + recipe.source);
-                        continue;
-                    }
-                    result[i].time = timeNumber;
-                    recipe.time = timeNumber;
-
-                } else if (recipe.source.indexOf("www.koket.se") > -1 && recipe.time) {
-                    let timenr = 0;
-                    let timeString = recipe.time + "";
-                    parts = timeString.replace("ca", '').replace(",", ".").trim().split(" ");
-                    for (let j = 0; j < parts.length; j++) {
-                        if (Number.isInteger(parts[j] - 0) || parts[j].indexOf(".") > -1) {
-                            if (!parts[j + 1] || parts[j + 1].indexOf("min") > -1 || parts[j + 1].indexOf("m") > -1) {
-                                timenr += parts[j] - 0;
-                            } else if (parts[j + 1].indexOf("dagar") > -1 || parts[j + 1].indexOf("dygn") > -1) {
-                                timenr += parts[j] * 60 * 24;
-                            } else if (parts[j + 1].indexOf("h") > -1) {
-                                timenr += parts[j] * 60;
-                            } else {
-                                log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
-                                break;
-                            }
-                            j++;
-                        } else {
-                            if (parts[j].indexOf("-") > -1) {
-                                let nrparts = parts[j].split("-");
-                                if (!parts[j + 1] || parts[j + 1].indexOf("m") > -1 || parts[j + 1].indexOf("min") > -1) {
-                                    timenr += ((nrparts[0] - 0) + (nrparts[1] - 0)) / 2;
-                                } else if (parts[j + 1].indexOf("h") > -1) {
-                                    timenr += (((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60;
-                                } else if (parts[j + 1].indexOf("d") > -1) {
-                                    timenr += ((((nrparts[0] - 0) + (nrparts[1] - 0)) / 2) * 60) * 24;
-                                }
-                            } else if (parts[j].indexOf("h") > -1) {
-                                timenr += (parts[j].substring(0, parts[j].indexOf("h")) - 0) * 60;
-                            } else if (parts[j].indexOf("m") > -1) {
-                                timenr += parts[j].substring(0, parts[j].indexOf("m")) - 0;
-                            } else if (parts[j].indexOf("min") > -1) {
-                                timenr += parts[j].substring(0, parts[j].indexOf("min")) - 0;
-                            } else {
-                                log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
-                                break;
-                            }
-                        }
-                    }
-                    if (timenr === 0 || !Number.isInteger(timenr)) {
-                        log.push("kunde inte förstå time KOKET:" + recipe.time + ": recipe:" + recipe.source);
-                        continue;
-                    }
-                    timeNumber = timenr;
-                    result[i].time = timeNumber;
-                    recipe.time = timeNumber;
-                } else if (recipe.source.indexOf("http://www.tasteline.com") > -1 && recipe.time) {
-                    let timeString = recipe.time;
-                    if (timeString.indexOf("minut") > -1) {
-                        timeNumber = timeString.split(" ")[0] - 0;
-                    } else if (timeString.indexOf("timm") > -1) {
-                        timeNumber = (timeString.split(" ")[0] - 0) * 60;
-                    } else {
-                        log.push("kunde inte förstå time TASTELINE:" + recipe.time + ": recipe:" + recipe.source);
-                        continue;
-                    }
-                    result[i].time = timeNumber;
-                    recipe.time = timeNumber;
-                }
-            }
-
             recipe.ingredients = checkGrammar(recipe.ingredients);
-            for (let f = 0; f < recipe.ingredients.length; f++) {
-                //capitalize first letter
-                if (!validateIngredient(recipe.ingredients[f])) {
-                    log.push("invalid ingredient:" + recipe.ingredients[f].name);
-                    continue;
-                }
-                let food = recipe.ingredients[f].name;
-                if (existingFoods.indexOf(food) > -1) {
-                    let databaseRef = firebase.database().ref('foods').child(food).child('uses');
-                    databaseRef.transaction(function (uses) {
-                        if (uses) {
-                            uses = uses + 1;
-                        }
-                        return (uses || 0) + 1;
-                    });
-                } else {
-                    firebase.database().ref("foods/" + food).set({
-                        name: food,
-                        uses: 0
-                    })
-                    existingFoods.push(food);
+            let exists = false;
+            for (let i = 0; i < existingRecipes.length; i++) {
+                if (existingRecipes[i].source === recipe.source) {
+                    exists = true;
+                    //säkerställ att visits inte försvinner vid update
+                    //update funkar inte. behöver ha den riktiga referensen till childen
+                    //inte som här till child.val()
+                    //skap aen till array i början med alla keys?
+                    //skapa någon metod som query till firebase som hämtar rätt child utefter source
+                    //när det funkar kör mittkok11 och nya ica urls
+                    existingRecipes[i].update(recipe);
+                    nrOfRecipesUpdated++;
                 }
             }
-            for (let property in recipe.tags) {
-                if (recipe.tags.hasOwnProperty(property)) {
-                    //remove tags that already are ingredients
-                    let tag = property.charAt(0).toUpperCase() + property.slice(1);
-                    if (existingFoods.indexOf(tag) > -1) {
-                        log.push("tag already exists as food: " + tag);
-                        continue;
-                    }
-                    if (existingTags.indexOf(tag) > -1) {
-                        let databaseRef = firebase.database().ref('tags').child(tag).child('uses');
-                        databaseRef.transaction(function (uses) {
-                            if (uses) {
-                                uses = uses + 1;
-                            }
-                            return (uses || 0) + 1;
-                        });
-                    } else {
-                        firebase.database().ref("tags/" + tag).set({
-                            name: tag,
-                            uses: 0
-                        })
-                        existingTags.push(tag);
-                    }
-                }
+            if(!exists){
+                recipesRef.push(recipe);
+                nrOfRecipesCreated++;
+                existingRecipes.push(recipe);
             }
-            nrOfRecipesCreated++;
-            recipesRef.push(recipe);
-            existingRecipeSources.push(recipe.source);
+            final.push(recipe);
         }
 
         log.push("input nr: " + result.length);
         log.push("created recipes: " + nrOfRecipesCreated);
+        log.push("updated recipes: " + nrOfRecipesUpdated);
+
         console.log("created recipes: " + nrOfRecipesCreated);
+        console.log("Updated recipes: " + nrOfRecipesUpdated);
+
         console.log("success!");
 
         fs.writeFile("C:/react/" + filename + "-LOG.json", JSON.stringify(log), function (err) {
@@ -269,7 +158,7 @@ function createRecipes() {
             }
             log.push("logfile saved!");
         });
-        fs.writeFile("C:/react/recipesbackup/" + filename + ".json", JSON.stringify(result), function (err) {
+        fs.writeFile("C:/react/recipesbackup/" + filename + ".json", JSON.stringify(final), function (err) {
             if (err) {
                 return console.log(err);
             }
@@ -277,6 +166,8 @@ function createRecipes() {
         });
     });
 }
+
+
 function validateRecipe(recipe) {
     let msg = { recipeSrc: "", cause: "" };
     if (!recipe) {
@@ -284,10 +175,6 @@ function validateRecipe(recipe) {
         return msg;
     }
     msg.recipeSrc = recipe.source;
-    if (existingRecipeSources.indexOf(recipe.source) > -1) {
-        msg.cause = "recipe already exists";
-        return msg;
-    }
     let invalidIngredients = 0;
     for (let i = 0; i < recipe.ingredients.length; i++) {
         if (!validateIngredient(recipe.ingredients[i])) {
@@ -303,7 +190,7 @@ function validateRecipe(recipe) {
         return msg;
     }
     for (let i = 0; i < recipe.ingredients.length; i++) {
-        if (recipe.ingredients[i].name==="Förp") {
+        if (recipe.ingredients[i].name === "Förp") {
             msg.cause = "recipe has faulty ingredient name:" + recipe.ingredients.name;
             return msg;
         }

@@ -64,7 +64,7 @@ function runRecipes() {
       let busted = false;
       let recipe = child.val();
       let changesmade = false;
-      if(recipe.source.indexOf("koket")>-1){
+      if(recipe.source.indexOf("mittkok.expressen")>-1){
         //recipesRef.child(child.key).remove();
         log.push("removed:" + recipe.source);
 

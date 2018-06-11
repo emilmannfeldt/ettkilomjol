@@ -12,8 +12,9 @@ var fs = require('fs');
 //1. Gå till en sida på koket.se
 //2. kör: var interv=setInterval(function(){if(document.querySelector('li.next').offsetParent!=null){document.querySelector('a[rel="next"]').click();}else{hrefs=Array.from(document.querySelectorAll('article.recipe header h2.title a')).map(a => a.href); console.log("done");clearInterval(interv);}},1000);
 //2b. Nytt script var interv=setInterval(function(){if(document.querySelector('.recipe-list .pagination button').offsetParent!=null){document.querySelector('.recipe-list .pagination button').click();}else{hrefs=Array.from(document.querySelectorAll('article.recipe header h2.title a')).map(a => a.href); console.log("done");clearInterval(interv);}},1000);
+//Improved: var result = []; var interv=setInterval(function(){if(document.querySelector('.recipe-list .pagination button')){result = result.concat(Array.from(document.querySelectorAll('article.recipe h2 a')).map(a => a.href));$('article.recipe').remove();document.querySelector('.recipe-list .pagination button').click();}else{;console.log("done");clearInterval(interv);}},1500);
 //3. Vänta på att "done" har loggats i consolen.
-//4. kopiera alla hrefs genom copy(Array.from(document.querySelectorAll('article.list-item.recipe .info .top h2 a')).map(a => a.href));
+//4. kopiera alla hrefs genom copy([...new Set(Array.from(document.querySelectorAll('article.list-item.recipe .info .top h2 a')).map(a => a.href)))];
 //5. paste in i urls
 //6. kör set DEBUG=nightmare && node koket.js
 //7. resultatet sparas i react/[filename].json

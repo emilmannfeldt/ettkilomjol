@@ -11,6 +11,9 @@ var fs = require('fs');
 //ta fram urls genom att:
 //1. Gå till en sida på ica.se/recept
 //2. kör: var hrefs=[]; var interv=setInterval(function(){if(document.querySelector('.recipe-bottom-container .showMoreText')){document.querySelector('a.loadmore').click();}else{hrefs=Array.from(document.querySelectorAll('article.recipe header h2.title a')).map(a => a.href);console.log("done");clearInterval(interv);}},1500);
+//IMPROVED var result = []; var interv=setInterval(function(){if(document.querySelector('.recipe-bottom-container .showMoreText')){result = result.concat(Array.from(document.querySelectorAll('article.recipe header h2.title a')).map(a => a.href));$('article.recipe').remove();document.querySelector('a.loadmore').click();}else{;console.log("done");clearInterval(interv);}},1500);
+//med denna laggar inte sidan och result byggs på under körningen.
+//kopiera result med copy([... new Set(result)])
 //3. Vänta på att "done" har loggats i consolen.
 //4. kopiera alla hrefs genom copy(hrefs) eller copy(Array.from(document.querySelectorAll('article.recipe header h2.title a')).map(a => a.href));
 //5. paste in i urls

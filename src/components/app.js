@@ -37,7 +37,7 @@ class App extends Component {
       <Router>
         <div>
           <Header onLogout={this.handleLogout} isAuthenticated={this.state.authenticated} loggedInUser={this.state.loggedInUser} />
-          <Route exact path="/stats" render={()=><Stats tags={this.props.tags} foods={this.props.foods} recipes={this.props.recipes} />}/>
+          <Route exact path="/stats" render={()=><Stats tags={this.props.tags} foods={this.props.foods} recipes={this.props.recipes} units={this.props.units} />}/>
           <Route exact path="/" render={()=><FilterableRecipeList tags={this.props.tags} foods={this.props.foods} recipes={this.props.recipes} />}/>
           <Footer/>
 

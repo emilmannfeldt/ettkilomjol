@@ -56,6 +56,7 @@ let tagChanges = [
     { from: "Woka", to: "Wok" },
     { from: "Wraps", to: "Wrap" },
     { from: "Äggfritt", to: "Äggfri" },
+    { from: "Grilla", to: "Grill" },
     { from: "Östeuropeisk mat", to: "Östeuropeisk" }];
 
 
@@ -118,6 +119,7 @@ let foodChanges = [
     { from: "En nypa salt", to: "Salt" },
     { from: "Espressokaffe", to: "Espresso" },
     { from: "Ev salt", to: "Salt" },
+    { from: "Ev vatten", to: "Vatten" },
     { from: "Extra virgin olivolja", to: "Olivolja" },
     { from: "Fast potatis", to: "Potatis" },
     { from: "Fasta potatisar", to: "Potatis" },
@@ -725,6 +727,10 @@ let foodChanges = [
     { from: "Yoghurt naturell", to: "Yoghurt" },
     { from: "Äkta vaniljpulver", to: "Vaniljpulver" },
     { from: "Portioner ris", to: "Port ris" },
+    { from: "Mogna bananer", to: "Banan" },
+    { from: "Laktosfri", to: "Laktosfritt" },
+
+
 
 ];
 //nya konstiga saker som upptäckts:
@@ -734,7 +740,9 @@ let filename = "changeName";
 let log = [];
 let foodLoaded = false;
 let tagLoaded = false;
-firebase.auth().signInAnonymously().catch(function (error) { });
+firebase.auth().signInAnonymously().catch(function (error) {
+    console.log("ERROR"+ error)
+ });
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         foodRef.orderByChild("uses").once("value", function (snapshot) {
