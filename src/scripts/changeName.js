@@ -16,6 +16,52 @@ var fs = require('fs');
 let existingFoods = [];
 let existingTags = [];
 //fixa en array med tags som ska tas bort helt? "smarrigt"
+//de osm har () i sig ska vi kolla på amount med. om amount är 1 så ta bort parantesen annars ta .to
+let unitChanges = [
+    { from: "kruka(or)", to: "krukor" },
+    { from: "gram", to: "g" },
+    { from: "klyfta(or)", to: "klyftor" },
+    { from: "skiva(or)", to: "skivor" },
+    { from: "paket", to: "förp" },
+    { from: "förpackning", to: "förp" },
+    { from: "stjälk(ar)", to: "stjälkar" },
+    { from: "burk(ar)", to: "förp" },
+    { from: "ask", to: "förp" },
+    { from: "kvist(ar)", to: "kvistar" },
+    { from: "bit(ar)", to: "bit" },
+    { from: "tärning(ar)", to: "tärningar" },
+    { from: "knippa(en)", to: "knippen" },
+    { from: "droppe(ar)", to: "droppar" },
+    { from: "del(ar)", to: "delar" },
+    { from: "platta(or)", to: "plattor" },
+    { from: "stänk", to: "skvätt" },
+    { from: "kula(or)", to: "kulor" },
+    { from: "flaska(or)", to: "flaskor" },
+    { from: "sats(er)", to: "satser" },
+    { from: "tub(er)", to: "förp" },
+    { from: "liten bit", to: "bit" },
+    { from: "korg", to: "förp" },
+    { from: "meter", to: "m" },
+    { from: "hekto", to: "hg" },
+    { from: "påse", to: "förp" },
+    { from: "påsar", to: "förp" },
+    { from: "burk", to: "förp" },
+    { from: "näve", to: "handfull" },
+    { from: "liter", to: "l" },
+    { from: "pkt", to: "förp" },
+    { from: "burkar", to: "förp" },
+    { from: "förpackningar", to: "förp" },
+    { from: "tuber", to: "förp" },
+    { from: "tub", to: "förp" },
+    { from: "nävar", to: "handfull" },
+    { from: "droppar§", to: "droppar" },
+    { from: "kuvert", to: "förp" },
+    { from: "tks", to: "tsk" },
+    { from: "decimeter", to: "dm" },
+    { from: "knippa", to: "knippe" },
+    { from: "gr", to: "g" },
+    { from: "portioner", to: "port" },
+    { from: "ca", to: "" }];
 
 
 let tagChanges = [
@@ -57,6 +103,7 @@ let tagChanges = [
     { from: "Wraps", to: "Wrap" },
     { from: "Äggfritt", to: "Äggfri" },
     { from: "Grilla", to: "Grill" },
+    { from: "Nyttigt", to: "Nyttig" },
     { from: "Östeuropeisk mat", to: "Östeuropeisk" }];
 
 
@@ -130,6 +177,12 @@ let foodChanges = [
     { from: "Finhackad rödlök", to: "Rödlök" },
     { from: "Finhackad schalottenlök", to: "Schalottenlök" },
     { from: "Finhackad vitlök", to: "Vitlök" },
+    { from: "Finhackade vitlöksklyftor", to: "Vitlöksklyfta" },
+    { from: "Finhackade gräslök", to: "Gräslök" },
+    { from: "Finhackade bladpersilja", to: "Bladpersilja" },
+    { from: "Finhackad vitlöksklyftor", to: "Vitlöksklyfta" },
+    { from: "Finhackad gräslök", to: "Gräslök" },
+    { from: "Finhackad bladpersilja", to: "Bladpersilja" },
     { from: "Finkrossade tomater", to: "Krossad tomat" },
     { from: "Finriven färsk ingefära", to: "Ingefära" },
     { from: "Finriven ingefära", to: "Ingefära" },
@@ -728,6 +781,13 @@ let foodChanges = [
     { from: "Äkta vaniljpulver", to: "Vaniljpulver" },
     { from: "Portioner ris", to: "Port ris" },
     { from: "Mogna bananer", to: "Banan" },
+    { from: "Mogen mango", to: "Mango" },
+    { from: "Skivad rödlök", to: "Rödlök" },
+    { from: "Skivad banan", to: "Banan" },
+    { from: "Smulad getost", to: "Getost" },
+    { from: "Förkokta majskolvar", to: "Majskolv" },
+
+
     { from: "Laktosfri", to: "Laktosfritt" },
 
 
@@ -741,8 +801,8 @@ let log = [];
 let foodLoaded = false;
 let tagLoaded = false;
 firebase.auth().signInAnonymously().catch(function (error) {
-    console.log("ERROR"+ error)
- });
+    console.log("ERROR" + error)
+});
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         foodRef.orderByChild("uses").once("value", function (snapshot) {
@@ -774,6 +834,7 @@ function runRecipes() {
             let usedTagsTo = [];
             let recipe = child.val();
             let changesmade = false;
+            let deleteRecipe = false;
             let tagsToRemove = [];
             console.log("recipe running:" + recipe.source);
             for (let i = 0; i < recipe.ingredients.length; i++) {
@@ -784,12 +845,12 @@ function runRecipes() {
                         recipe.ingredients[i].name = change.to;
                         changesmade = true;
                         log.push("From food:" + change.from + " toFood:" + change.to + " src:" + recipe.source + " key:" + child.key);
-                        if(change.to.startsWith("Förp ") && (!recipe.ingredients[i].unit || recipe.ingredients[i].unit === "st")){
-                            log.push("from:" +  recipe.ingredients[i].unit + " " + recipe.ingredients[i].name);
+                        if (change.to.startsWith("Förp ") && (!recipe.ingredients[i].unit || recipe.ingredients[i].unit === "st")) {
+                            log.push("from:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name);
                             recipe.ingredients[i].name = change.to.substring(5).trim();
                             recipe.ingredients[i].name = recipe.ingredients[i].name.charAt(0).toUpperCase() + recipe.ingredients[i].name.slice(1);
                             recipe.ingredients[i].unit = "förp";
-                            log.push("to:" +  recipe.ingredients[i].unit + " " + recipe.ingredients[i].name + " source:" + recipe.source);
+                            log.push("to:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name + " source:" + recipe.source);
 
                             //detta behöver köras i separat script för alla som börjar på förp i datachange nu. Men sen räcker det att köra den här
                             //testa, lägg till liknande för Port och skivor
@@ -823,7 +884,59 @@ function runRecipes() {
                     }
                 }
             }
-            if (changesmade) {
+
+            for (let i = 0; i < recipe.ingredients.length; i++) {
+                let ingredient = recipe.ingredients[i];
+                for (let j = 0; j < unitChanges.length; j++) {
+                    let change = foodChanges[j];
+                    if (ingredient.unit && change.from === ingredient.unit) {
+                        if (ingredient.amount && ingredient.amount == "1") {
+                            if (change.to.trim() === "") {
+                                log.push("deleting unit:" + ingredient.unit);
+                                delete recipe.ingredients[j].unit;
+                            } else {
+                                log.push("setting unit to singular:" + ingredient.amount + ingredient.unit);
+                                recipe.ingredients[i].unit = change.to.replace(/\s*\([^()]*\)$/, '');
+                                log.push("to: " + ingredient.amount + recipe.ingredients[i].unit);
+
+                            }
+                        } else {
+                            if (change.to.trim() === "") {
+                                log.push("deleting unit:" + ingredient.unit);
+                                delete recipe.ingredients[j].unit;
+                            } else {
+                                log.push("change unit from:" + ingredient.unit);
+                                recipe.ingredients[i].unit = change.to;
+                                log.push("change unit to:" + ingredient.recipe.ingredients[i].unit);
+
+                            }
+                        }
+                        changesmade = true;
+                    }
+                }
+            }
+
+            for (let i = 0; i < recipe.ingredients.length; i++) {
+                let ingredient = recipe.ingredients[i];
+                if (ingredient.amount && isNaN(ingredient.amount)) {
+                    if (ingredient.amount.length === 3 && (ingredient.amount.indexOf("/") === 1 || ingredient.amount.indexOf("+") === 1)) {
+                        log.push("change amount from:" + ingredient.amount);
+
+                        recipe.ingredients[i].amount = Math.round( eval(ingredient.amount) * 100 ) / 100;
+                        log.push("to:" + recipe.ingredients[i].amount);
+
+                        changesmade = true;
+                    } else {
+                        log.push("---------------------------------------------------------------------------------------------");
+                        log.push("DELETING recipe>" + recipe.source + ":" + ingredient.amount);
+                        log.push("---------------------------------------------------------------------------------------------");
+                        deleteRecipe = true;
+                    }
+                }
+            }
+            if (deleteRecipe) {
+                recipesRef.child(child.key).remove();
+            } else if (changesmade) {
                 var recipeRef = recipesRef.child(child.key);
                 recipeRef.update(recipe);
             }

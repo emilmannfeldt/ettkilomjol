@@ -131,7 +131,17 @@ function createRecipes() {
                     //skap aen till array i början med alla keys?
                     //skapa någon metod som query till firebase som hämtar rätt child utefter source
                     //när det funkar kör mittkok11 och nya ica urls
-                    existingRecipes[i].update(recipe);
+                    console.log("UPDATE");
+//måste testas mer noga med att läsa in ett recept från backup med +1 på något etc
+                    recipesRef.orderByChild('source').equalTo(existingRecipes[i].source).once("value", function(snapshot) {
+                        snapshot.forEach(function(child) {
+                            console.log(child.key);
+                            let recipeTmp = child.val();
+                            log.push("old recipe: " + JSON.stringify(recipeTmp));
+                            recipesRef.child(child.key).update(recipe);
+                            log.push("new recipe: " + JSON.stringify(recipe));
+                        });
+                    });
                     nrOfRecipesUpdated++;
                 }
             }

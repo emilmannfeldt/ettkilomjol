@@ -26,7 +26,7 @@ class RecipeList extends Component {
         let ingredientHits = 0;
         for (let i = 0; i < recipeIngredients.length; i++) {
             let ing = recipeIngredients[i].name;
-            if (filterIngredients.indexOf(ing) > -1 ) {
+            if (filterIngredients.indexOf(ing) > -1) {
                 //här måste vi ändra så att dubbletter av ingredient namn inte räjnas dubbel träff
                 ingredientHits++;
             }
@@ -158,42 +158,64 @@ class RecipeList extends Component {
         }
         return b.rating - a.rating;
     }
-
-    sortOnTid(a, b) {
-        if(!b.time && !a.time){
-            return 0;
+    sortOnPopularitet(a, b) {
+        if (!a.visits && !b.visits) {
+            this.sortOnVotes(a, b);
         }
-        if(!b.time){
-            return -1;
-        }
-        if(!a.time){
+        if (!a.visits) {
             return 1;
         }
-        if(a.time === b.time){
+        if (!b.visits) {
+            return -1;
+        }
+        if (a.visits === b.visits) {
+            this.sortOnVotes(a, b);
+        }
+        return b.visits - a.visits;
+    }
+    sortOnVotes(a, b) {
+        if (b.votes === a.votes) {
+            return b.rating - a.rating;
+        }
+        return b.votes - a.votes;
+    }
+
+    sortOnTid(a, b) {
+        if (!b.time && !a.time) {
+            return 0;
+        }
+        if (!b.time) {
+            return -1;
+        }
+        if (!a.time) {
+            return 1;
+        }
+        if (a.time === b.time) {
             return a.level - b.level;
         }
         return a.time - b.time;
     }
 
     sortOnAntalIngredienserAsc(a, b) {
-        if(a.ingredients.length === b.ingredients.length){
+        if (a.ingredients.length === b.ingredients.length) {
             return this.sortOnBetyg(a, b);
         }
         return a.ingredients.length - b.ingredients.length;
     }
 
     sortRecipes(a, b) {
-        
+
         if (this.props.filter.sort === 'Relevans') {
             return this.sortOnRelevans(a, b);
         } else if (this.props.filter.sort === 'Betyg') {
             return this.sortOnBetyg(a, b);
-        }else if (this.props.filter.sort === 'Snabbast'){
+        } else if (this.props.filter.sort === 'Popularitet') {
+            return this.sortOnPopularitet(a, b);
+        } else if (this.props.filter.sort === 'Snabbast') {
             return this.sortOnTid(a, b);
-        }else if (this.props.filter.sort === 'Ingredienser'){
+        } else if (this.props.filter.sort === 'Ingredienser') {
             return this.sortOnAntalIngredienserAsc(a, b);
         }
-
     }
 
     render() {

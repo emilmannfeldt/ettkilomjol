@@ -63,6 +63,14 @@ function runRecipes() {
             }
         }
     }
+    console.log(foods.length)
+    for(let prop in foods){
+        let food = foods[prop];
+        if(food.uses < 5){
+            delete foods[prop];
+        }
+    }
+
     foodsRef.set(foods);
     console.log("Success!");
 }

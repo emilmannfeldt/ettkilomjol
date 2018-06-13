@@ -20,12 +20,22 @@ var fs = require('fs');
 //6. Sätt filename enligt "ICA-RECEPTSRC-DATE.json"
 //6. kör node set DEBUG=nightmare & node ica.js
 //8. kör node createRecipes.js och ange namnet på filen som skapades här
-let urls = [
-    "https://www.ica.se/recept/julsmorgas-med-honungs-och-senapsmarinerad-lax-720896/",
-    "https://www.ica.se/recept/levain-med-confiterat-anklar-och-enbarspicklad-svamp-720687/"
-  ];
+let urls = [ "https://www.ica.se/recept/sojabonsburgare-med-avokadokram-724092/",
+"https://www.ica.se/recept/somrig-mazarintarta-med-farska-bar-724036/",
+"https://www.ica.se/recept/stekt-torskrygg-med-medelhavssalsa-724071/",
+"https://www.ica.se/recept/vitlokssill-med-citron-724123/",
+"https://www.ica.se/recept/brantevikssill-724122/",
+"https://www.ica.se/recept/frasch-basilikasill-724121/",
+"https://www.ica.se/recept/tre-goda-silltapas-724119/",
+"https://www.ica.se/recept/matjessill-pa-fat-724120/",
+"https://www.ica.se/recept/stekta-thaifiskbollar-i-salladsknyten-724069/",
+"https://www.ica.se/recept/parmesanpopcorn-724047/",
+"https://www.ica.se/recept/popcorn-med-chili-och-lime-724046/",
+"https://www.ica.se/recept/kycklingvingar-med-koriandermajonnas-724045/",
+"https://www.ica.se/recept/kottfarspaj-med-mozzarella-724000/",
+"https://www.ica.se/recept/shrimp-rolls-724048/"];
 
-let filename = "ica/laktosTESTfri-2018-06-07.json";
+let filename = "ica/Relevans-2018-06-13.json";
 
 nightmare
     .goto('https://www.ica.se/recept')

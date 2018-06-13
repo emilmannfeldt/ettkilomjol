@@ -37,7 +37,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         //firebase.database().ref("recipes").remove();
         foodsRef.orderByChild("uses").once("value", function (snapshot) {
             snapshot.forEach(function (child) {
-                if(child.val().uses > 1){
+                if (child.val().uses > 1) {
                     existingFoods.splice(0, 0, child.val().name);
                 }
             });
@@ -68,7 +68,7 @@ function runRecipes() {
             if (recipe.tags.hasOwnProperty(property)) {
                 let tag = property;
                 if (existingFoods.indexOf(tag) > -1) {
-                    if(removedTags.indexOf(tag) == -1){
+                    if (removedTags.indexOf(tag) == -1) {
                         removedTags.push(tag);
                     }
                     continue;
@@ -86,8 +86,13 @@ function runRecipes() {
             }
         }
     }
-    console.log(removedTags + "removed bcs its in foods")
 
+    for (let prop in tags) {
+        let tag = tags[prop];
+        if (tag.uses < 5) {
+            delete tags[prop];
+        }
+    }
     tagsRef.set(tags);
     console.log("Success!");
 }

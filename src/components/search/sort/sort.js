@@ -11,13 +11,11 @@ class Sort extends Component {
         menuStyle: {
             marginTop: 0,
             color: 'rgba(255, 255, 255, 0.9)',
-
         },
         root: {
             float: 'right',
             height: 60,
             color: 'rgba(255, 255, 255, 0.9)',
-
         },
         floatingLabel: {
             top: 22,
@@ -40,6 +38,7 @@ class Sort extends Component {
             >
                 <MenuItem value={'Relevans'} primaryText="Relevans" />
                 <MenuItem value={'Betyg'} primaryText="Betyg" />
+                <MenuItem value={'Popularitet'} primaryText="Populäritet" />
                 <MenuItem value={'Snabbast'} primaryText="Snabbast" />
                 <MenuItem value={'Ingredienser'} primaryText="Antal ingredienser" />
             </SelectField>

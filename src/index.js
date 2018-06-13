@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import './index.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { firebaseApp } from './base';
-import { PropagateLoader } from 'react-spinners';
-import Typed from 'typed.js';
 
 
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
@@ -38,17 +37,10 @@ const DAYS_TO_SAVE_LOCALSTORAGE = 1;
 //https://www.npmjs.com/package/react-loading-animation
 
 window.onload = function () {
-  var options = {
-    strings: ['Letar recept','Googlar..','Kollar masterchef','Ringer mamma','Chattar med Mannerström', 'Läser på mjölkpaketet','Frågar Siri','Dammar av kokboken','Ringer gatuköket','Surfar på onlinepizza'],
-    typeSpeed: 40,
-    backSpeed: 20,
-    backDelay: 300,
-    startDelay: 0,
-  }
-  var typed = new Typed("#loading-text", options);
+console.log("windowload");
   firebaseApp.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
-console.log("ERROR sign in anonymous" + error);
+    console.log("ERROR sign in anonymous" + error);
     // ...
   });
 };
@@ -146,9 +138,8 @@ function getRecipesIndexedDB() {
   }
 }
 
-function hideSpinner(){
-  document.querySelector(".spinner").style.display='none';
-  document.querySelector("#loading-text").style.display='none';
+function hideSpinner() {
+  document.querySelector(".spinner").style.display = 'none';
 }
 // let signOut = function() {
 //   // Sign out of Firebase.
@@ -157,7 +148,9 @@ function hideSpinner(){
 //testa indexdb, funkar det? gå tillbaka till localcache... Snygga till cards
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
 firebaseApp.auth().onAuthStateChanged(function (user) {
+  console.log("auth before user if")
   if (user) {
+    console.log("auth after user if")
     getRecipesIndexedDB();
 
     let foodRef = firebaseApp.database().ref("foods");
@@ -173,7 +166,7 @@ firebaseApp.auth().onAuthStateChanged(function (user) {
         foods.length = 0;
         snapshot.forEach(function (child) {
           if (child.val().uses >= MIN_USES_FOOD) {
-            foods.splice(0,0,child.val());
+            foods.splice(0, 0, child.val());
           }
         });
         localStorage.setItem('foods', JSON.stringify(foods));
@@ -185,12 +178,16 @@ firebaseApp.auth().onAuthStateChanged(function (user) {
       console.log("LOADING NEW UNITS");
       unitsRef.once("value", function (snapshot) {
         units.length = 0;
-        snapshot.forEach(function (child) {
-          units = Object.keys(snapshot.val()).map(function (key) { return snapshot.val()[key]; });
-          units.sort(function (a, b) {
-            return a.ref - b.ref;
-          });
-        });
+        units = snapshot.val();
+        for (let type in units) {
+          if (units.hasOwnProperty(type)) {
+            let unit = Object.keys(units[type]).map(function (key) { return units[type][key]; });
+            unit.sort(function (a, b) {
+              return a.ref - b.ref;
+            });
+            units[type] = unit;
+          }
+        }
         localStorage.setItem('units', JSON.stringify(units));
       });
       localStorage.setItem('lastupdatedunits', JSON.stringify(Date.now()));
@@ -202,7 +199,7 @@ firebaseApp.auth().onAuthStateChanged(function (user) {
         tags.length = 0;
         snapshot.forEach(function (child) {
           if (child.val().uses >= MIN_USES_TAG) {
-            tags.splice(0,0,child.val());
+            tags.splice(0, 0, child.val());
           }
         });
         localStorage.setItem('tags', JSON.stringify(tags));
@@ -228,7 +225,7 @@ firebaseApp.auth().onAuthStateChanged(function (user) {
     // No user is signed in.
     console.log("bye" + user);
   }
-  
+
 });
 
 //https://www.youtube.com/watch?v=_Fzl0Cim6F8
@@ -240,14 +237,10 @@ firebaseApp.auth().onAuthStateChanged(function (user) {
 const Applicaption = () => (
   <MuiThemeProvider>
     <div>
-    <div className='spinner'>
-        <PropagateLoader
-          color={'#00bcd4'} 
-        />
+      <div className='spinner'>
+        <LinearProgress />
       </div>
-      <div className='spinner' id="loading-text">Letar recept</div>
-
-    <App foods={foods} tags={tags} units={units} users={users} recipes={recipes}></App>
+      <App foods={foods} tags={tags} units={units} users={users} recipes={recipes}></App>
     </div>
   </MuiThemeProvider>
 );

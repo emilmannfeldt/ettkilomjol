@@ -58,20 +58,23 @@ function runRecipes() {
   //script för att  hitta alla recept som har någon ingrediens med ett visst antal uses
   let namel = 0;
   let numberRec = 0;
+  
   recipesRef.once('value', function (snapshot) {
     console.log("receipes hämtade");
     snapshot.forEach(function (child) {
       let busted = false;
       let recipe = child.val();
       let changesmade = false;
-      if(recipe.source.indexOf("mittkok.expressen")>-1){
-        //recipesRef.child(child.key).remove();
-        log.push("removed:" + recipe.source);
-
-      }
+      let pinne = "--------------";
       console.log("recipe running:" + recipe.source);
+
+
+      
       for (let i = 0; i < recipe.ingredients.length; i++) {
-     
+          let ingredient = recipe.ingredients[i];
+          if(ingredient.name.trim() === "förp"){
+            log.push(recipe.source);
+          }
       }
 
 

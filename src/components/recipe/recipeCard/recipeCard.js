@@ -1,22 +1,18 @@
 import React, { Component } from 'react';
 import './recipeCard.css';
+import { firebaseApp } from '../../../base';
 import Time from './time/time';
 import Tags from './tags/tags';
 import Level from './level/level';
 import Rating from './rating/rating';
-
+import Portion from './portion/portion';
 import FavoriteIcon from 'material-ui/svg-icons/action/favorite-border';
 import FlatButton from 'material-ui/FlatButton';
-
 import Ingredientlist from './ingredientlist/ingredientlist';
 import IngredientProgress from './ingredientProgress/ingredientProgress';
-
 import { Card, CardText } from 'material-ui/Card';
 
 class RecipeCard extends Component {
-  //onödigt med constructor om det bara är super(props)?
-  //ha en state här som är true/false om detailview visas. 
-  //nvänd den för att visa mer/mindre i komponenterna
   constructor(props) {
     super(props);
     this.state = {
@@ -24,14 +20,9 @@ class RecipeCard extends Component {
     };
     this.toggleIngredientlist = this.toggleIngredientlist.bind(this);
     this.closeIngredientlist = this.closeIngredientlist.bind(this);
-
+    this.visitSource = this.visitSource.bind(this);
 
   }
-  //if expanded visa ännu en komponent (lista med ingredienser)
-  //stäng alla andra expanded när denna blir true?
-  //det som nu är ingredients kan duppliceras till ingredientlist
-
-
   styles = {
     recipeCard: {
       margin: 4,
@@ -43,15 +34,31 @@ class RecipeCard extends Component {
     }
   };
 
-  toggleIngredientlist(){
+  toggleIngredientlist() {
     this.setState({
       expanded: !this.state.expanded,
     });
   }
 
-  closeIngredientlist(){
+  closeIngredientlist() {
     this.setState({
       expanded: false,
+    });
+  }
+
+  visitSource() {
+    let recipeRef = firebaseApp.database().ref("recipes");
+    recipeRef.orderByChild('source').equalTo(this.props.recipe.source).once("value", function (snapshot) {
+      snapshot.forEach(function (child) {
+        let recipeTmp = child.val();
+        console.log("visiting " + child.val().source);
+        if (recipeTmp.visits) {
+          recipeTmp.visits = recipeTmp.visits + 1;
+        } else {
+          recipeTmp.visits = 1;
+        }
+        recipeRef.child(child.key).update(recipeTmp);
+      });
     });
   }
 
@@ -78,18 +85,26 @@ class RecipeCard extends Component {
     function IngredientlistComponent(props) {
       const render = props.render;
       if (render) {
-        return (<div><Ingredientlist ingredients={props.ingredients} missing={props.missing}/></div>);
+        return (<div><Ingredientlist ingredients={props.ingredients} missing={props.missing} /></div>);
       } else {
-        return (<div className="hidden"/>);
+        return (<div className="hidden" />);
       }
-
+    }
+    function PortionComponent(props) {
+      const render = props.render;
+      if (render && props.portions) {
+        return (<div><Portion portions={props.portions} />
+        </div>);
+      } else {
+        return (<div className="hidden" />);
+      }
     }
 
     return (<div className="col-xs-12 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
       <CardText className="recipe-card-info row">
         <div className="recipecard-title col-xs-12"><h2>
-          <a target='_blank' href={this.props.recipe.source}>{this.props.recipe.title}</a></h2>
-          
+          <a onClick={this.visitSource} target='_blank' href={this.props.recipe.source}>{this.props.recipe.title}</a></h2>
+
         </div>
         <div className="col-xs-12 recipecard-author">
           <span>
@@ -99,15 +114,15 @@ class RecipeCard extends Component {
           </span>
         </div>
         <FlatButton
-            label="Spara"
-            className="recipecard-save-btn"
-            secondary={true}
-            icon={<FavoriteIcon/>}/>
+          label="Spara"
+          className="recipecard-save-btn"
+          secondary={true}
+          icon={<FavoriteIcon />} />
         <div className="col-xs-12 recipecard-description">{this.props.recipe.description} </div>
         <div className="col-xs-12 recipecard-rating">
           <Rating
-          value={this.props.recipe.rating}
-          votes={this.props.recipe.votes}
+            value={this.props.recipe.rating}
+            votes={this.props.recipe.votes}
           />
         </div>
         <div className="col-md-4 col-xs-12">
@@ -116,14 +131,15 @@ class RecipeCard extends Component {
         </div>
         <div className="col-md-8 col-xs-12 recipecard-ingredients">
           <IngredientProgress
-            matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist}/>
+            matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist} />
+          <PortionComponent portions={this.props.recipe.portions} render={this.state.expanded} />
         </div>
         <div className="col-md-8 col-xs-12 ingredient-list">
-        <IngredientlistComponent
-            ingredients={this.props.recipe.ingredients} missing={missingIngredients} render={this.state.expanded}/>
+          <IngredientlistComponent
+            ingredients={this.props.recipe.ingredients} missing={missingIngredients} render={this.state.expanded} />
         </div>
         <div className="col-xs-12">
-          <Tags matchedTags={matchedTags} recipeTags={this.props.recipe.tags} recipeKey={this.props.recipe.source}/>
+          <Tags matchedTags={matchedTags} recipeTags={this.props.recipe.tags} recipeKey={this.props.recipe.source} />
         </div>
 
       </CardText>
