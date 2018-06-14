@@ -10,6 +10,6 @@ let config = {
   if (window.location.hostname === 'localhost') {
     config.apiKey = "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8";
   }
-const firebaseApp = firebase.initializeApp(config);
+const fire = firebase.initializeApp(config);
 
-export {firebaseApp}
+export {fire}

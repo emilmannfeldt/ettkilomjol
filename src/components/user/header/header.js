@@ -7,59 +7,99 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/more-vert
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import Button from '@material-ui/core/Button';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import headerImg from './pexels-photo-262918.jpeg'
+import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
+import headerImg from './pexels-photo-262918.jpeg';
+import { fire } from '../../../base';
+import firebase from 'firebase';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      showLoginPage: false
     };
+    this.logout = this.logout.bind(this);
+    this.login = this.login.bind(this);
+
   }
-  //här ska jag bygga upp en header med login/register knapp om man inte är authed. annars visas ikoner för "min profil, mina recept, inköpslistor, logga ut"
-  //https://www.youtube.com/watch?v=XMuoDQy61ys
-  //https://www.youtube.com/watch?v=-OKrloDzGpU
-  
- // får in metoder här från app.js för logout/signin/register new user. 
-  //slutresultatet ska vara ett korrekt state i app.js över inloggad användare och tillgörande data för denna som sedan skickas vidare till berörda componenter.
-  //se om jag kan dela upp / bryta ut mer delar från index.js för att snygga till den.
-  //kanske behöver använda react routing?
-      
-//problem med run deploy..
-//push behöver jag skriva in namn och lösenord igen
-//senaste tre commitsen har inte kunnat deployats, recipebackups, mailchimp, header.js, base.js
-//testa felsökning annars försök styra om till firebase hosting?
+  uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: 'popup',
+    // We will display Google and Facebook as auth providers.
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    ],
+    callbacks: {
+      signInSuccessWithAuthResult: () => {
+        this.setState({
+          showLoginPage: false,
+        });
+        return false;
+      }
+    }
+  }
+
+  logout(e) {
+    e.preventDefault();
+    this.setState({
+      showLoginPage: false
+    });
+    console.log("signout");
+    fire.auth().signOut();
+  }
+  login(e) {
+    e.preventDefault();
+    this.setState({
+      showLoginPage: !this.state.showLoginPage
+    });
+    console.log("signin");
+  }
 
   render() {
     return (
       <div>
-      {window.location.href.endsWith("/stats") ? 
-      null : <div className="headerImageContainer">
-              <img src={headerImg} id="headerimage"/>
-            </div>}
+        {window.location.href.endsWith("/stats") ?
+          null : <div className="headerImageContainer">
+            <img src={headerImg} id="headerimage" />
+          </div>}
 
-      <Toolbar>
-        <ToolbarGroup firstChild={true}>
-        <ToolbarTitle className="toolbar-title" text="Ett kilo mjöl" />
-        </ToolbarGroup>
-        <ToolbarGroup>
-          <FontIcon className="muidocs-icon-custom-sort" />
-          <Button variant="contained" className="login-btn" color="primary" >
-          Logga in
+        <Toolbar>
+          <ToolbarGroup firstChild={true}>
+            <ToolbarTitle className="toolbar-title"
+              text={'Ett kilo mjöl'} />
+          </ToolbarGroup>
+          <ToolbarGroup>
+            <FontIcon className="muidocs-icon-custom-sort" />
+            {fire.auth().currentUser.isAnonymous ? (
+              <Button onClick={this.login} variant="contained" className="login-btn" color="primary" >
+                {this.state.showLoginPage ? 'Avbryt' : 'Logga in'}
           </Button>
-          <IconMenu
-            iconButtonElement={
-              <IconButton touch={true} className="toolbar-more-btn">
-                <NavigationExpandMoreIcon className="toolbar-more-icon"/>
-              </IconButton>
-            }
-          >
-            <MenuItem primaryText="Kontakta mig" />
-            <MenuItem primaryText="Om applikationen" />
-          </IconMenu>
-        </ToolbarGroup>
-      </Toolbar>
+            ) : (
+                <Button onClick={this.logout} variant="contained" className="login-btn" color="primary" >
+                  Logga ut
+          </Button>)}
+
+            <IconMenu
+              iconButtonElement={
+                <IconButton touch={true} className="toolbar-more-btn">
+                  <NavigationExpandMoreIcon className="toolbar-more-icon" />
+                </IconButton>
+              }
+            >
+              <MenuItem primaryText="Kontakta mig" />
+              <MenuItem primaryText="Om applikationen" />
+            </IconMenu>
+          </ToolbarGroup>
+        </Toolbar>
+        {this.state.showLoginPage ? (
+          <div className="login-form">
+            <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={fire.auth()} />
+          </div>
+        ) : (null)}
       </div>
     );
   }

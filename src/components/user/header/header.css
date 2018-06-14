@@ -9,6 +9,7 @@
     margin-bottom: -490px;
     background-color: black;
 }
+
 #headerimage {
     opacity: 0.9;
     position: relative;
@@ -23,40 +24,122 @@
     -ms-transform: translate(-50%);
     -webkit-transform: translateX(-50%);
 }
+
 img {
     border: none;
     max-width: 100%;
     width: auto;
     height: auto;
 }
-.login-btn{
+
+.login-btn {
     min-width: 10rem !important;
 }
-.toolbar-title{
+
+.toolbar-title {
     color: rgba(255, 255, 255, 0.9) !important;
     margin-left: 1.5rem;
     font-weight: 600;
     font-size: 1.5em !important;
 }
-.toolbar-more-icon{
+
+.toolbar-more-icon {
     color: rgba(255, 255, 255, 0.9) !important;
 }
-@media (max-width: 599px){
+
+.login-form:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#firebaseui_container {
+    z-index: 1000;
+    position: fixed;
+    top: 10%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.firebaseui-container {
+    background: rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+    min-height: 150px;
+    padding-top: 10px;
+    border-radius: 20px;
+    box-shadow: none;
+}
+
+.firebaseui-container.firebaseui-page-provider-sign-in {
+    background: transparent;
+    box-shadow: none;
+    min-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+}
+
+.firebaseui-container.firebaseui-id-page-callback {
+    background: transparent;
+    box-shadow: none;
+    margin-top: 40px;
+    height: 84px;
+    min-height: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+}
+
+.firebaseui-card-header {
+    display: none;
+}
+
+.firebaseui-subtitle, .firebaseui-text {
+    color: rgba(255, 255, 255, 0.87);
+}
+
+.firebaseui-form-actions .mdl-button--raised.mdl-button--colored.firebaseui-button {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.firebaseui-id-dismiss-info-bar {
+    display: block;
+}
+
+.firebaseui-info-bar {
+    border: 0;
+    border-radius: 10px;
+    left: 5%;
+    right: 5%;
+    top: 10%;
+    bottom: 10%;
+}
+
+.login-btn {
+    z-index: 1000;
+}
+
+@media (max-width: 599px) {
     .headerImageContainer {
         height: 330px;
         margin-bottom: -330px;
     }
-    .login-btn{
+    .login-btn {
         margin-right: 0px !important;
         margin-left: 0px !important;
     }
-    .toolbar-more-btn{
+    .toolbar-more-btn {
         width: 1rem !important;
         padding-right: 0px !important;
         padding-left: 0.4rem !important;
     }
 }
-@media (max-width: 979px){
+
+@media (max-width: 979px) {
     .headerImageContainer {
         height: 420px;
         margin-bottom: -420px;

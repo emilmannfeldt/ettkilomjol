@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './recipeCard.css';
-import { firebaseApp } from '../../../base';
+import { fire } from '../../../base';
 import Time from './time/time';
 import Tags from './tags/tags';
 import Level from './level/level';
@@ -47,7 +47,7 @@ class RecipeCard extends Component {
   }
 
   visitSource() {
-    let recipeRef = firebaseApp.database().ref("recipes");
+    let recipeRef = fire.database().ref("recipes");
     recipeRef.orderByChild('source').equalTo(this.props.recipe.source).once("value", function (snapshot) {
       snapshot.forEach(function (child) {
         let recipeTmp = child.val();

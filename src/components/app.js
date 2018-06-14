@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import FilterableRecipeList from './filterableRecipeList';
-import Filterbar from './search/filterbar/filterbar';
-import Header from './user/header/header';
-import Footer from './user/footer/footer';
-import { firebaseApp } from '../base';
+import Home from './home';
+import { fire } from '../base';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
   BrowserRouter as Router,
   Route,
@@ -17,33 +15,40 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedInUser: {},
-      authenticated: false,
+      user: null,
     };
-    this.handleLogout = this.handleLogout.bind(this);
+    this.authListener = this.authListener.bind(this);
   }
 
-  handleLogout() {
-    this.setState({
-      loggedInUser: null,
-      authenticated: false,
+  componentDidMount() {
+    console.log("app didmount")
+    this.authListener();
+  }
+
+  authListener() {
+    fire.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log("app login")
+        console.log(user)
+        this.setState({ user });
+      } else {
+        fire.auth().signInAnonymously().catch(function (error) {
+          console.log("ERROR sign in anonymous" + error);
+        });
+        console.log("app logout")
+      }
     });
-    firebaseApp.auth.signOut();
   }
 
   render() {
 
     return (
-      <Router>
-        <div>
-          <Header onLogout={this.handleLogout} isAuthenticated={this.state.authenticated} loggedInUser={this.state.loggedInUser} />
-          <Route exact path="/stats" render={()=><Stats tags={this.props.tags} foods={this.props.foods} recipes={this.props.recipes} units={this.props.units} />}/>
-          <Route exact path="/" render={()=><FilterableRecipeList tags={this.props.tags} foods={this.props.foods} recipes={this.props.recipes} />}/>
-          <Footer/>
+      <MuiThemeProvider>
+        {this.state.user ? (
+          <Home />
+        ) : (null)}
+      </MuiThemeProvider>
 
-
-        </div>
-      </Router>
     );
   }
 }
