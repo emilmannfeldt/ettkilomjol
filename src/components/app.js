@@ -2,13 +2,6 @@ import React, { Component } from 'react';
 import Home from './home';
 import { fire } from '../base';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter
-} from "react-router-dom";
 import Stats from './pages/stats';
 
 class App extends Component {

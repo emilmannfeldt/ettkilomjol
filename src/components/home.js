@@ -5,11 +5,8 @@ import Footer from './user/footer/footer';
 import { fire } from '../base';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
     Route,
-    Link,
-    Redirect,
-    withRouter
 } from "react-router-dom";
 import Stats from './pages/stats';
 
