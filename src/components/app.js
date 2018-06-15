@@ -23,6 +23,11 @@ class App extends Component {
   componentDidMount() {
     console.log("app didmount")
     this.authListener();
+    if (!this.state.user) {
+      fire.auth().signInAnonymously().catch(function (error) {
+        console.log("ERROR sign in anonymous" + error);
+      });
+    }
   }
 
   authListener() {
