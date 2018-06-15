@@ -7,10 +7,10 @@
   color: rgba(255, 255, 255, 0.9) !important;
 }
 .quick-tags-norecipes{
-  margin-top:16em;
+  margin-top:6em;
 }
 @media (max-width: 767px){
   .quick-tags-norecipes{
-    margin-top:1em;
+    margin-top:4em;
   }
 }

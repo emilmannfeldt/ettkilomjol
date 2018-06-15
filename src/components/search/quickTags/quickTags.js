@@ -30,7 +30,7 @@ class QuickTags extends Component {
   render() {
     let chips = [];
     let tagsToDisplay = 20;
-    if(!this.props.filterIsEmpty){
+    if(this.props.recipeListRendered){
       tagsToDisplay = 8;
     }
     for (let i = 0; i < this.props.tags.length; i++) {
@@ -45,7 +45,7 @@ class QuickTags extends Component {
     }
 
     return (
-      <div className={this.props.filterIsEmpty ? 'chip-wrapper quick-tags-norecipes' : 'chip-wrapper'}>
+      <div className={this.props.recipeListRendered ? 'chip-wrapper' : 'chip-wrapper quick-tags-norecipes'}>
         {chips}
       </div>
     );

@@ -23,9 +23,6 @@ class Sort extends Component {
             color: 'rgba(255, 255, 255, 0.9)',
         }
     };
-    showSort(){
-        return this.props.filter.tags.length > 0 || this.props.filter.ingredients.length > 0;
-    }
 
     handleChange(event, index, value) {
         let newFilter = this.props.filter;
@@ -33,7 +30,7 @@ class Sort extends Component {
         this.props.onUserInput(newFilter);
 
     } render() {
-        if (this.showSort()) {
+        if (this.props.render) {
             return (<SelectField
                 style={this.styles.root}
                 menuStyle={this.styles.menuStyle}
