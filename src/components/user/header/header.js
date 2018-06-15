@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import './header.css';
+import { Link } from 'react-router-dom';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
+import LoggedInIcon from 'material-ui/svg-icons/social/person';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
@@ -60,6 +62,25 @@ class Header extends Component {
   }
 
   render() {
+    function MenuItemList(props) {
+      if (fire.auth().currentUser.isAnonymous) {
+        return (<div>
+          <Link to={'/stats'}><MenuItem primaryText="Siffror" /></Link>
+          <MenuItem primaryText="Kontakta mig" />
+          <MenuItem primaryText="Logga in" onClick={props.loginAction} />
+        </div>
+        );
+      } else {
+        return (<div>
+          <Link to={'/stats'}><MenuItem primaryText="Siffror" /></Link>
+          <MenuItem primaryText="Kontakta mig" />
+          <MenuItem primaryText="Favoritrecept" />
+          <MenuItem primaryText="Mina inköpslistor" />
+          <MenuItem primaryText="Logga ut" onClick={props.logoutAction} />
+        </div>);
+      }
+    }
+
     return (
       <div>
         {window.location.href.endsWith("/stats") ?
@@ -67,21 +88,22 @@ class Header extends Component {
             <img src={headerImg} id="headerimage" />
           </div>}
 
-        <Toolbar>
+        <Toolbar className="toolbar">
           <ToolbarGroup firstChild={true}>
-            <ToolbarTitle className="toolbar-title"
-              text={'Ett kilo mjöl'} />
+            <Link to={'/'}>
+              <ToolbarTitle className="toolbar-title"
+                text={'Ett kilo mjöl'} />
+            </Link>
           </ToolbarGroup>
           <ToolbarGroup>
             <FontIcon className="muidocs-icon-custom-sort" />
             {fire.auth().currentUser.isAnonymous ? (
               <Button onClick={this.login} variant="contained" className="login-btn" color="primary" >
                 {this.state.showLoginPage ? 'Avbryt' : 'Logga in'}
-          </Button>
-            ) : (
-                <Button onClick={this.logout} variant="contained" className="login-btn" color="primary" >
-                  Logga ut
-          </Button>)}
+              </Button>
+            ) : (<div>
+              <LoggedInIcon className="toolbar-more-icon" /><span className="username-label"> {fire.auth().currentUser.displayName}</span></div>
+              )}
 
             <IconMenu
               iconButtonElement={
@@ -90,8 +112,7 @@ class Header extends Component {
                 </IconButton>
               }
             >
-              <MenuItem primaryText="Kontakta mig" />
-              <MenuItem primaryText="Om applikationen" />
+              <MenuItemList logoutAction={this.logout} loginAction={this.login} />
             </IconMenu>
           </ToolbarGroup>
         </Toolbar>

@@ -134,22 +134,6 @@ class Stats extends Component {
 
     }
 
-    waitForProps() {
-        let that = this;
-        let j = 0;
-        let waitProps = setInterval(function () {
-            if (that.props.recipes.length > 0) {
-                console.log("force rerender")
-                that.forceUpdate();
-                clearInterval(waitProps);
-            }
-            j++;
-            if (j > 100) {
-                clearInterval(waitProps);
-            }
-        }, 500);
-    }
-
     getDefaultChartData() {
         let chart = {
             labels: [],
@@ -416,9 +400,8 @@ class Stats extends Component {
 
 
     render() {
-        if (this.props.recipes.length === 0) {
-            this.waitForProps();
-        }
+        console.log("RENDERING" + this.props.recipes.length)
+
 
         const defaultOptions = {
             maintainAspectRatio: false,

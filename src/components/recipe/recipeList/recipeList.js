@@ -248,7 +248,7 @@ class RecipeList extends Component {
         }
 
         return (
-            <div><div className="col-md-12 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept i databasen' : ''}</div>
+            <div><div className="col-md-12 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept hämtade' : ''}</div>
                 {easterEgg ? <img src="http://i.imgur.com/W43yLfJ.jpg" height="100%" width="100%"></img> : recipes.map((recipe, index) =>
                     <RecipeCard key={index} filter={this.props.filter} ref="child"
                         recipe={recipe} />

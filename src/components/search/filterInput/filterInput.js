@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import FilterChip from '../filterChip/filterChip';
-import Sort from '../sort/sort';
-
 import './filterInput.css';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
 import FlatButton from 'material-ui/FlatButton';
@@ -13,7 +11,7 @@ class FilterInput extends Component {
     this.state = {
       ingredients: this.props.filter.ingredients,
       tags: this.props.filter.tags,
-      sort: 'Relevans',
+      sort: this.props.filter.sort,
       searchText: '',
     };
     this.handleChange = this.handleChange.bind(this);
@@ -21,7 +19,6 @@ class FilterInput extends Component {
     this.deleteIngredient = this.deleteIngredient.bind(this);
     this.deleteTag = this.deleteTag.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
-    this.handleNewSort = this.handleNewSort.bind(this);
   }
 
   styles = {
@@ -159,16 +156,6 @@ class FilterInput extends Component {
     
     this.props.onFilterChange(newFilter);
   }
-  handleNewSort(value){
-    this.setState({
-      sort : value
-    });
-    let newFilter = this.props.filter;
-    newFilter.sort = value;
-
-    this.props.onFilterChange(newFilter);
-    
-  }
 
   handleNewRequest = (searchText) => {
     let foundchip = false;
@@ -219,8 +206,6 @@ class FilterInput extends Component {
             icon={<ClearIcon />}
           />
           : ''}
-          <Sort onChange={this.handleNewSort} value={this.state.sort}/>
-
       </div>
     );
   }

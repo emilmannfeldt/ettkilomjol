@@ -122,6 +122,14 @@ img {
 .login-btn {
     z-index: 1000;
 }
+.username-label{
+    vertical-align: bottom;
+    line-height: 2em;
+    color: #f5f4f4;
+}
+.toolbar{
+    background-color: #616161 !important;
+}
 
 @media (max-width: 599px) {
     .headerImageContainer {

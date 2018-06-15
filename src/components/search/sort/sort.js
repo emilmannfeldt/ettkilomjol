@@ -6,6 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 class Sort extends Component {
     constructor(props) {
         super(props);
+        this.handleChange = this.handleChange.bind(this);
     }
     styles = {
         menuStyle: {
@@ -22,18 +23,26 @@ class Sort extends Component {
             color: 'rgba(255, 255, 255, 0.9)',
         }
     };
-    handleChange = (event, index, value) => this.props.onChange(value);
-    render() {
-        return (
-            <SelectField
+    showSort(){
+        return this.props.filter.tags.length > 0 || this.props.filter.ingredients.length > 0;
+    }
+
+    handleChange(event, index, value) {
+        let newFilter = this.props.filter;
+        newFilter.sort = value;
+        this.props.onUserInput(newFilter);
+
+    } render() {
+        if (this.showSort()) {
+            return (<SelectField
                 style={this.styles.root}
                 menuStyle={this.styles.menuStyle}
-                selectedMenuItemStyle={{color:'rgb(0,188,212)'}}
+                selectedMenuItemStyle={{ color: 'rgb(0,188,212)' }}
                 floatingLabelStyle={this.styles.floatingLabel}
                 id="sortselect"
                 labelStyle={{ color: 'rgba(255, 255, 255, 0.9)' }}
                 floatingLabelText="Sortering"
-                value={this.props.value}
+                value={this.props.filter.sort}
                 onChange={this.handleChange}
             >
                 <MenuItem value={'Relevans'} primaryText="Relevans" />
@@ -41,8 +50,10 @@ class Sort extends Component {
                 <MenuItem value={'Popularitet'} primaryText="Populäritet" />
                 <MenuItem value={'Snabbast'} primaryText="Snabbast" />
                 <MenuItem value={'Ingredienser'} primaryText="Antal ingredienser" />
-            </SelectField>
-        );
+            </SelectField>);
+        } else {
+            return (null);
+        }
     }
 }
 export default Sort;
