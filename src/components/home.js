@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import FilterableRecipeList from './filterableRecipeList';
+import './home.css';
+
 import Header from './user/header/header';
 import Footer from './user/footer/footer';
 import { fire } from '../base';

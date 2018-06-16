@@ -12,9 +12,13 @@ import Button from '@material-ui/core/Button';
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 import headerImg from './pexels-photo-262918.jpeg';
 import { fire } from '../../../base';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-
+//https://www.youtube.com/watch?v=2ciHixbc4HE bra genomgång av userdata koppling
+//det ska vara effektivt att spara nya recept listor, lägga till saker..
+//hämting gör jag en gång i början och sen cachar? eller behöver jag ladda det on the go?
+//ha en "userData" object i cachen och props som hämtat både favoriter och köplistor. koll om den den stämmer med currentUserId. 
+//
 
 class Header extends Component {
   constructor(props) {
