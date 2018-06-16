@@ -83,6 +83,7 @@ let tagChanges = [
     { from: "Huvudrätter", to: "Huvudrätt" },
     { from: "Indisk mat", to: "Indisk" },
     { from: "Italiensk mat", to: "Italiensk" },
+    { from: "Italien", to: "Italiensk" },
     { from: "Laktosfritt", to: "Laktosfri" },
     { from: "Limpor", to: "Limpa" },
     { from: "Mexikansk mat", to: "Mexikansk" },
@@ -888,26 +889,30 @@ function runRecipes() {
             for (let i = 0; i < recipe.ingredients.length; i++) {
                 let ingredient = recipe.ingredients[i];
                 for (let j = 0; j < unitChanges.length; j++) {
-                    let change = foodChanges[j];
+                    let change = unitChanges[j];
                     if (ingredient.unit && change.from === ingredient.unit) {
                         if (ingredient.amount && ingredient.amount == "1") {
                             if (change.to.trim() === "") {
                                 log.push("deleting unit:" + ingredient.unit);
-                                delete recipe.ingredients[j].unit;
+                                delete recipe.ingredients[i].unit;
                             } else {
                                 log.push("setting unit to singular:" + ingredient.amount + ingredient.unit);
-                                recipe.ingredients[i].unit = change.to.replace(/\s*\([^()]*\)$/, '');
+                                if(change.from.indexOf("(") > -1){
+                                    recipe.ingredients[i].unit = change.from.replace(/\s*\([^()]*\)$/, '');
+                                }else{
+                                    recipe.ingredients[i].unit = change.to.replace(/\s*\([^()]*\)$/, '');
+                                }
                                 log.push("to: " + ingredient.amount + recipe.ingredients[i].unit);
-
                             }
                         } else {
                             if (change.to.trim() === "") {
                                 log.push("deleting unit:" + ingredient.unit);
-                                delete recipe.ingredients[j].unit;
+                                console.log("unit to delte" + recipe.ingredients[i].unit)
+                                delete recipe.ingredients[i].unit;
                             } else {
                                 log.push("change unit from:" + ingredient.unit);
                                 recipe.ingredients[i].unit = change.to;
-                                log.push("change unit to:" + ingredient.recipe.ingredients[i].unit);
+                                log.push("change unit to:" + recipe.ingredients[i].unit);
 
                             }
                         }
@@ -935,10 +940,10 @@ function runRecipes() {
                 }
             }
             if (deleteRecipe) {
-                recipesRef.child(child.key).remove();
+                //recipesRef.child(child.key).remove();
             } else if (changesmade) {
-                var recipeRef = recipesRef.child(child.key);
-                recipeRef.update(recipe);
+                //var recipeRef = recipesRef.child(child.key);
+                //recipeRef.update(recipe);
             }
         });
 

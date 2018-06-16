@@ -25,7 +25,6 @@ firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     foodRef.orderByChild("uses").once("value", function (snapshot) {
       console.log("startfood");
-
       snapshot.forEach(function (child) {
         if (child.val().uses == 0) {
           existingFoods.splice(0, 0, child.val().name);
@@ -58,7 +57,8 @@ function runRecipes() {
   //script för att  hitta alla recept som har någon ingrediens med ett visst antal uses
   let namel = 0;
   let numberRec = 0;
-  
+  let invalids = [",", "+", "$", "#", "[", "]", "."];
+
   recipesRef.once('value', function (snapshot) {
     console.log("receipes hämtade");
     snapshot.forEach(function (child) {
@@ -66,16 +66,9 @@ function runRecipes() {
       let recipe = child.val();
       let changesmade = false;
       let pinne = "--------------";
-      console.log("recipe running:" + recipe.source);
 
-
-      
-      for (let i = 0; i < recipe.ingredients.length; i++) {
-          let ingredient = recipe.ingredients[i];
-          if(ingredient.name.trim() === "förp"){
-            log.push(recipe.source);
-          }
-      }
+      console.log(recipe.source)
+      //recipesRef.child(child.key).update(recipe);
 
 
     });

@@ -106,7 +106,9 @@ function createRecipes() {
                 continue;
             }
             if (recipe.title.indexOf("&amp;") > -1) {
-                recipe.title = recipe.title.replace("&amp;", "&");
+                recipe.title = recipe.title.replace(/&amp;/g, '&');
+                //lägg tilll /g så det blir replace all
+                //fortsätt kollla på recplace i andra scripts
             }
             for (let h = 0; h < recipe.ingredients.length; h++) {
                 if (recipe.ingredients[h].unit && recipe.ingredients[h].unit.trim() == "") {
@@ -116,7 +118,7 @@ function createRecipes() {
                     delete recipe.ingredients[h].amount;
                 }
                 if(recipe.ingredients[h].amount && isNaN(recipe.ingredients[h].amount)){
-                    recipe.ingredients[h].amount = recipe.ingredients[h].amount.replace(",",".");
+                    recipe.ingredients[h].amount = recipe.ingredients[h].amount.replace(",/g",".");
                 }
             }
             //time temporary

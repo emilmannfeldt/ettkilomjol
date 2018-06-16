@@ -1225,13 +1225,15 @@ nightmare
                             if (t.match(/^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/)) {
                                 t = t + "FAILEDTAG";
                             }
-                            tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
+                            tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
 
 
                         })
                         recipe.tags = tags;
                         //source
                         recipe.source = window.location.href;
+                        recipe.source = recipe.source.substr(recipe.source.indexOf("tasteline.com"));
+
 
                         //votes rating
                         if (document.querySelector('.page-content .recipe-description .recipe-rating.voting-enabled i')) {
@@ -1301,7 +1303,7 @@ nightmare
                                         return;
                                     }
                                     let namepart = ingredientsDom[j].getElementsByClassName("ingredient")[0].getElementsByTagName("span")[0].innerHTML.trim();
-                                    ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim();
+                                    ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim();
                                     if (ingredientNames.indexOf(ingredient.name) > -1) {
                                         continue;
                                     }

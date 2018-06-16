@@ -293,12 +293,14 @@ nightmare
             $('.category-touch-scroll .btn.green-btn.category').each(function () {
               let t = $(this).text().split('/');
               for (let i = 0; i < t.length; i++) {
-                tags[t[i].charAt(0).toUpperCase() + t[i].slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
+                tags[t[i].charAt(0).toUpperCase() + t[i].slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
               }
             })
             recipe.tags = tags;
             //source
             recipe.source = window.location.href;
+            recipe.source = recipe.source.substr(recipe.source.indexOf("koket.se"));
+
             //rating
             recipe.rating = document.querySelector('.recipe-content-wrapper .rating-container.rating').getAttribute("data-setrating");
             //votes
@@ -331,7 +333,7 @@ nightmare
               //koket.se använder flera olika format på tid så det är inte lätt att ta ut ett generellt värde
               let timenr = 0;
               let timeString = document.querySelector('.recipe-content-wrapper .cooking-time .time').innerHTML.replace(/(\r\n|\n|\r|)/gm, "").trim();
-              parts = timeString.replace("ca", '').replace(",", ".").trim().split(" ");
+              parts = timeString.replace("ca", '').replace(/,/g, ".").trim().split(" ");
               for (let j = 0; j < parts.length; j++) {
                 if (Number.isInteger(parts[j] - 0) || parts[j].indexOf(".") > -1) {
                   if (!parts[j + 1] || parts[j + 1].indexOf("min") > -1 || parts[j + 1].indexOf("m") > -1) {
@@ -384,7 +386,7 @@ nightmare
                 let ingredient = {};
                 let parts = ingredientsDom[i].getElementsByTagName("span");
                 let namepart = parts[2].innerHTML.trim();
-                ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '');
+                ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '');
                 if (ingredientNames.indexOf(ingredient.name) > -1) {
                   continue;
                 }
@@ -407,7 +409,7 @@ nightmare
                     delete ingredient.unit;
                 }
                 if(ingredient.amount && isNaN(ingredient.amount)){
-                  ingredient.amount = ingredient.amount.replace(",",".");
+                  ingredient.amount = ingredient.amount.replace(/,/g, ".");
                   if(ingredient.amount.indexOf("-")>-1){
                     let splited = ingredient.amount.split("-");
                     let first = +splited[0];

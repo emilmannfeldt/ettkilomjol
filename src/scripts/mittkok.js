@@ -565,13 +565,14 @@ nightmare
                             if (t.match(/^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/)) {
                                 t = t + "ERROR";
                             }
-                            tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
+                            tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
 
 
                         })
                         recipe.tags = tags;
                         //source
                         recipe.source = window.location.href;
+                        recipe.source = recipe.source.substr(recipe.source.indexOf("mittkok.expressen.se"));
 
                         //votes rating
                         if (document.querySelector('.recipe .recipe__rate .rate__meta')) {
@@ -666,16 +667,16 @@ nightmare
                                 let ingredientArray = ingredientList[i].getElementsByTagName("span")[0].innerHTML.replace(/(\r\n|\n|\r|<[^>]*>)/gm, "").replace(/&#8232;/g, "").split("            ");
                                 let ingredient = {};
                                 if (ingredientArray.length === 1) {
-                                    ingredient.name = ingredientArray[0].trim().replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([.#$])/g, '').trim();
+                                    ingredient.name = ingredientArray[0].trim().replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([.#$])/g, '').trim();
                                 }
                                 if (ingredientArray.length === 2) {
                                     ingredient.amount = ingredientArray[0].trim();
-                                    ingredient.name = ingredientArray[1].trim().replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([.#$])/g, '').trim();
+                                    ingredient.name = ingredientArray[1].trim().replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([.#$])/g, '').trim();
                                 }
                                 if (ingredientArray.length === 3) {
                                     ingredient.amount = ingredientArray[0].trim();
                                     ingredient.unit = ingredientArray[1].trim();
-                                    ingredient.name = ingredientArray[2].trim().replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([.#$])/g, '').trim();
+                                    ingredient.name = ingredientArray[2].trim().replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([.#$])/g, '').trim();
                                 }
                                 if (ingredientArray.length > 3) {
                                     ingredient.name = "ERROR:" + ingredientArray.toString();
@@ -783,8 +784,8 @@ nightmare
                                     delete ingredient.unit;
                                 }
                                 if(ingredient.amount && isNaN(ingredient.amount)){
-                                    ingredient.amount = ingredient.amount.replace(",",".");
-                                }
+                                    ingredient.amount = ingredient.amount.replace(/,/g,".");
+                                }s
                                 ingredientNames.push(ingredient.name);
                                 ingredients.push(ingredient);
                             }

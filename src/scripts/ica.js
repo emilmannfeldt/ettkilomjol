@@ -63,15 +63,16 @@ nightmare
                         //cannot read property length of null
                         $('.related-recipes .related-recipe-tags__container a').each(function () {
                             let t = $(this).text();
-                            if (t.match(/^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/)) {
+                            if (t.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g)) {
                                 t = t + "FAILEDTAG";
                             }
-                            tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
+                            tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
 
                         })
                         recipe.tags = tags;
                         //source
                         recipe.source = window.location.href;
+                        recipe.source = recipe.source.substr(recipe.source.indexOf("ica.se"));
                         //rating
                         recipe.rating = document.querySelector('.recipepage header .recipe-header a.rating-stars').getAttribute("title");
                         //votes
@@ -161,7 +162,7 @@ nightmare
 
                                 let namepart = innerHtml.slice(innerHtml.indexOf(parts[2] === "st" ? parts[3] : parts[2])).trim();
 
-                                ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim();
+                                ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim();
                                 if (ingredientNames.indexOf(ingredient.name) > -1) {
                                     continue;
                                 }
@@ -224,7 +225,7 @@ nightmare
 
 
 
-                                ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)$/, '').split(",")[0].replace(/([/.#$])/g, '').trim();
+                                ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim();
                                 if (ingredientNames.indexOf(ingredient.name) > -1) {
                                     continue;
                                 }
