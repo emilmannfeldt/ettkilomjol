@@ -34,6 +34,11 @@ img {
 
 .login-btn {
     min-width: 10rem !important;
+    color: #f5f4f4 !important;
+    z-index: 1000;
+    align-items: flex-end !important;
+    line-height: 1.4em !important;
+    font-size: 1em !important;
 }
 
 .toolbar-title {
@@ -119,15 +124,13 @@ img {
     bottom: 10%;
 }
 
-.login-btn {
-    z-index: 1000;
-}
-.username-label{
+.username-label {
     vertical-align: bottom;
     line-height: 2em;
     color: #f5f4f4;
 }
-.toolbar{
+
+.toolbar {
     background-color: #616161 !important;
 }
 

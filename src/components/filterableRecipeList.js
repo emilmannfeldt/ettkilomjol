@@ -261,7 +261,7 @@ class FilterableRecipelist extends Component {
         </div>
         <div className="row recipelist-wrapper">
         <div className="col-md-12 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept hämtade' : ''}</div>
-          <RecipeList recipes={this.state.foundRecipes} filter={this.state.filter}/>
+          <RecipeList recipes={this.state.foundRecipes} filter={this.state.filter} favs={this.props.favs}/>
         </div>
         <div className="row helper">
         </div>

@@ -66,9 +66,11 @@ function runRecipes() {
       let recipe = child.val();
       let changesmade = false;
       let pinne = "--------------";
+      if(recipe.description){
+        numberRec = numberRec + (recipe.description.length);
 
+      }
       console.log(recipe.source)
-      //recipesRef.child(child.key).update(recipe);
 
 
     });

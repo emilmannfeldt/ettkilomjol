@@ -3,10 +3,10 @@ import './recipeCard.css';
 import { fire } from '../../../base';
 import Time from './time/time';
 import Tags from './tags/tags';
+import Favorite from './favorite/favorite';
 import Level from './level/level';
 import Rating from './rating/rating';
 import Portion from './portion/portion';
-import FavoriteIcon from 'material-ui/svg-icons/action/favorite-border';
 import FlatButton from 'material-ui/FlatButton';
 import Ingredientlist from './ingredientlist/ingredientlist';
 import IngredientProgress from './ingredientProgress/ingredientProgress';
@@ -21,7 +21,6 @@ class RecipeCard extends Component {
     this.toggleIngredientlist = this.toggleIngredientlist.bind(this);
     this.closeIngredientlist = this.closeIngredientlist.bind(this);
     this.visitSource = this.visitSource.bind(this);
-    this.saveRecipe = this.saveRecipe.bind(this);
   }
   styles = {
     recipeCard: {
@@ -44,21 +43,6 @@ class RecipeCard extends Component {
     this.setState({
       expanded: false,
     });
-  }
-  saveRecipe(){
- 
-
-    //i komponenten som visar upp favoritrecepten kan jag ha en listener för users/uid/fav/child_add?
-    //eller räcker det att en .on istället för once?
-    //
-    let fav = {};
-    fav[this.props.recipe.source.replace(/\./g, ",").replace(/\//g,"+")] = true;
-    fire.database().ref('users/' + fire.auth().currentUser.uid +'/fav').update(fav);
-    //lägg till funktion så att anonyma inte läggs till. Visa istället info om att du måste loggain för att kunna spara recept
-    //och visa en loginknapp. (när man loggat in så vill jag om möjligt spara receptet man försökte spara, extra bra ifall receptlistan försvinner)
-    //när man lyckas lägga till ett recept ska en info success komma upp som säger att receptet lags till 
-    //och en visa en länk för att se "alla dina favoriter"
-
   }
 
   visitSource() {
@@ -114,11 +98,12 @@ class RecipeCard extends Component {
         return (<div className="hidden" />);
       }
     }
-
+    //jag ska få in en array med alla använderns favoritrecept hit från recipelist
+    //kolla index of mot denn recipe.source och sätt isFav
     return (<div className="col-xs-12 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
       <CardText className="recipe-card-info row">
         <div className="recipecard-title col-xs-12"><h2>
-          <a onClick={this.visitSource} target='_blank' href={'//'+this.props.recipe.source}>{this.props.recipe.title}</a></h2>
+          <a onClick={this.visitSource} target='_blank' href={'//' + this.props.recipe.source}>{this.props.recipe.title}</a></h2>
 
         </div>
         <div className="col-xs-12 recipecard-author">
@@ -128,12 +113,9 @@ class RecipeCard extends Component {
             {this.props.recipe.created ? ' - ' + this.props.recipe.created : ''}
           </span>
         </div>
-        <FlatButton
-          label="Spara"
-          className="recipecard-save-btn"
-          secondary={true}
-          onClick={this.saveRecipe}
-          icon={<FavoriteIcon />} />
+        <div className="col-xs-12 recipecard-favorite">
+          <Favorite source={this.props.recipe.source} isFav={this.props.isFav} />
+        </div>
         <div className="col-xs-12 recipecard-description">{this.props.recipe.description} </div>
         <div className="col-xs-12 recipecard-rating">
           <Rating

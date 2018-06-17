@@ -5,6 +5,7 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import LoggedInIcon from 'material-ui/svg-icons/social/person';
+import LoginIcon from '@material-ui/icons/PersonOutline';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
@@ -67,7 +68,7 @@ class Header extends Component {
 
   render() {
     function MenuItemList(props) {
-      if (fire.auth().currentUser.isAnonymous) {
+      if (!fire.auth().currentUser || fire.auth().currentUser.isAnonymous) {
         return (<div>
           <Link to={'/stats'}><MenuItem primaryText="Siffror" /></Link>
           <MenuItem primaryText="Kontakta mig" />
@@ -102,7 +103,8 @@ class Header extends Component {
           <ToolbarGroup>
             <FontIcon className="muidocs-icon-custom-sort" />
             {fire.auth().currentUser.isAnonymous ? (
-              <Button onClick={this.login} variant="contained" className="login-btn" color="primary" >
+              <Button onClick={this.login} size="small" className="login-btn" >
+                <LoginIcon />
                 {this.state.showLoginPage ? 'Avbryt' : 'Logga in'}
               </Button>
             ) : (<div>

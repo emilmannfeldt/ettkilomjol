@@ -22,6 +22,7 @@ class Home extends Component {
             foods: [],
             recipes: [],
             units: [],
+            favs: [],
             MIN_USES_FOOD: 5,
             MIN_USES_TAG: 8,
             MIN_ACCEPTED_RECIPES: 17000,
@@ -30,6 +31,7 @@ class Home extends Component {
         this.localIsOld = this.localIsOld.bind(this);
         this.getRecipesIndexedDB = this.getRecipesIndexedDB.bind(this);
         this.hideSpinner = this.hideSpinner.bind(this);
+        this.favListener = this.favListener.bind(this);
 
     }
     componentDidMount() {
@@ -100,7 +102,43 @@ class Home extends Component {
             });
             localStorage.setItem('lastupdatedtags', JSON.stringify(Date.now()));
         }
+        fire.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.favListener();
+
+            }
+        });
     }
+
+    favListener() {
+        console.log("calling favListener")
+        //denna körs väl inte varje gång det kommer in ett ny fav updateras?
+        var favRef = fire.database().ref('users/' + fire.auth().currentUser.uid + '/fav');
+        let that = this;
+        favRef.on('value', function (snapshot) {
+            if (snapshot.val()) {
+                console.log("setting favs:" + Object.keys(snapshot.val()));
+                let favsTmp = Object.keys(snapshot.val());
+                for(let i = 0; i < favsTmp.length; i++){
+                    favsTmp[i] = that.decodeSource(favsTmp[i]);
+                }
+                that.setState({
+                    favs: favsTmp,
+                });
+            } else {
+                that.setState({
+                    favs: [],
+                });
+            }
+
+        });
+
+    }
+//fixa tabort funktion. och sen fixa snackbaren så att den visar rätt info och även inloggningsrutan
+    decodeSource(source){
+        return source.replace(/,/g,'.').replace(/\+/g,'/');
+    }
+
     localIsOld = function (localVar) {
         let yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - this.state.DAYS_TO_SAVE_LOCALSTORAGE);
@@ -201,9 +239,9 @@ class Home extends Component {
                     <div className='spinner'>
                         <LinearProgress />
                     </div>
-                    <Header/>
+                    <Header />
                     <Route exact path="/stats" render={() => <Stats tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
-                    <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} />} />
+                    <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} />} />
                     <Footer />
 
                 </div>

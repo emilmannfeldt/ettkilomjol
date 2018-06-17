@@ -11,7 +11,7 @@ class RecipeList extends Component {
             <div>
                 {this.props.recipes.map((recipe, index) =>
                     <RecipeCard key={index} filter={this.props.filter} ref="child"
-                        recipe={recipe} />
+                        recipe={recipe} isFav={this.props.favs.indexOf(recipe.source) > -1} />
                 )}</div>);
     }
 }
