@@ -1,0 +1,14 @@
+.chart-container {
+    display: block;
+}
+
+.chart {
+    padding-top: 1.5em;
+}
+
+.chart canvas {}
+
+.chart-title {
+    text-align: center;
+    font-size: 1.4em;
+}

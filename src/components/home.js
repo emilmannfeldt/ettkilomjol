@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import FilterableRecipeList from './filterableRecipeList';
 import './home.css';
-
 import Header from './user/header/header';
 import Footer from './user/footer/footer';
 import { fire } from '../base';
@@ -11,6 +10,7 @@ import {
     Route,
 } from "react-router-dom";
 import Stats from './pages/stats';
+import Faq from './pages/faq';
 
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
@@ -111,15 +111,12 @@ class Home extends Component {
     }
 
     favListener() {
-        console.log("calling favListener")
-        //denna körs väl inte varje gång det kommer in ett ny fav updateras?
         var favRef = fire.database().ref('users/' + fire.auth().currentUser.uid + '/fav');
         let that = this;
         favRef.on('value', function (snapshot) {
             if (snapshot.val()) {
-                console.log("setting favs:" + Object.keys(snapshot.val()));
                 let favsTmp = Object.keys(snapshot.val());
-                for(let i = 0; i < favsTmp.length; i++){
+                for (let i = 0; i < favsTmp.length; i++) {
                     favsTmp[i] = that.decodeSource(favsTmp[i]);
                 }
                 that.setState({
@@ -134,9 +131,9 @@ class Home extends Component {
         });
 
     }
-//fixa tabort funktion. och sen fixa snackbaren så att den visar rätt info och även inloggningsrutan
-    decodeSource(source){
-        return source.replace(/,/g,'.').replace(/\+/g,'/');
+    //fixa tabort funktion. och sen fixa snackbaren så att den visar rätt info och även inloggningsrutan
+    decodeSource(source) {
+        return source.replace(/,/g, '.').replace(/\+/g, '/');
     }
 
     localIsOld = function (localVar) {
@@ -240,6 +237,7 @@ class Home extends Component {
                         <LinearProgress />
                     </div>
                     <Header />
+                    <Route exact path="/faq" render={() => <Faq />} />
                     <Route exact path="/stats" render={() => <Stats tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
                     <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} />} />
                     <Footer />

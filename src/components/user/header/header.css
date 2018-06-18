@@ -148,6 +148,10 @@ img {
         padding-right: 0px !important;
         padding-left: 0.4rem !important;
     }
+    .toolbar-title {
+        font-weight: 400;
+        padding-right: 0px !important;
+    }
 }
 
 @media (max-width: 979px) {

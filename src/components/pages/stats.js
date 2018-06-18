@@ -15,7 +15,6 @@ class Stats extends Component {
             occasions: ['Middag', 'Lunch', 'Tillbehör', 'Förrätt', 'Efterrätt', 'Fest', 'Bröllop', 'Buffé', 'Frukost', 'Grill', 'Jul', 'Nyår', 'Midsommar', 'Brunch', 'Picknick', 'Matlåda', 'Barnkalas', 'Fredagsmys', 'Halloween'],
             foodExcludes: ['']
         };
-
     }
 
     getFoodTotalScale(food, recipes) {
@@ -168,8 +167,6 @@ class Stats extends Component {
         let tasteline = 0;
         let koket = 0;
         let mittkok = 0;
-        console.log("LÄNGD" + this.props.recipes.length);
-        console.log(this.props.tags)
         for (let i = 0; i < this.props.recipes.length; i++) {
             let recipe = this.props.recipes[i];
             if (recipe.source.indexOf("ica.se") > -1) {
@@ -190,7 +187,6 @@ class Stats extends Component {
 
     getRecipesPerTag() {
         let chartData = this.getDefaultChartData();
-        console.log(this.props.tags);
         for (let i = 0; i < this.props.tags.length; i++) {
             if (i === 7) {
                 break;
@@ -375,7 +371,7 @@ class Stats extends Component {
             if (!recipe.visits) {
                 continue;
             }
-            if (topVisits.length <= 10) {
+            if (topVisits.length < 10) {
                 topRecipes.push(recipe);
                 topVisits.push(recipe.visits);
                 continue;
@@ -400,8 +396,6 @@ class Stats extends Component {
 
 
     render() {
-        console.log("RENDERING" + this.props.recipes.length)
-
 
         const defaultOptions = {
             maintainAspectRatio: false,
@@ -409,55 +403,58 @@ class Stats extends Component {
             animation: {
                 easing: 'easeOutBack',
             },
+            legend:{
+                position: 'top',
+            }
         }
         return (
-            <div>
-                <div>
-                    <h2>Mest använda källor</h2>
-                    <Doughnut data={this.getRecipesPerSource()} width={100}
-                        height={50}
+            <div className="container chart-container">
+                <div className="chart">
+                    <div className="chart-title">Mest använda källor</div>
+                    <Doughnut data={this.getRecipesPerSource()} width={50}
+                        height={100}
                         options={defaultOptions} />
                 </div>
-                <div>
-                    <h2>Tillfälle</h2>
-                    <Doughnut data={this.getRecipesPerOccasion()} width={100}
-                        height={50}
+                <div className="chart">
+                    <div className="chart-title">Tillfällen</div>
+                    <Doughnut data={this.getRecipesPerOccasion()} width={50}
+                        height={100}
                         options={defaultOptions} />
                 </div>
-                <div>
-                    <h2>Diet</h2>
+                <div className="chart">
+                    <div className="chart-title">Dieter</div>
                     <Doughnut data={this.getRecipesPerDiet()} width={100}
-                        height={50}
+                        height={100}
                         options={defaultOptions} />
                 </div>
-                <div>
-                    <h2>Allergier</h2>
+                <div className="chart">
+                    <div className="chart-title">Allergier</div>
                     <Doughnut data={this.getRecipesPerAllergy()} width={100}
-                        height={50}
+                        height={100}
                         options={defaultOptions} />
                 </div>
-                <div>
-                    <h2>Ursprung</h2>
+                <div className="chart">
+                    <div className="chart-title">Ursprung</div>
                     <Doughnut data={this.getRecipesPerOrigin()} width={100}
-                        height={50}
+                        height={100}
                         options={defaultOptions} />
                 </div>
-                <div>
-                    <h2>Svårighetsgrad</h2>
+                <div className="chart">
+                    <div className="chart-title">Svårgihetsgrad</div>
                     <Doughnut data={this.getRecipesPerLevel()} width={100}
-                        height={50}
+                        height={100}
                         options={defaultOptions} />
                 </div>
-                <div>
-                    <h2>Ingredienser</h2>
+                <div className="chart">
+                    <div className="chart-title">Mest använda ingredienser</div>
                     <HorizontalBar data={this.getRecipesPerFood()} width={100}
                         height={1250}
                         options={this.getRecipesPerFoodOptions()} />
                 </div>
-                <div>
-                    <h2>Populäraste recepten</h2>
+                <div className="chart">
+                    <div className="chart-title">Mest besökta recept</div>
                     <HorizontalBar data={this.getRecipesPerVisits()} width={100}
-                        height={125}
+                        height={150}
                         options={defaultOptions} />
                 </div>
             </div>

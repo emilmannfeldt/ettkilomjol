@@ -70,29 +70,31 @@ class Header extends Component {
     function MenuItemList(props) {
       if (!fire.auth().currentUser || fire.auth().currentUser.isAnonymous) {
         return (<div>
+          <Link to={'/'}><MenuItem primaryText="Sök recept" /></Link>
           <Link to={'/stats'}><MenuItem primaryText="Siffror" /></Link>
-          <MenuItem primaryText="Kontakta mig" />
           <MenuItem primaryText="Logga in" onClick={props.loginAction} />
         </div>
         );
       } else {
         return (<div>
+          <Link to={'/'}><MenuItem primaryText="Sök recept" /></Link>
           <Link to={'/stats'}><MenuItem primaryText="Siffror" /></Link>
-          <MenuItem primaryText="Kontakta mig" />
-          <MenuItem primaryText="Favoritrecept" />
+          <MenuItem primaryText="Mina favoritrecept" />
           <MenuItem primaryText="Mina inköpslistor" />
           <MenuItem primaryText="Logga ut" onClick={props.logoutAction} />
         </div>);
       }
     }
+    let backgroundImage = <div className="headerImageContainer">
+      <img src={headerImg} id="headerimage" />
+    </div>;
+    if (window.location.href.endsWith("/stats") || window.location.href.endsWith("/faq")) {
+      backgroundImage = null;
+    }
 
     return (
       <div>
-        {window.location.href.endsWith("/stats") ?
-          null : <div className="headerImageContainer">
-            <img src={headerImg} id="headerimage" />
-          </div>}
-
+        {backgroundImage}
         <Toolbar className="toolbar">
           <ToolbarGroup firstChild={true}>
             <Link to={'/'}>
