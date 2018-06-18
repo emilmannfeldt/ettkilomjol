@@ -146,14 +146,14 @@ class FilterInput extends Component {
     this.setState({
       ingredients: [],
       tags: [],
-      sort : 'Relevans',
+      sort: 'Relevans',
       searchText: ''
     });
     let newFilter = this.props.filter;
     newFilter.ingredients = [];
     newFilter.tags = [];
     newFilter.sort = 'Relevans';
-    
+
     this.props.onFilterChange(newFilter);
   }
 
@@ -196,10 +196,10 @@ class FilterInput extends Component {
           {chips}
         </div>
         <AutoComplete className="c-autocomplete" ref="filterSearchbar" searchText={this.state.searchText} floatingLabelText="Sök ingredienser & preferenser" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.handleUpdateInputText} dataSource={searchables}
-          onNewRequest={this.handleNewRequest} maxSearchResults={6} fullWidth={true}/ >
+          onNewRequest={this.handleNewRequest} maxSearchResults={6} fullWidth={true} />
         {chips.length > 0 ?
-           <FlatButton label="Rensa sökning"
-           style={{color: 'rgba(255, 255, 255, 0.9)'}}
+          <FlatButton label="Rensa sökning"
+            style={{ color: 'rgba(255, 255, 255, 0.9)' }}
             className="filter-clear-btn"
             onClick={this.clearFilter}
             secondary={false}

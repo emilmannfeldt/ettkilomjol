@@ -39,14 +39,12 @@ class Footer extends Component {
                 <ul>
                   <li><a href="/faq">FAQ</a></li>
                   <li><Link to={'/stats'}>Statistik</Link></li>
-                  <li><a href="/advertise">Annonsera</a></li>
                 </ul>
               </div>
               <div className="col-lg-4">
                 <ul>
                   <li><a href="/create-recipes">Lägg till recept</a></li>
-                  <li><a href="/login">Logga in</a></li>
-                  <li><a href="/register">Registrera</a></li>
+                  <li><a href="/advertise">Annonsera</a></li>
                 </ul>
               </div>
             </div>

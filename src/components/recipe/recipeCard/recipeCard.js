@@ -84,18 +84,17 @@ class RecipeCard extends Component {
     function IngredientlistComponent(props) {
       const render = props.render;
       if (render) {
-        return (<div><Ingredientlist ingredients={props.ingredients} missing={props.missing} /></div>);
+        return (<Ingredientlist ingredients={props.ingredients} missing={props.missing} />);
       } else {
-        return (<div className="hidden" />);
+        return (null);
       }
     }
     function PortionComponent(props) {
       const render = props.render;
       if (render && props.portions) {
-        return (<div><Portion portions={props.portions} />
-        </div>);
+        return (<Portion portions={props.portions} />);
       } else {
-        return (<div className="hidden" />);
+        return (null);
       }
     }
     //jag ska få in en array med alla använderns favoritrecept hit från recipelist
@@ -104,7 +103,6 @@ class RecipeCard extends Component {
       <CardText className="recipe-card-info row">
         <div className="recipecard-title col-xs-12"><h2>
           <a onClick={this.visitSource} target='_blank' href={'//' + this.props.recipe.source}>{this.props.recipe.title}</a></h2>
-
         </div>
         <div className="col-xs-12 recipecard-author">
           <span>
@@ -118,18 +116,14 @@ class RecipeCard extends Component {
         </div>
         <div className="col-xs-12 recipecard-description">{this.props.recipe.description} </div>
         <div className="col-xs-12 recipecard-rating">
-          <Rating
-            value={this.props.recipe.rating}
-            votes={this.props.recipe.votes}
-          />
+          <Rating value={this.props.recipe.rating} votes={this.props.recipe.votes} />
         </div>
         <div className="col-md-4 col-xs-12">
           <Time time={this.props.recipe.time} />
           <Level index={this.props.recipe.level} />
         </div>
         <div className="col-md-8 col-xs-12 recipecard-ingredients">
-          <IngredientProgress
-            matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist} />
+          <IngredientProgress matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist} />
           <PortionComponent portions={this.props.recipe.portions} render={this.state.expanded} />
         </div>
         <div className="col-md-8 col-xs-12 ingredient-list">
@@ -139,7 +133,6 @@ class RecipeCard extends Component {
         <div className="col-xs-12">
           <Tags matchedTags={matchedTags} recipeTags={this.props.recipe.tags} recipeKey={this.props.recipe.source} />
         </div>
-
       </CardText>
     </Card>
     </div>);

@@ -18,7 +18,6 @@ class Tags extends Component {
         }
 
         return (
-
             <div className="tags-wrapper">
                 {tags}
             </div>

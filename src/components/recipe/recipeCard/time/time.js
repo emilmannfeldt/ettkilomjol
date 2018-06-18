@@ -11,7 +11,7 @@ class Time extends Component {
         let hours = Math.floor(this.props.time / 60)
         let minutes = this.props.time % 60;
         if (hours > 0) {
-            if(minutes>0){
+            if (minutes > 0) {
                 return hours + " h " + minutes + " m";
             }
             return hours + " h";
@@ -22,12 +22,11 @@ class Time extends Component {
     }
 
     render() {
-
-        return (
-
-            <div className={this.props.time ? 'recipecard-time' : 'hidden'}> <TimerIcon /> {this.timeString() + " | "} </div>
-
-        );
+        if (this.props.time) {
+            return (<div className='recipecard-time'> <TimerIcon /> {this.timeString() + " | "} </div>);
+        } else {
+            return (null);
+        }
     }
 }
 export default Time;

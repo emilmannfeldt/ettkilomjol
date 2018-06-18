@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './rating.css';
 import StarIcon from 'material-ui/svg-icons/toggle/star';
 
-
 class Rating extends Component {
     constructor(props) {
         super(props);
@@ -14,7 +13,6 @@ class Rating extends Component {
 
     render() {
         let ratingPercentage = Math.round(this.props.value * 20);
-        //this.styles.top.width = ratingPercentage + "%";
         let votes = "";
         if(this.props.votes > 1){
             votes= this.props.votes + " röster";

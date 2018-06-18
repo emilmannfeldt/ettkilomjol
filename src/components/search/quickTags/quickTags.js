@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Chip from 'material-ui/Chip';
-
 import './quickTags.css';
 
 class QuickTags extends Component {
