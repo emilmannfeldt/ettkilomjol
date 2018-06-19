@@ -78,8 +78,8 @@ class Header extends Component {
       } else {
         return (<div>
           <Link to={'/'}><MenuItem primaryText="Sök recept" /></Link>
+          <Link to={'/favorites'}><MenuItem primaryText="Mina favoriter" /></Link>
           <Link to={'/stats'}><MenuItem primaryText="Siffror" /></Link>
-          <MenuItem primaryText="Mina favoritrecept" />
           <MenuItem primaryText="Mina inköpslistor" />
           <MenuItem primaryText="Logga ut" onClick={props.logoutAction} />
         </div>);
@@ -88,7 +88,9 @@ class Header extends Component {
     let backgroundImage = <div className="headerImageContainer">
       <img src={headerImg} id="headerimage" />
     </div>;
-    if (window.location.href.endsWith("/stats") || window.location.href.endsWith("/faq")) {
+    if (window.location.href.endsWith("/stats")
+      || window.location.href.endsWith("/faq")
+      || window.location.href.endsWith("/contact")) {
       backgroundImage = null;
     }
 

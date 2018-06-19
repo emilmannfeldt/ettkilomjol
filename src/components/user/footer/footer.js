@@ -31,7 +31,7 @@ class Footer extends Component {
             <div className="col-lg-4">
               <ul>
                 <li><a href="/about">Om Ettkilomjol.se</a></li>
-                <li><a href="/contact">Kontakta mig</a></li>
+                <li><a href="#" onClick={() => {this.props.openContact('')}}>Kontakta mig</a></li>
               </ul>
             </div>
             <div className="col-lg-4">
@@ -42,7 +42,7 @@ class Footer extends Component {
             </div>
             <div className="col-lg-4">
               <ul>
-                <li><a href="/create-recipes">Lägg till recept</a></li>
+                <li></li>
               </ul>
             </div>
           </div>

@@ -3,14 +3,13 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Button from '@material-ui/core/Button';
+
 class Faq extends Component {
 
+
     render() {
-        //sätt upp en faq kort
-        //fixa en sida för "mina favoritrecept"
-        //använd recipecard? något problem med det? vill jag visa på något annat sätt? 
-        //sortering?
-        //kunna filtrera på recept-title
+
         return (
             <div className="container"><h2>Frequently Asked Questions</h2>
                 <div className="faq-container">
@@ -26,7 +25,8 @@ class Faq extends Component {
                             Hur kan jag lägga till egna recept?
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            Om du vill se dina egna recept här så behöver du skapa receptet på någon av dessa sidor (tasteline.com, ica.se, mittkok.expressen.se, koket.se). När du gjort detta kan du maila mig din länk till info.ettkilomjol@gmail.com. Så kan jag se till att receptet dyker upp här.
+                            Om du vill se dina egna recept här så behöver du skapa receptet på någon av dessa sidor (tasteline.com, ica.se, mittkok.expressen.se, koket.se). När du gjort det kan du kontakta mig med länken.
+                            <Button onClick={() => {this.props.openContact('recipe')}}>Kontakta mig</Button>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     <ExpansionPanel >
@@ -34,7 +34,8 @@ class Faq extends Component {
                             Jag har ett problem med appen, hur kan jag få hjälp?
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            Du kan maila mig på info.ettkilomjol@gmail.com.
+                            Absolut. Du kan kontakta mig här nedan.
+                            <Button onClick={() => {this.props.openContact('help')}}>Kontakta mig</Button>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     <ExpansionPanel >

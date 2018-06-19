@@ -11,6 +11,10 @@ import {
 } from "react-router-dom";
 import Stats from './pages/stats';
 import Faq from './pages/faq';
+import Contact from './pages/contact';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import MyRecipes from './user/myRecipes/myRecipes';
 
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
@@ -27,6 +31,8 @@ class Home extends Component {
             MIN_USES_TAG: 8,
             MIN_ACCEPTED_RECIPES: 17000,
             DAYS_TO_SAVE_LOCALSTORAGE: 1,
+            contactOpen: false,
+            contactSubject: '',
         }
         this.localIsOld = this.localIsOld.bind(this);
         this.getRecipesIndexedDB = this.getRecipesIndexedDB.bind(this);
@@ -34,6 +40,19 @@ class Home extends Component {
         this.favListener = this.favListener.bind(this);
 
     }
+    handleContactOpen = (subject) => {
+        this.setState({
+            contactOpen: true,
+            contactSubject: subject,
+        });
+    };
+
+    handleContactClose = () => {
+        this.setState({
+            contactOpen: false,
+            contactSubject: ''
+        });
+    };
     componentDidMount() {
         //kanske kan sätta detta direkt i construktorn?
         this.setState({
@@ -237,11 +256,20 @@ class Home extends Component {
                         <LinearProgress />
                     </div>
                     <Header />
-                    <Route exact path="/faq" render={() => <Faq />} />
+                    <Route exact path="/favorites" render={() => <MyRecipes recipes={this.state.recipes} favs={this.state.favs}/>} />
+                    <Route exact path="/faq" render={() => <Faq openContact={this.handleContactOpen} />} />
                     <Route exact path="/stats" render={() => <Stats tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
                     <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} />} />
-                    <Footer />
-
+                    <Footer openContact={this.handleContactOpen}/>
+                    <Dialog
+                        open={this.state.contactOpen}
+                        onClose={this.handleContactClose}
+                        aria-labelledby="form-dialog-title"
+                    >
+                        <DialogContent>
+                            <Contact subject={this.state.contactSubject} />
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </Router>
         );
