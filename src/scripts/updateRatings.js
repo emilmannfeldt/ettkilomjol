@@ -1,12 +1,21 @@
 var firebase = require('firebase');
 var fs = require('fs');
-
+//Prod
+// let config = {
+//     apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
+//     authDomain: "ettkilomjol-10ed1.firebaseapp.com",
+//     databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
+//     storageBucket: "ettkilomjol-10ed1.appspot.com",
+//     messagingSenderId: "1028199106361"
+// };
+//Dev
 let config = {
-    apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
-    authDomain: "ettkilomjol-10ed1.firebaseapp.com",
-    databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
-    storageBucket: "ettkilomjol-10ed1.appspot.com",
-    messagingSenderId: "1028199106361"
+    apiKey: "AIzaSyCRcK1UiO7j0x9OjC_8jq-kbFl9r9d38pk",
+    authDomain: "ettkilomjol-dev.firebaseapp.com",
+    databaseURL: "https://ettkilomjol-dev.firebaseio.com",
+    projectId: "ettkilomjol-dev",
+    storageBucket: "ettkilomjol-dev.appspot.com",
+    messagingSenderId: "425944588036"
 };
 firebase.initializeApp(config);
 let recipesRef = firebase.database().ref("recipes");
@@ -40,8 +49,8 @@ firebase.auth().onAuthStateChanged(function (user) {
                 let recipe = child.val();
 
                 //if(child.val().source.indexOf("koket.se")> -1){
-                  //  urls.push(child.val().source);
-                    //recipesRef.child(child.key).remove();
+                //  urls.push(child.val().source);
+                //recipesRef.child(child.key).remove();
                 //}
             });
             console.log("recipes fetched");
@@ -176,7 +185,7 @@ function updateRecipes() {
             });
 
         });
-        
+
     console.log("done");
 
     //downloads: 2.7gb

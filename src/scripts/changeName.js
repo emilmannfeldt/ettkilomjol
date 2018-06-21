@@ -1,12 +1,21 @@
 var firebase = require('firebase');
 var fs = require('fs');
-
+//Prod
+// let config = {
+//     apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
+//     authDomain: "ettkilomjol-10ed1.firebaseapp.com",
+//     databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
+//     storageBucket: "ettkilomjol-10ed1.appspot.com",
+//     messagingSenderId: "1028199106361"
+// };
+//Dev
 let config = {
-    apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
-    authDomain: "ettkilomjol-10ed1.firebaseapp.com",
-    databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
-    storageBucket: "ettkilomjol-10ed1.appspot.com",
-    messagingSenderId: "1028199106361"
+    apiKey: "AIzaSyCRcK1UiO7j0x9OjC_8jq-kbFl9r9d38pk",
+    authDomain: "ettkilomjol-dev.firebaseapp.com",
+    databaseURL: "https://ettkilomjol-dev.firebaseio.com",
+    projectId: "ettkilomjol-dev",
+    storageBucket: "ettkilomjol-dev.appspot.com",
+    messagingSenderId: "425944588036"
 };
 firebase.initializeApp(config);
 let recipesRef = firebase.database().ref("recipes");
@@ -858,6 +867,13 @@ function runRecipes() {
                             //ta sen bort ändringarna jag gjorde för FÖRP i recipecard, recipelist, ingredientlist, index
                             //nästa steg fixa spinner loader för när recepten håller på att laddas in från indexjs
                             //fixa en enkel pil och text med exempel på sökningar eller gör som koket.se och ha bara hjälptext i inputfältet om det inte är mobilläge annars inget alls
+                        } else if (change.to.startsWith("cm ") && (!recipe.ingredients[i].unit || recipe.ingredients[i].unit === "st")) {
+                            log.push("from:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name);
+                            recipe.ingredients[i].name = change.to.substring(3).trim();
+                            recipe.ingredients[i].name = recipe.ingredients[i].name.charAt(0).toUpperCase() + recipe.ingredients[i].name.slice(1);
+                            recipe.ingredients[i].unit = "cm";
+                            log.push("to:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name + " source:" + recipe.source);
+
                         }
                     }
                 }
@@ -897,9 +913,9 @@ function runRecipes() {
                                 delete recipe.ingredients[i].unit;
                             } else {
                                 log.push("setting unit to singular:" + ingredient.amount + ingredient.unit);
-                                if(change.from.indexOf("(") > -1){
+                                if (change.from.indexOf("(") > -1) {
                                     recipe.ingredients[i].unit = change.from.replace(/\s*\([^()]*\)$/, '');
-                                }else{
+                                } else {
                                     recipe.ingredients[i].unit = change.to.replace(/\s*\([^()]*\)$/, '');
                                 }
                                 log.push("to: " + ingredient.amount + recipe.ingredients[i].unit);
@@ -927,7 +943,7 @@ function runRecipes() {
                     if (ingredient.amount.length === 3 && (ingredient.amount.indexOf("/") === 1 || ingredient.amount.indexOf("+") === 1)) {
                         log.push("change amount from:" + ingredient.amount);
 
-                        recipe.ingredients[i].amount = Math.round( eval(ingredient.amount) * 100 ) / 100;
+                        recipe.ingredients[i].amount = Math.round(eval(ingredient.amount) * 100) / 100;
                         log.push("to:" + recipe.ingredients[i].amount);
 
                         changesmade = true;

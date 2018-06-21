@@ -15,6 +15,7 @@ import Contact from './pages/contact';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import MyRecipes from './user/myRecipes/myRecipes';
+import MySnackbar from './mySnackbar/mySnackbar';
 
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
@@ -33,12 +34,13 @@ class Home extends Component {
             DAYS_TO_SAVE_LOCALSTORAGE: 1,
             contactOpen: false,
             contactSubject: '',
+            snackbarType: '',
         }
         this.localIsOld = this.localIsOld.bind(this);
         this.getRecipesIndexedDB = this.getRecipesIndexedDB.bind(this);
         this.hideSpinner = this.hideSpinner.bind(this);
         this.favListener = this.favListener.bind(this);
-
+        this.setSnackbar = this.setSnackbar.bind(this);
     }
     handleContactOpen = (subject) => {
         this.setState({
@@ -248,6 +250,13 @@ class Home extends Component {
     hideSpinner() {
         document.querySelector(".spinner").style.display = 'none';
     }
+    setSnackbar(snack) {
+        //Denna skapar en evig loop. updatering av state rerender och runt
+        this.setState({
+            snackbarType: snack
+        });
+    }
+
     render() {
         return (
             <Router>
@@ -256,11 +265,11 @@ class Home extends Component {
                         <LinearProgress />
                     </div>
                     <Header />
-                    <Route exact path="/favorites" render={() => <MyRecipes recipes={this.state.recipes} favs={this.state.favs}/>} />
+                    <Route exact path="/favorites" render={() => <MyRecipes recipes={this.state.recipes} favs={this.state.favs} />} />
                     <Route exact path="/faq" render={() => <Faq openContact={this.handleContactOpen} />} />
                     <Route exact path="/stats" render={() => <Stats tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
-                    <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} />} />
-                    <Footer openContact={this.handleContactOpen}/>
+                    <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />
+                    <Footer openContact={this.handleContactOpen} />
                     <Dialog
                         open={this.state.contactOpen}
                         onClose={this.handleContactClose}
@@ -270,6 +279,7 @@ class Home extends Component {
                             <Contact subject={this.state.contactSubject} />
                         </DialogContent>
                     </Dialog>
+                    <MySnackbar render={this.state.snackbarType != ""} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />
                 </div>
             </Router>
         );

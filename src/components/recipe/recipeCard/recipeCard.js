@@ -11,6 +11,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Ingredientlist from './ingredientlist/ingredientlist';
 import IngredientProgress from './ingredientProgress/ingredientProgress';
 import { Card, CardText } from 'material-ui/Card';
+import Fade from '@material-ui/core/Fade';
 
 class RecipeCard extends Component {
   constructor(props) {
@@ -97,44 +98,48 @@ class RecipeCard extends Component {
         return (null);
       }
     }
-    //jag ska få in en array med alla använderns favoritrecept hit från recipelist
-    //kolla index of mot denn recipe.source och sätt isFav
-    return (<div className="col-xs-12 list-item" style={this.styles.wrapper}> <Card className="recipecard-content" style={this.styles.recipeCard}>
-      <CardText className="recipe-card-info row">
-        <div className="recipecard-title col-xs-12"><h2>
-          <a onClick={this.visitSource} target='_blank' href={'//' + this.props.recipe.source}>{this.props.recipe.title}</a></h2>
-        </div>
-        <div className="col-xs-12 recipecard-author">
-          <span>
-            {this.props.recipe.author}
-            {this.props.recipe.createdFor ? ', ' + this.props.recipe.createdFor : ''}
-            {this.props.recipe.created ? ' - ' + this.props.recipe.created : ''}
-          </span>
-        </div>
-        <div className="col-xs-12 recipecard-favorite">
-          <Favorite source={this.props.recipe.source} isFav={this.props.isFav} />
-        </div>
-        <div className="col-xs-12 recipecard-description">{this.props.recipe.description} </div>
-        <div className="col-xs-12 recipecard-rating">
-          <Rating value={this.props.recipe.rating} votes={this.props.recipe.votes} />
-        </div>
-        <div className="col-md-4 col-xs-12">
-          <Time time={this.props.recipe.time} />
-          <Level index={this.props.recipe.level} />
-        </div>
-        <div className="col-md-8 col-xs-12 recipecard-ingredients">
-          <IngredientProgress matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist} />
-          <PortionComponent portions={this.props.recipe.portions} render={this.state.expanded} />
-        </div>
-        <div className="col-md-8 col-xs-12 ingredient-list">
-          <IngredientlistComponent
-            ingredients={this.props.recipe.ingredients} missing={missingIngredients} render={this.state.expanded} />
-        </div>
-        <div className="col-xs-12">
-          <Tags matchedTags={matchedTags} recipeTags={this.props.recipe.tags} recipeKey={this.props.recipe.source} />
-        </div>
-      </CardText>
-    </Card>
+    return (<div className="col-xs-12 list-item" style={this.styles.wrapper}>
+      <Fade in={true} style={{ transitionDelay: this.props.transitionDelay * 200 }}
+        timeout={500}>
+        <Card className="recipecard-content" style={this.styles.recipeCard}>
+          <CardText className="recipe-card-info row">
+            <div className="recipecard-title col-xs-12">
+              {this.props.demo ? (<h2>{this.props.recipe.title}</h2>
+              ) : (<h2><a onClick={this.visitSource} target='_blank' href={'//' + this.props.recipe.source}>{this.props.recipe.title}</a></h2>
+                )}
+            </div>
+            <div className="col-xs-12 recipecard-author">
+              <span>
+                {this.props.recipe.author}
+                {this.props.recipe.createdFor ? ', ' + this.props.recipe.createdFor : ''}
+                {this.props.recipe.created ? ' - ' + this.props.recipe.created : ''}
+              </span>
+            </div>
+            <div className="col-xs-12 recipecard-favorite">
+              <Favorite source={this.props.recipe.source} isFav={this.props.isFav} setSnackbar={this.props.setSnackbar} />
+            </div>
+            <div className="col-xs-12 recipecard-description">{this.props.recipe.description} </div>
+            <div className="col-xs-12 recipecard-rating">
+              <Rating value={this.props.recipe.rating} votes={this.props.recipe.votes} />
+            </div>
+            <div className="col-md-4 col-xs-12">
+              <Time time={this.props.recipe.time} />
+              <Level index={this.props.recipe.level} />
+            </div>
+            <div className="col-md-8 col-xs-12 recipecard-ingredients">
+              <IngredientProgress matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist} />
+              <PortionComponent portions={this.props.recipe.portions} render={this.state.expanded} />
+            </div>
+            <div className="col-md-8 col-xs-12 ingredient-list">
+              <IngredientlistComponent
+                ingredients={this.props.recipe.ingredients} missing={missingIngredients} render={this.state.expanded} />
+            </div>
+            <div className="col-xs-12">
+              <Tags matchedTags={matchedTags} recipeTags={this.props.recipe.tags} recipeKey={this.props.recipe.source} />
+            </div>
+          </CardText>
+        </Card>
+      </Fade>
     </div>);
   }
 }

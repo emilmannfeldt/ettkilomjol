@@ -53,7 +53,7 @@ class Contact extends Component {
                                 }}
                             >
                                 <MenuItem value={'tip'}>Tips på förbättring / ny feature</MenuItem>
-                                <MenuItem value={'help'}>Support</MenuItem>
+                                <MenuItem value={'help'}>Hjälp</MenuItem>
                                 <MenuItem value={'recipe'}>Lägg till recept</MenuItem>
                                 <MenuItem value={'other'}>Annat</MenuItem>
                             </Select>
@@ -92,7 +92,7 @@ class Contact extends Component {
                         />
                     </div>
                     <div className="col-xs-12 no-gutter">
-                        <Button variant="contained" type="submit">Skicka</Button>
+                        <Button color="primary" variant="contained" type="submit">Skicka</Button>
                     </div>
                 </form>
             </div>
