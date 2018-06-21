@@ -106,6 +106,7 @@ let tagChanges = [
     { from: "Spansk mat", to: "Spansk" },
     { from: "Tex-mex", to: "Tex Mex" },
     { from: "Thailändsk mat", to: "Thailändsk" },
+    { from: "Thailand", to: "Thailändsk" },
     { from: "Tårtor", to: "Tårta" },
     { from: "Vardagsmiddag", to: "Vardag" },
     { from: "Vegetariskt", to: "Vegetarisk" },
@@ -796,11 +797,17 @@ let foodChanges = [
     { from: "Skivad banan", to: "Banan" },
     { from: "Smulad getost", to: "Getost" },
     { from: "Förkokta majskolvar", to: "Majskolv" },
-
-
+    { from: "Cm färsk ingefära", to: "Ingefära" },
+    { from: "Cm ingefära", to: "Ingefära" },
+    { from: "Cm purjolök", to: "Purjolök" },
+    { from: "Frityrolja", to: "Olja" },
+    { from: "Benfria fläskkottleter", to: "Fläskkottlet" },
+    { from: "Benfri fläskkarré", to: "Fläskkarré" },
+    { from: "Laktosfritt smör", to: "Smör" },
+    { from: "Laktosfri mjölkdryck", to: "Mjölk" },
+    { from: "Valfri pasta", to: "Pasta" },
+    { from: "Valfri mjölk", to: "Mjölk" },
     { from: "Laktosfri", to: "Laktosfritt" },
-
-
 
 ];
 //nya konstiga saker som upptäckts:
@@ -867,10 +874,9 @@ function runRecipes() {
                             //ta sen bort ändringarna jag gjorde för FÖRP i recipecard, recipelist, ingredientlist, index
                             //nästa steg fixa spinner loader för när recepten håller på att laddas in från indexjs
                             //fixa en enkel pil och text med exempel på sökningar eller gör som koket.se och ha bara hjälptext i inputfältet om det inte är mobilläge annars inget alls
-                        } else if (change.to.startsWith("cm ") && (!recipe.ingredients[i].unit || recipe.ingredients[i].unit === "st")) {
+                        } else if (change.from.startsWith("Cm ") && (!recipe.ingredients[i].unit || recipe.ingredients[i].unit === "st")) {
                             log.push("from:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name);
-                            recipe.ingredients[i].name = change.to.substring(3).trim();
-                            recipe.ingredients[i].name = recipe.ingredients[i].name.charAt(0).toUpperCase() + recipe.ingredients[i].name.slice(1);
+                            recipe.ingredients[i].name = change.to;
                             recipe.ingredients[i].unit = "cm";
                             log.push("to:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name + " source:" + recipe.source);
 
@@ -912,13 +918,13 @@ function runRecipes() {
                                 log.push("deleting unit:" + ingredient.unit);
                                 delete recipe.ingredients[i].unit;
                             } else {
-                                log.push("setting unit to singular:" + ingredient.amount + ingredient.unit);
+                                log.push("setting unit to singular:" + ingredient.amount + " " + ingredient.unit);
                                 if (change.from.indexOf("(") > -1) {
                                     recipe.ingredients[i].unit = change.from.replace(/\s*\([^()]*\)$/, '');
                                 } else {
                                     recipe.ingredients[i].unit = change.to.replace(/\s*\([^()]*\)$/, '');
                                 }
-                                log.push("to: " + ingredient.amount + recipe.ingredients[i].unit);
+                                log.push("to: " + ingredient.amount + " " + recipe.ingredients[i].unit);
                             }
                         } else {
                             if (change.to.trim() === "") {
@@ -956,10 +962,10 @@ function runRecipes() {
                 }
             }
             if (deleteRecipe) {
-                //recipesRef.child(child.key).remove();
+                recipesRef.child(child.key).remove();
             } else if (changesmade) {
-                //var recipeRef = recipesRef.child(child.key);
-                //recipeRef.update(recipe);
+                var recipeRef = recipesRef.child(child.key);
+                recipeRef.update(recipe);
             }
         });
 

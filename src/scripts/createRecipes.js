@@ -147,6 +147,7 @@ function createRecipes() {
                     recipesRef.orderByChild('source').equalTo(existingRecipes[i].source).once("value", function(snapshot) {
                         snapshot.forEach(function(child) {
                             let recipeTmp = child.val();
+                            console.log("updating..." + recipeTmp.source);
                             log.push("old recipe: " + JSON.stringify(recipeTmp));
                             recipesRef.child(child.key).update(recipe);
                             log.push("new recipe: " + JSON.stringify(recipe));

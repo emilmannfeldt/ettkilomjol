@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-
+import './mySnackbar.css';
 class MySnackbar extends React.Component {
     constructor(props) {
         super(props);
@@ -20,7 +20,7 @@ class MySnackbar extends React.Component {
 
     render() {
         let message = "";
-        let duration = 6000;
+        let duration = 8000;
         let actions = [];
         switch (this.props.variant) {
             case 'login_required':

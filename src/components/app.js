@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Home from './home';
 import { fire } from '../base';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Stats from './pages/stats';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 class App extends Component {
   constructor(props) {
@@ -36,6 +36,9 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider>
+        <div className='spinner'>
+          <LinearProgress />
+        </div>
         {this.state.user ? (
           <Home />
         ) : (null)}

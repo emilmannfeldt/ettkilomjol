@@ -1,3 +1,4 @@
+Det finns två miljöer som styrs i base.js och genom att kommentera fram rätt config i varje script
 Inleverans görs genom att fälja instruktioner i respektive script: koket.js, mittkok.js, ica.js, tasteline.js
 Efter en inleverans är det bra att köra dessa script för att tvätta datat:
 1. changeName.js = Byter namn på vissa ingredienser och tags

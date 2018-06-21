@@ -4,7 +4,6 @@ import './home.css';
 import Header from './user/header/header';
 import Footer from './user/footer/footer';
 import { fire } from '../base';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import {
     HashRouter as Router,
     Route,
@@ -261,9 +260,6 @@ class Home extends Component {
         return (
             <Router>
                 <div>
-                    <div className='spinner'>
-                        <LinearProgress />
-                    </div>
                     <Header />
                     <Route exact path="/favorites" render={() => <MyRecipes recipes={this.state.recipes} favs={this.state.favs} />} />
                     <Route exact path="/faq" render={() => <Faq openContact={this.handleContactOpen} />} />
