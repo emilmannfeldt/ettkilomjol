@@ -25,7 +25,7 @@ class MySnackbar extends React.Component {
         switch (this.props.variant) {
             case 'login_required':
                 message = "Du behöver vara inloggad för att spara recept";
-                actions = [<Button key="login" className="my_snackbar-login-btn" variant="outlined" size="small" onClick={this.props.onLogin}>
+                actions = [<Button key="login" className="my_snackbar-login-btn" variant="outlined" size="small" onClick={this.loginCall}>
                     Logga in
                 </Button>,
                 <IconButton

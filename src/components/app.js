@@ -36,12 +36,14 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider>
-        <div className='spinner'>
-          <LinearProgress />
+        <div>
+          <div className='spinner'>
+            <LinearProgress />
+          </div>
+          {this.state.user ? (
+            <Home />
+          ) : (null)}
         </div>
-        {this.state.user ? (
-          <Home />
-        ) : (null)}
       </MuiThemeProvider>
     );
   }
