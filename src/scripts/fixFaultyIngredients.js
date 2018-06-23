@@ -149,7 +149,7 @@ function runRecipes() {
               ingredientIndexesToRemove.push(ingredientToMerge.index);
               changesmade=true;
             }
-            log.push("merge and checkunits done: " + JSON.stringify(ingredient));
+            log.push("merge and checkunits done: " + JSON.stringify(mergedIngredient));
 
           }
           else {

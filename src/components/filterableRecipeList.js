@@ -76,7 +76,7 @@ class FilterableRecipelist extends Component {
       return this.simpleFilter(filter.tags.length, recipe.tags.length, tagHits);
     }
     if (tagHits === 0) {
-      return this.simpleFilter(filter.ingredients.length, recipe.ingredients.length, ingredientHits) && ingredientHits / recipe.ingredients.length > 0.2;
+      return this.simpleFilter(filter.ingredients.length, recipe.ingredients.length, ingredientHits);
     }
     //om det finns både tags och ingredients i filtret
     return this.simpleFilter(filter.ingredients.length + filter.tags.length, recipe.ingredients.length + Object.keys(recipe.tags).length, ingredientHits + tagHits);

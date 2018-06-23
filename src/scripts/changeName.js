@@ -359,7 +359,7 @@ let foodChanges = [
     { from: "Kinesiskt risvin", to: "Risvin" },
     { from: "Kiwifrukter", to: "Kiwi" },
     { from: "Klyftor vitlök", to: "Vitlöksklyfta" },
-    { from: "Knippe grön sparris", to: "Knippe sparris" },
+    { from: "Knippe grön sparris", to: "Sparris" },
     { from: "Kokande vatten", to: "Vatten" },
     { from: "Kokhett vatten", to: "Vatten" },
     { from: "Kokosflakes", to: "Kokosflingor" },
@@ -728,8 +728,8 @@ let foodChanges = [
     { from: "Helt bovete", to: "Bovete" },
     { from: "Hushållsmjukost", to: "Mjukost" },
     { from: "Klyfta vitlök", to: "Vitlöksklyfta" },
-    { from: "Knippa dill", to: "Knippe dill" },
-    { from: "Knippa gräslök", to: "Knippe gräslök" },
+    { from: "Knippa dill", to: "Dill" },
+    { from: "Knippa gräslök", to: "Gräslök" },
     { from: "Kokta stora vita bönor", to: "Vita bönor" },
     { from: "Krossad ananas", to: "Ananas" },
     { from: "Krossade vitlöksklyftor", to: "Vitlöksklyfta" },
@@ -810,6 +810,10 @@ let foodChanges = [
     { from: "Laktosfri mjölkdryck", to: "Mjölk" },
     { from: "Valfri pasta", to: "Pasta" },
     { from: "Valfri mjölk", to: "Mjölk" },
+    { from: "Knippa persilja", to: "Persilja" },
+    { from: "Knippa rädisor", to: "Rädisor" },
+    { from: "Knippa salladslök", to: "Salladslök" },
+
     { from: "Laktosfri", to: "Laktosfritt" },
 
 ];
@@ -881,6 +885,13 @@ function runRecipes() {
                             log.push("from:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name);
                             recipe.ingredients[i].name = change.to;
                             recipe.ingredients[i].unit = "cm";
+                            log.push("to:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name + " source:" + recipe.source);
+
+                        }
+                        else if ((change.from.startsWith("Knippe ") || change.from.startsWith("Knippa ") )&& (!recipe.ingredients[i].unit || recipe.ingredients[i].unit === "st")) {
+                            log.push("from:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name);
+                            recipe.ingredients[i].name = change.to;
+                            recipe.ingredients[i].unit = "Knippe";
                             log.push("to:" + recipe.ingredients[i].unit + " " + recipe.ingredients[i].name + " source:" + recipe.source);
 
                         }
