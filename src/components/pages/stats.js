@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './stats.css';
 import { Doughnut, Bar, HorizontalBar } from 'react-chartjs-2';
-
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 class Stats extends Component {
     constructor(props) {
@@ -13,7 +15,7 @@ class Stats extends Component {
             allergies: ['Glutenfri', 'Äggfri', 'Mjölkproteinfri', 'Laktosfri', 'Sockerfri'],
             origins: ['Nordisk', 'Svensk', 'Asiatisk', 'Italiensk', 'Fransk', 'Tex Mex', 'Thailändsk', 'Indisk', 'Latinamerikansk', 'Mellanöstern', 'Amerikansk'],
             occasions: ['Middag', 'Lunch', 'Tillbehör', 'Förrätt', 'Efterrätt', 'Fest', 'Bröllop', 'Buffé', 'Frukost', 'Grill', 'Jul', 'Nyår', 'Midsommar', 'Brunch', 'Picknick', 'Matlåda', 'Barnkalas', 'Fredagsmys', 'Halloween'],
-            foodExcludes: ['']
+            foodExcludes: [''],
         };
     }
 
@@ -392,10 +394,18 @@ class Stats extends Component {
         return chartData;
     }
 
-
-
-
     render() {
+        let visits = 0;
+        let favs = 0;
+        for (let i = 0; i < this.props.recipes.length; i++) {
+            visits = visits + (this.props.recipes[i].visits || 0);
+        }
+        for (let i = 0; i < this.props.users.length; i++) {
+            let user = this.props.users[i];
+            if(user.fav){
+                favs = favs + (Object.keys(user.fav).length || 0);
+            }
+        }
 
         const defaultOptions = {
             maintainAspectRatio: false,
@@ -403,12 +413,33 @@ class Stats extends Component {
             animation: {
                 easing: 'easeOutBack',
             },
-            legend:{
+            legend: {
                 position: 'top',
             }
         }
         return (
+
             <div className="container chart-container">
+                <List>
+                    <ListItem className="stat-listitem">
+                        <ListItemText primary="Recept" secondary={this.props.recipes.length} />
+                    </ListItem>
+                    <ListItem className="stat-listitem">
+                        <ListItemText primary="Sökbara ingredienser" secondary={this.props.foods.length} />
+                    </ListItem>
+                    <ListItem className="stat-listitem">
+                        <ListItemText primary="Sökbara preferenser" secondary={this.props.tags.length} />
+                    </ListItem>
+                    <ListItem className="stat-listitem">
+                        <ListItemText primary="Aktiva användare" secondary={this.props.users.length} />
+                    </ListItem>
+                    <ListItem className="stat-listitem">
+                        <ListItemText primary="Favoritiserade recept" secondary={favs} />
+                    </ListItem>
+                    <ListItem className="stat-listitem">
+                        <ListItemText primary="Antal besök" secondary={visits} />
+                    </ListItem>
+                </List>
                 <div className="chart">
                     <div className="chart-title">Mest använda källor</div>
                     <Doughnut data={this.getRecipesPerSource()} width={50}

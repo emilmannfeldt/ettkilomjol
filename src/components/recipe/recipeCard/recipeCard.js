@@ -105,7 +105,8 @@ class RecipeCard extends Component {
           <CardText className="recipe-card-info row">
             <div className="recipecard-title col-xs-12">
               {this.props.demo ? (<h2>{this.props.recipe.title}</h2>
-              ) : (<h2><a onClick={this.visitSource} target='_blank' href={'//' + this.props.recipe.source}>{this.props.recipe.title}</a></h2>
+              ) : (<h2><a onClick={this.visitSource} target='_blank' 
+              href={this.props.recipe.source.indexOf('tasteline.com')>-1 ? '//www.' + this.props.recipe.source : '//' + this.props.recipe.source}>{this.props.recipe.title}</a></h2>
                 )}
             </div>
             <div className="col-xs-12 recipecard-author">

@@ -115,6 +115,9 @@ let tagChanges = [
     { from: "Äggfritt", to: "Äggfri" },
     { from: "Grilla", to: "Grill" },
     { from: "Nyttigt", to: "Nyttig" },
+    { from: "Vardagsmiddag", to: "Vardag" },
+    { from: "Varmrätt", to: "Huvudrätt" },
+    { from: "Nyttigt", to: "Nyttig" },
     { from: "Östeuropeisk mat", to: "Östeuropeisk" }];
 
 

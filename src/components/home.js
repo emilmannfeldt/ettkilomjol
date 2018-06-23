@@ -15,6 +15,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import MyRecipes from './user/myRecipes/myRecipes';
 import MySnackbar from './mySnackbar/mySnackbar';
+import Button from '@material-ui/core/Button';
+import ScrollIcon from '@material-ui/icons/ExpandLess';
 
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
@@ -26,6 +28,7 @@ class Home extends Component {
             foods: [],
             recipes: [],
             units: [],
+            users: [],
             favs: [],
             MIN_USES_FOOD: 5,
             MIN_USES_TAG: 8,
@@ -40,6 +43,8 @@ class Home extends Component {
         this.hideSpinner = this.hideSpinner.bind(this);
         this.favListener = this.favListener.bind(this);
         this.setSnackbar = this.setSnackbar.bind(this);
+        this.scrollFunction = this.scrollFunction.bind(this);
+
     }
     handleContactOpen = (subject) => {
         this.setState({
@@ -122,12 +127,42 @@ class Home extends Component {
             });
             localStorage.setItem('lastupdatedtags', JSON.stringify(Date.now()));
         }
+        if (this.state.users.length < 1 || this.localIsOld('lastupdatedusers')) {
+            console.log("LOADING NEW USERS");
+            usersRef.once('value', function (snapshot) {
+                let usersTmp = [];
+                snapshot.forEach(function (child) {
+                    usersTmp.splice(0, 0, child.val());
+                });
+                that.setState({
+                    users: usersTmp
+                });
+                localStorage.setItem('users', JSON.stringify(usersTmp));
+            });
+            localStorage.setItem('lastupdatedusers', JSON.stringify(Date.now()));
+        }
         fire.auth().onAuthStateChanged((user) => {
             if (user) {
                 this.favListener();
 
             }
         });
+        window.addEventListener("scroll", this.scrollFunction);
+
+
+    }
+
+    scrollFunction() {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            document.getElementById("scrolltop-btn").style.display = "block";
+        } else {
+            document.getElementById("scrolltop-btn").style.display = "none";
+        }
+    }
+
+    topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }
 
     favListener() {
@@ -261,10 +296,12 @@ class Home extends Component {
             <Router>
                 <div>
                     <Header />
-                    <Route exact path="/favorites" render={() => <MyRecipes recipes={this.state.recipes} favs={this.state.favs} />} />
-                    <Route exact path="/faq" render={() => <Faq openContact={this.handleContactOpen} />} />
-                    <Route exact path="/stats" render={() => <Stats tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
-                    <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />
+                    <div id="content">
+                        <Route exact path="/favorites" render={() => <MyRecipes recipes={this.state.recipes} favs={this.state.favs} />} />
+                        <Route exact path="/faq" render={() => <Faq openContact={this.handleContactOpen} />} />
+                        <Route exact path="/stats" render={() => <Stats users={this.state.users} tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
+                        <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />
+                    </div>
                     <Footer openContact={this.handleContactOpen} />
                     <Dialog
                         open={this.state.contactOpen}
@@ -276,6 +313,12 @@ class Home extends Component {
                         </DialogContent>
                     </Dialog>
                     <MySnackbar render={this.state.snackbarType != ""} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />
+                    <Button variant="fab"
+                        aria-label="Scrolla till toppen"
+                        color="primary" id="scrolltop-btn" onClick={this.topFunction} title="Tillbaka till toppen"
+                    >
+                        <ScrollIcon />
+                    </Button>
                 </div>
             </Router>
         );

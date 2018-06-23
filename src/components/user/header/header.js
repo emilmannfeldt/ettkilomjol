@@ -95,7 +95,7 @@ class Header extends Component {
     }
 
     return (
-      <div>
+      <div id="header">
         {backgroundImage}
         <Toolbar className="toolbar">
           <ToolbarGroup firstChild={true}>

@@ -2,12 +2,29 @@ import React, { Component } from 'react';
 import './footer.css';
 import { Link } from 'react-router-dom';
 
+
+
+
+
 class Footer extends Component {
   constructor(props) {
     super(props);
     this.state = {
 
     };
+  }
+  componentDidMount(){
+    this.autoHeight();
+    window.addEventListener("resize", this.autoHeight);
+  }
+  autoHeight() {
+    let header = document.querySelector('#header');
+    let content = document.querySelector('#content');
+    let footer = document.querySelector('#footer');
+
+    content.style.minHeight = 0;
+    content.style.minHeight= (window.document.body.scrollHeight - header.offsetHeight - footer.offsetHeight)+"px";
+
   }
 
   render() {

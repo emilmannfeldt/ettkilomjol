@@ -5,3 +5,16 @@
 .spinner .MuiLinearProgress-barColorPrimary-10 {
     background-color: #2196f3;
 }
+
+#content {
+    padding-bottom: 2em;
+}
+
+#scrolltop-btn {
+    display: none;
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    z-index: 99;
+    opacity: 0.7;
+}

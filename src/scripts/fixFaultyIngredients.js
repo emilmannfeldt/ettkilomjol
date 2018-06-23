@@ -93,20 +93,6 @@ function runRecipes() {
       let ingredientIndexesToRemove = [];
       let ingredientsToSkip = [];
       let deleteRecipe = false;
-      //lägg till funktion för att slå ihop dubletter av ignredienser...
-      //om de har olika units så kolla om det täcks av min unit converter
-      //tänk på att det kan vara tre av samma och fler till och med
-      //tänker något sånt här:
-      //loopa igenom ignredienser och spara undan namnen i en array. När en dubblet hittas så spara ner den ingrediensen i en variabel ingredientToMerge
-      //ta sen bort den ingrediensen från receptet
-      //sätta i = 0 och loopa igenom alla ingredienser igen. När man hittar matchningen för ingredientToMerge.name så adera amount från ingredientToMerge
-      //om det är olika unit så hantera det i unit converter. om det itne går så återskapa ingrediensen ingredientToMerge till receptet. kolla hur ofta detta händer.
-      // om det händer att det inte går att fixa så ta bort hela receptet
-      //det får bli en egen metod för mergeIngredients() som kollar på unit och amount osv.
-      //när loopen har gått igenom alla ingredienser så tyder det på att det inte finns några dubbletter att rätta till kvar.
-      //snygga till så att rättnignen för förp osv är separerat i ev egen metod också.
-      //lägg till allt detta i createRecipes.js?? nej måste vara efter changeName, kanske i changeName? eller inte
-      //
       let changesmade = false;
       console.log("recipe running:" + recipe.source);
 
@@ -152,13 +138,6 @@ function runRecipes() {
             let amount2 = ingredientToMerge.amount ? +ingredientToMerge.amount : 1;
             recipe.ingredients[i].amount = amount1 + amount2;
             ingredientIndexesToRemove.push(ingredientToMerge.index);
-            //TESTKÖR DETTA UTAN CHANGESMADE AKTIV. SE HUR MÅNGA MERGE ERRORS SOM FINNS OCH HUR DE SER UT?
-            //om unit skiljer sig så kolla om både units finns med i firebase.units. Om så är fallet så omvandla den den lägre valören till den högre och addera sen amounts
-            //kan även köra en checkUnit() efteråt? ifall det skulle bli 20msk så vill jag ändra om det till något enklare
-            //checkunit kan ju köras här var gång?? annars efteråt
-
-            //finns ett tiotal recept som är fel vid unit volym - vikt. Går inte att lösa. Måste fixa i algoritmen att det endast räknas som en träff!!
-            //finns även flera inom vikt och volym av olika kvaniteter dl - msk etc. detta kan vi merga med hjälp av units nedan.
             changesmade = true;
           } else if (!ingredient.unit && !ingredientToMerge.unit && !ingredientToMerge.amount && !ingredient.amount){
             ingredientIndexesToRemove.push(ingredientToMerge.index);
@@ -194,15 +173,6 @@ function runRecipes() {
       }
 
       if(ingredientsToSkip.length>0){
-        //visa recept så är det ingrediensen i ingredientsSkip som har unit 
-        //och inte den som är undefined. kan jag fixa det?
-        //kanske använda en annan lista än ingredientsToSkip för att avgöra om receptet ska tas bort.
-        //skapa en variabel deleteRecipe längre upp och sätt den till true om det merge error units på båda ingredienserna
-
-        //ser bättre ut nu
-        //nytt fel https://www.koket.se/skinkstek-fran-as "ca 5" har kommit in som amount från koket.se
-        //skapa ärende på det och se över om det finns fler med ca i amount och hur det är möjligt??
-        //borde vara numeriskt
         if(deleteRecipe){
           log.push("---------------------------------------------------------------------------------------------");
           log.push("DELETING recipe>" + recipe.source);
