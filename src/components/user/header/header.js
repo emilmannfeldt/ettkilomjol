@@ -5,7 +5,7 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import LoggedInIcon from 'material-ui/svg-icons/social/person';
-import LoginIcon from '@material-ui/icons/PersonOutline';
+import LoginIcon from '@material-ui/icons/Lock';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
@@ -15,6 +15,8 @@ import headerImg from './header.jpg';
 import { fire } from '../../../base';
 import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import Avatar from '@material-ui/core/Avatar';
+
 //https://www.youtube.com/watch?v=2ciHixbc4HE bra genomgång av userdata koppling
 //det ska vara effektivt att spara nya recept listor, lägga till saker..
 //hämting gör jag en gång i början och sen cachar? eller behöver jag ladda det on the go?
@@ -32,9 +34,8 @@ class Header extends Component {
 
   }
   uiConfig = {
-    // Popup signin flow rather than redirect flow.
+    // testa redirect?
     signInFlow: 'popup',
-    // We will display Google and Facebook as auth providers.
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
@@ -85,6 +86,22 @@ class Header extends Component {
         </div>);
       }
     }
+    function MyLoginComponent(props) {
+      if (fire.auth().currentUser.isAnonymous) {
+        return (<Button onClick={props.logincall} size="small" className="login-btn" >
+          <LoginIcon />
+          {props.showLoginPage ? 'Avbryt' : 'Logga in'}
+        </Button>);
+      } else {
+        if (fire.auth().currentUser.photoURL) {
+          return(<Avatar src={fire.auth().currentUser.photoURL} alt="user avatar" tile="test"/>);
+        } else {
+          return (<div><LoggedInIcon className="toolbar-more-icon" /> <span className="username-label"> {fire.auth().currentUser.displayName}</span></div >
+          );
+        }
+      }
+
+    }
     let backgroundImage = <div className="headerImageContainer">
       <img src={headerImg} id="headerimage" />
     </div>;
@@ -103,15 +120,7 @@ class Header extends Component {
             </Link>
           </ToolbarGroup>
           <ToolbarGroup>
-            <FontIcon className="muidocs-icon-custom-sort" />
-            {fire.auth().currentUser.isAnonymous ? (
-              <Button onClick={this.login} size="small" className="login-btn" >
-                <LoginIcon />
-                {this.state.showLoginPage ? 'Avbryt' : 'Logga in'}
-              </Button>
-            ) : (<div>
-              <LoggedInIcon className="toolbar-more-icon" /><span className="username-label"> {fire.auth().currentUser.displayName}</span></div>
-              )}
+            <MyLoginComponent logincall={this.login} showLoginPage={this.state.showLoginPage} />
 
             <IconMenu
               iconButtonElement={
