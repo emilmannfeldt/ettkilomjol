@@ -1,6 +1,7 @@
 .my_recipes-title {
     position: relative;
-    color: rgba(255, 255, 255, 0.9);
+    color: #444444;
+    text-align: center;
 }
 .my_recipes-container {
     min-height: 26em;
@@ -11,22 +12,32 @@
     padding: 0.4em !important;
     color: rgba(255, 255, 255, 0.9);
     font-size: 16px;
+
+    height: 2.6em !important;
+    margin-top: 1.6em !important;
+    border-radius: 15px !important;
+    background-color: white !important;
+    border: 1px solid gray !important;
+    padding-right: 1em !important;
+    padding-left: 1em !important;
 }
 
 .my_recipes-search input {
-    color: rgba(255, 255, 255, 0.9);
     font-size: 16px;
+
+    margin-top: -8px !important;
+    top: 10px !important;
 }
 
 .my_recipes-search label {
-    margin-left: 0.3em;
-    margin-top: 0.4em;
     font-size: 1em;
-    color: rgba(255, 255, 255, 0.9) !important;
+    left: inherit;
+    line-height: 40px;
+    margin-top: -22px;
 }
 
 .my_recipes-search div::before {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.9) !important;
+    border-bottom: none !important;
 }
 
 .my_recipes-search div::after {

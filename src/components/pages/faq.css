@@ -4,3 +4,8 @@
 .faq-panel{
     display: block !important;
 }
+h2{
+    position: relative;
+    color: #444444;
+    text-align: center;
+}
