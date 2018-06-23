@@ -4,6 +4,7 @@
 
 .popular-tags{
     min-height: 4em;
+    margin-bottom: 1em;
 }
 @media (min-width: 1000px) {
     .filterbar-wrapper{
