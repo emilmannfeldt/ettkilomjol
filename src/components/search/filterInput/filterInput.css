@@ -1,10 +1,35 @@
-.filter-clear-btn span{
-    text-transform: none !important;
-  } 
-.filter-clear-btn{
-  vertical-align: top;
-  margin-left: -17px !important;
+.filter-clear-btn span {
+  text-transform: none !important;
 }
-.c-autocomplete label, .c-autocomplete input {
-  color: rgba(255, 255, 255, 0.9) !important;
+
+.filter-clear-btn {
+  vertical-align: top;
+}
+
+.c-autocomplete {
+  height: 2.6em !important;
+  margin-top: 1.6em !important;
+  border-radius: 15px !important;
+  background-color: white !important;
+  border: 1px solid gray !important;
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+.c-autocomplete label {
+  line-height: 40px !important;
+  top: 0px !important;
+}
+
+.c-autocomplete input {
+  margin-top: -8px !important;
+  top: 10px !important;
+}
+
+.c-autocomplete hr:first-child {
+  display: none !important;
+}
+
+.c-autocomplete hr {
+  position: inherit !important;
 }

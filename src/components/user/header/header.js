@@ -11,7 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import Button from '@material-ui/core/Button';
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
-import headerImg from './pexels-photo-262918.jpeg';
+import headerImg from './header.jpg';
 import { fire } from '../../../base';
 import firebase from 'firebase/app';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
@@ -88,9 +88,7 @@ class Header extends Component {
     let backgroundImage = <div className="headerImageContainer">
       <img src={headerImg} id="headerimage" />
     </div>;
-    if (window.location.href.endsWith("/stats")
-      || window.location.href.endsWith("/faq")
-      || window.location.href.endsWith("/contact")) {
+    if (window.location.href.endsWith("/stats")) {
       backgroundImage = null;
     }
 
