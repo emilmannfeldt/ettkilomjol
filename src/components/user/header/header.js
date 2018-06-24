@@ -100,13 +100,16 @@ class Header extends Component {
           );
         }
       }
-
     }
     let backgroundImage = <div className="headerImageContainer">
       <img src={headerImg} id="headerimage" />
     </div>;
     if (window.location.href.endsWith("/stats")) {
       backgroundImage = null;
+    }
+    let titleText = "Ett kilo mjol";
+    if(fire.options.projectId==="ettkilomjol-dev"){
+      titleText = "Ett kilo mjol DEV";
     }
 
     return (
@@ -116,7 +119,7 @@ class Header extends Component {
           <ToolbarGroup firstChild={true}>
             <Link to={'/'}>
               <ToolbarTitle className="toolbar-title"
-                text={'Ett kilo mjöl'} />
+                text={titleText} />
             </Link>
           </ToolbarGroup>
           <ToolbarGroup>
