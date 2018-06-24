@@ -19,6 +19,11 @@ class FilterInput extends Component {
     this.deleteIngredient = this.deleteIngredient.bind(this);
     this.deleteTag = this.deleteTag.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
+    Array.prototype.diff = function (a) {
+      return this.filter(function (i) {
+        return a.indexOf(i) < 0;
+      });
+    };
   }
 
   styles = {
@@ -110,21 +115,12 @@ class FilterInput extends Component {
   }
 
   getAutoCompletteFoods() {
-    Array.prototype.diff = function (a) {
-      return this.filter(function (i) {
-        return a.indexOf(i) < 0;
-      });
-    };
     let foodNames = this.props.foods.map(a => a.name);
     return foodNames.diff(this.props.filter.ingredients);
   }
 
   getAutoCompletteTags() {
-    Array.prototype.diff = function (a) {
-      return this.filter(function (i) {
-        return a.indexOf(i) < 0;
-      });
-    };
+
     let tagNames = this.props.tags.map(a => a.name);
     return tagNames.diff(this.props.filter.tags);
   }

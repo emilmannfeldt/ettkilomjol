@@ -27,7 +27,7 @@ class Faq extends Component {
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails className="faq-panel">
                             Om du vill se dina egna recept här så behöver du skapa receptet på någon av dessa sidor (tasteline.com, ica.se, mittkok.expressen.se, koket.se). När du gjort det kan du kontakta mig med länken.
-                            <Button variant="contained" color="primary" className="faq-contact-btn" onClick={() => { this.props.openContact('recipe') }}>Kontakta mig</Button>
+                            <Button variant="contained" color="primary" className="faq-contact-btn" onClick={() => { this.props.openContact('newRecipe') }}>Kontakta mig</Button>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     <ExpansionPanel >

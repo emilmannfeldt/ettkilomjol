@@ -3,14 +3,12 @@ import './header.css';
 import { Link } from 'react-router-dom';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
 import LoggedInIcon from 'material-ui/svg-icons/social/person';
 import LoginIcon from '@material-ui/icons/Lock';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/more-vert';
 import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
 import Button from '@material-ui/core/Button';
-import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 import headerImg from './header.jpg';
 import { fire } from '../../../base';
 import firebase from 'firebase/app';
@@ -102,7 +100,7 @@ class Header extends Component {
       }
     }
     let backgroundImage = <div className="headerImageContainer">
-      <img src={headerImg} id="headerimage" />
+      <img src={headerImg} id="headerimage" alt="bakgrundsbild"/>
     </div>;
     if (window.location.href.endsWith("/stats")) {
       backgroundImage = null;

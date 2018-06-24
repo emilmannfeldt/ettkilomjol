@@ -4,7 +4,6 @@ import RecipeList from './recipe/recipeList/recipeList';
 import Filterbar from './search/filterbar/filterbar';
 import QuickTags from './search/quickTags/quickTags';
 import Sort from './search/sort/sort';
-import LinearProgress from 'material-ui/LinearProgress';
 
 class FilterableRecipelist extends Component {
   constructor(props) {

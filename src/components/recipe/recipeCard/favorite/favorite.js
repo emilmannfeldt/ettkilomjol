@@ -44,7 +44,6 @@ class Favorite extends React.Component {
         return source.replace(/\./g, ",").replace(/\//g, "+");
     }
     render() {
-        const { classes } = this.props;
         function MyFavoriteIcon(props) {
             if (props.isFav) {
                 return (<FavoriteIcon />);

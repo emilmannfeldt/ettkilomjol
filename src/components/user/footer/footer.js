@@ -39,8 +39,6 @@ class Footer extends Component {
                 LinkedIn</a></li>
               <li><a href="https://tree.taiga.io/project/ettkilomjol-ett-kilo-mjol/">
                 Taiga</a></li>
-              <li><a href="#">
-                Portfolio</a></li>
             </ul>
           </div>
 
@@ -59,7 +57,7 @@ class Footer extends Component {
             </div>
             <div className="col-lg-4">
               <ul>
-                <li></li>
+              <li><Link to={'/privacy'}>Integritetspolicy</Link></li>
               </ul>
             </div>
           </div>

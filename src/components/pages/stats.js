@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './stats.css';
-import { Doughnut, Bar, HorizontalBar } from 'react-chartjs-2';
+import { Doughnut, HorizontalBar } from 'react-chartjs-2';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -341,11 +341,6 @@ class Stats extends Component {
                             footer += " " + totalScales.length.amount + " " + totalScales.length.unit;
                         }
                         return footer.trim();
-                    },
-                    afterFooter: function (tooltipItem, data) {
-                        var dataset = data['datasets'][0];
-                        var percent = 10;
-                        return '';
                     },
                     label: function (tooltipItem, data) {
                         var label = 'Hittas i ';

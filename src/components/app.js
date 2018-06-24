@@ -22,7 +22,6 @@ class App extends Component {
     fire.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log("app login")
-        console.log(user)
         this.setState({ user });
       } else {
         fire.auth().signInAnonymously().catch(function (error) {

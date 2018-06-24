@@ -71,7 +71,6 @@ class Home extends Component {
         let unitsRef = fire.database().ref("units");
         let tagsRef = fire.database().ref("tags");
         let usersRef = fire.database().ref("users");
-        let recipeRef = fire.database().ref("recipes");
         let that = this;
         if (this.state.foods.length < 1 || this.localIsOld('lastupdatedfoods')) {
             console.log("LOADING NEW FOODS");
@@ -211,7 +210,7 @@ class Home extends Component {
             upgraded = true;
             console.log("INDEXDB upgrade")
             var db = open.result;
-            var store = db.createObjectStore("RecipeStore", { keyPath: "source" });
+            db.createObjectStore("RecipeStore", { keyPath: "source" });
         }
         open.onsuccess = function () {
             console.log("onsuccess");
@@ -312,7 +311,7 @@ class Home extends Component {
                             <Contact subject={this.state.contactSubject} />
                         </DialogContent>
                     </Dialog>
-                    <MySnackbar render={this.state.snackbarType != ""} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />
+                    <MySnackbar render={this.state.snackbarType !== ""} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />
                     <Button variant="fab"
                         aria-label="Scrolla till toppen"
                         color="primary" id="scrolltop-btn" onClick={this.topFunction} title="Tillbaka till toppen"

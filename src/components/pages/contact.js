@@ -54,7 +54,8 @@ class Contact extends Component {
                             >
                                 <MenuItem value={'tip'}>Tips på förbättring / ny feature</MenuItem>
                                 <MenuItem value={'help'}>Hjälp</MenuItem>
-                                <MenuItem value={'recipe'}>Lägg till recept</MenuItem>
+                                <MenuItem value={'recipeError'}>Felanmäl recept</MenuItem>
+                                <MenuItem value={'newRecipe'}>Lägg till recept</MenuItem>
                                 <MenuItem value={'other'}>Annat</MenuItem>
                             </Select>
                         </FormControl>

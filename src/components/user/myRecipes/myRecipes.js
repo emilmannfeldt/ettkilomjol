@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import { fire } from '../../../base';
 import RecipeList from '../../recipe/recipeList/recipeList';
 import './myRecipes.css'
 import TextField from '@material-ui/core/TextField';
 import Fuse from 'fuse.js';
-import { Card, CardText } from 'material-ui/Card';
-import Fade from '@material-ui/core/Fade';
 import RecipeCard from '../../recipe/recipeCard/recipeCard';
 
 class MyRecipes extends Component {
@@ -18,15 +15,6 @@ class MyRecipes extends Component {
     };
 
     handleSearch = event => {
-        //lägg till funktionalitet för att hantera freeSearch i recipeList.
-        //det är lite deplay mellan att spinnern försvinner och recpten visas?
-        //en egen spinner här?
-        //dör spinnern lite för tidigt egentligen?
-        //lägg till hideSpinner här? och ignorera hideSPinner i home.js om urlen slutar på /favorites?
-        //styla likt automcpletten, sno några rader css från den
-        //en annan backgrundbild på denna sida? något som inte behöver vara en bild. 
-        //något finnt mönster eller enfrärgad
-        //fixa en information på ett card om det saknas favoriter.
         this.setState({
             filter: {
                 freeSearch: event.target.value,
@@ -36,7 +24,6 @@ class MyRecipes extends Component {
         })
     };
     dummy() {
-        console.log("dummy");
     }
     render() {
         var options = {
@@ -64,13 +51,12 @@ class MyRecipes extends Component {
         if (this.state.filter.freeSearch.length > 0) {
             var fuse = new Fuse(recipesTmp, options);
             recipesTmp = fuse.search(this.state.filter.freeSearch);
-            console.log(recipesTmp);
         }
         let demoRecipe = null;
         if (this.props.recipes.length > 0) {
-            demoRecipe = this.props.recipes[this.props.recipes.length-1];
+            demoRecipe = this.props.recipes[this.props.recipes.length - 1];
             demoRecipe.title = "Exempel på recept";
-            demoRecipe.source="#";
+            demoRecipe.source = "#";
             demoRecipe.description = "Du har inga sparade favoritrecept. För att spara ett recept klickar du på hjärtat upp till höger. Detta är bara ett exempel. Gå till sök recept för att hitta dina favoriter.";
         }
         return (

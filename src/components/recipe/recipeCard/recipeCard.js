@@ -7,7 +7,6 @@ import Favorite from './favorite/favorite';
 import Level from './level/level';
 import Rating from './rating/rating';
 import Portion from './portion/portion';
-import FlatButton from 'material-ui/FlatButton';
 import Ingredientlist from './ingredientlist/ingredientlist';
 import IngredientProgress from './ingredientProgress/ingredientProgress';
 import { Card, CardText } from 'material-ui/Card';

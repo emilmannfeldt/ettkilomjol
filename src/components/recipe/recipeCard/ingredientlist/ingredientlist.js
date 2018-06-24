@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import './ingredientlist.css';
 import IconButton from 'material-ui/IconButton';
-import ShoppingBasketIcon from 'material-ui/svg-icons/action/shopping-basket';
 import AddIcon from 'material-ui/svg-icons/content/add-box';
 import DoneIcon from 'material-ui/svg-icons/action/done';
-import Divider from 'material-ui/Divider';
-import { List, ListItem } from 'material-ui/List';
-import LinearProgress from 'material-ui/LinearProgress';
+import { List } from 'material-ui/List';
 
 class Ingredientlist extends Component {
   constructor(props) {
@@ -44,7 +41,6 @@ class Ingredientlist extends Component {
     function IngredientList(props) {
       let ingredients = props.ingredients;
       let missing = props.missing;
-      let prev = ingredients[0].name;
       for (let i = 0; i < ingredients.length; i++) {
         ingredients[i].missing = missing.indexOf(ingredients[i].name) > -1;
       }

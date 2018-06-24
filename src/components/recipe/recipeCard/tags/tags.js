@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import './tags.css';
 
 class Tags extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         let tags = [];
         for (let i = 0; i < this.props.matchedTags.length; i++) {
