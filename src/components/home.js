@@ -11,8 +11,6 @@ import {
 import Stats from './pages/stats';
 import Faq from './pages/faq';
 import Contact from './pages/contact';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
 import MyRecipes from './user/myRecipes/myRecipes';
 import MySnackbar from './mySnackbar/mySnackbar';
 import Button from '@material-ui/core/Button';
@@ -302,15 +300,8 @@ class Home extends Component {
                         <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />
                     </div>
                     <Footer openContact={this.handleContactOpen} />
-                    <Dialog
-                        open={this.state.contactOpen}
-                        onClose={this.handleContactClose}
-                        aria-labelledby="form-dialog-title"
-                    >
-                        <DialogContent>
-                            <Contact subject={this.state.contactSubject} />
-                        </DialogContent>
-                    </Dialog>
+                    <Contact render={this.state.contactOpen} onClose={this.handleContactClose} subject={this.state.contactSubject}/>
+           
                     <MySnackbar render={this.state.snackbarType !== ""} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />
                     <Button variant="fab"
                         aria-label="Scrolla till toppen"

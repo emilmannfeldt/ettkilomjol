@@ -1,0 +1,11 @@
+.invitation-content {
+    width: 25em;
+}
+
+.invitation-content input {
+    width: 100%;
+}
+
+.invitation-dialog button {
+    width: 100%;
+}

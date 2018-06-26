@@ -7,6 +7,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import './contact.css';
 import { fire } from '../../base';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 class Contact extends Component {
     state = {
@@ -14,6 +19,7 @@ class Contact extends Component {
         message: '',
         replyto: '',
         type: '',
+        helptext: 'dsa'
     };
     componentDidMount() {
         if (!fire.auth().currentUser.isAnonymous) {
@@ -22,25 +28,64 @@ class Contact extends Component {
                 replyto: fire.auth().currentUser.email
             });
         }
+
         this.setState({
-            type: this.props.subject
-        })
+            type: this.props.subject,
+        });
+        this.updateHelptext(this.props.subject);
     }
     handleChange = name => event => {
         this.setState({
             [name]: event.target.value,
         });
+        if (name === "type") {
+            this.updateHelptext(event.target.value);
+        }
     };
+
+    updateHelptext(subject) {
+        let helptext = "";
+        switch (subject) {
+            case 'tip':
+                helptext = "Beskriv vad du skulle vilja kunna göra eller vad som du känner kan förbättras.";
+                break;
+            case 'help':
+                helptext = "Beskriv vad du stött på för problem.";
+                break;
+            case 'recipeError':
+                helptext = "Beskriv vad som är fel med receptet och bifoga länken till receptet.";
+                break;
+            case 'newRecipe':
+                helptext = "För att kunna få tillgång till ditt recept här behöver du skapa ditt recept på Ica, tasteline, koket, eller mittkok. Bifoga sedan länk till ditt skapade receptet här.";
+                break;
+            case 'other':
+                helptext = "";
+                break;
+            case undefined:
+                break;
+            default:
+                break;
+        }
+        this.setState({
+            helptext: helptext,
+        });
+    }
     render() {
 
         return (
-            <div className="container contact-container">
-                <h2>Kontakta mig</h2>
-                <form action="https://formspree.io/info.ettkilomjol@gmail.com"
-                    method="POST">
-                    <input type="text" name="_gotcha" style={{ display: 'none' }} />
-                    <input type="hidden" name="_subject" value="Contact form" />
-                    <div className="col-xs-12 no-gutter">
+            <Dialog className="contact-dialog"
+                open={this.props.render}
+                onClose={this.props.onClose}
+                aria-labelledby="form-dialog-title"
+            >
+                <form action="https://formspree.io/info.ettkilomjol@gmail.com" method="POST">
+                    <DialogTitle id="simple-dialog-title">Kontakta mig</DialogTitle>
+                    <DialogContent className="contact-dialog-content">
+                        <DialogContentText>
+                            {this.state.helptext}
+                        </DialogContentText>
+                        <input type="text" name="_gotcha" style={{ display: 'none' }} />
+                        <input type="hidden" name="_subject" value="Contact form" />
                         <FormControl className="contact-field">
                             <InputLabel htmlFor="age-simple">Ämne</InputLabel>
                             <Select autoWidth={true}
@@ -59,8 +104,7 @@ class Contact extends Component {
                                 <MenuItem value={'other'}>Annat</MenuItem>
                             </Select>
                         </FormControl>
-                    </div>
-                    <div className="col-xs-12 no-gutter">
+
                         <TextField className="contact-field"
                             label="Namn"
                             name="name"
@@ -68,8 +112,7 @@ class Contact extends Component {
                             onChange={this.handleChange('name')}
                             margin="normal"
                         />
-                    </div>
-                    <div className="col-xs-12 no-gutter">
+
                         <TextField className="contact-field"
                             required
                             label="Meddelande"
@@ -80,8 +123,6 @@ class Contact extends Component {
                             rowsMax="20"
                             margin="normal"
                         />
-                    </div>
-                    <div className="col-xs-12 no-gutter">
                         <TextField className="contact-field"
                             label="Din email"
                             required
@@ -91,12 +132,12 @@ class Contact extends Component {
                             onChange={this.handleChange('replyto')}
                             margin="normal"
                         />
-                    </div>
-                    <div className="col-xs-12 no-gutter">
+                    </DialogContent>
+                    <DialogActions>
                         <Button color="primary" variant="contained" type="submit">Skicka</Button>
-                    </div>
+                    </DialogActions>
                 </form>
-            </div>
+            </Dialog>
         );
     }
 }
