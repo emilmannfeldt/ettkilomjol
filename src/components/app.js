@@ -28,8 +28,6 @@ class App extends Component {
     this.authListener = this.authListener.bind(this);
     this.verifyInvitation = this.verifyInvitation.bind(this);
     this.getError = this.getError.bind(this);
-
-
   }
 
   componentDidMount() {
@@ -38,13 +36,6 @@ class App extends Component {
       this.setState({
         verified: true,
       })
-    } else {
-      let that = this;
-      fire.database().ref('/config/invitation_code').once('value').then(function (snapshot) {
-        that.setState({
-          invitationCode: snapshot.val()
-        })
-      });
     }
     console.log("app didmount")
     this.authListener();
@@ -73,54 +64,62 @@ class App extends Component {
     });
   }
   verifyInvitation() {
-
-    let tomanytries = JSON.parse(localStorage.getItem('tomanytries'));
-    let now = new Date();
-    if (tomanytries && now - tomanytries < this.state.waitTime) {
-      if (!this.state.tomanytries) {
-        this.setState({
-          tomanytries: true,
-        });
-        let that = this;
-        var waitTimer = setInterval(function () {
-          let now = new Date();
-          let tryagain = Math.floor(((that.state.waitTime - (now - tomanytries)) / 1000));
-          that.setState({
-            errorText: 'För många försök. Försök igen om ' + tryagain + " sekunder",
-          })
-          if (tryagain <= 0) {
-            that.setState({
-              errorText: '',
-              tomanytries: false,
-            })
-            clearInterval(waitTimer);
-          }
-        }, 1000);
-
-
-        this.setState({
-          tries: 0,
-        })
-      }
+    if (this.state.tomanytries) {
       return;
     }
-
-    if (this.state.invitationCode === this.state.inputCode) {
+    let tomanytries = JSON.parse(localStorage.getItem('tomanytries'));
+    let now = new Date();
+    let that = this;
+    if (tomanytries && now - tomanytries < this.state.waitTime) {
       this.setState({
-        verified: true,
+        tomanytries: true,
       });
-      localStorage.setItem('verifiedinvite', 'true');
-    } else {
+      var waitTimer = setInterval(function () {
+        let now = new Date();
+        let tryagain = Math.floor(((that.state.waitTime - (now - tomanytries)) / 1000));
+        that.setState({
+          errorText: 'För många försök. Försök igen om ' + tryagain + " sekunder",
+        })
+        if (tryagain <= 0) {
+          that.setState({
+            errorText: '',
+            tomanytries: false,
+          })
+          clearInterval(waitTimer);
+        }
+      }, 1000);
       this.setState({
-        tries: this.state.tries + 1,
-        errorText: 'Fel kod, försök igen'
+        tries: 0,
       })
-      if (this.state.tries > 5) {
-        localStorage.setItem('tomanytries', JSON.parse(Date.now()));
-      }
-      //snackbar eller bara en extra text som skrivs under/ovan inputfältet om att det var fel?
-      //någon säkerhet på om det är många försök på kort tid? spara något i localstorage då som anger när man kan försöka igen..?
+
     }
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", ' https://us-central1-ettkilomjol-dev.cloudfunctions.net/verifyInvitation?code=' + this.state.inputCode, true);
+    xmlHttp.onload = function (e) {
+      if (xmlHttp.readyState === 4) {
+        if (xmlHttp.status === 200) {
+          that.setState({
+            verified: true,
+          });
+          localStorage.setItem('verifiedinvite', 'true');
+          console.log("verifed ok")
+        } else {
+          console.log("verifed not ok")
+          that.setState({
+            tries: that.state.tries + 1,
+            errorText: 'Fel kod, försök igen'
+          })
+          if (that.state.tries > 2) {
+            localStorage.setItem('tomanytries', JSON.parse(Date.now()));
+          }
+        }
+      }
+    };
+    xmlHttp.onerror = function (e) {
+      console.log("verifed error");
+      console.error(xmlHttp.statusText);
+    };
+    xmlHttp.send(null);
   }
 
   handelChange = event => {
