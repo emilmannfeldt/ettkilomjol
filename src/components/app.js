@@ -149,7 +149,6 @@ class App extends Component {
                     <DialogContentText>
                       Ange den kod du fått i din inbjudan.
                 </DialogContentText>
-
                     <TextField className="verify-field"
                       name="inbjudan"
                       value={this.state.inputCode}

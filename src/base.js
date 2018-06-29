@@ -23,6 +23,6 @@ let devConfig = {
   storageBucket: "ettkilomjol-dev.appspot.com",
   messagingSenderId: "425944588036"
 };
-const fire = firebase.initializeApp(devConfig);
+const fire = firebase.initializeApp(prodConfig);
 
 export { fire }
