@@ -32,9 +32,6 @@ let filename = "test";
 let log = [];
 let foodLoaded = false;
 let recipeLoaded = false;
-//var väldig tid och skapar extremt många transactions.
-//alt1. dela upp så man kör 1000 i taget i loopen
-//skriv om scriptet så att vi skapar ett stort tags och foods objekt i javascript här och sen lägger in den en gång i firebase när allt är klart
 firebase.auth().signInAnonymously().catch(function (error) {
 });
 firebase.auth().onAuthStateChanged(function (user) {

@@ -47,7 +47,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "ica/updateAll8-2018-06-21";
+let filename = "ica/urls9-2018-07-02";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.

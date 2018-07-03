@@ -402,7 +402,17 @@ class Stats extends Component {
             }
         }
 
-        const defaultOptions = {
+        const defaultDoughnutOptions = {
+            maintainAspectRatio: false,
+            responsiveAnimationDuration: 1000,
+            animation: {
+                easing: 'easeOutBack',
+            },
+            legend: {
+                position: 'top',
+            }
+        }
+        const defaultBarOptions = {
             maintainAspectRatio: false,
             responsiveAnimationDuration: 1000,
             animation: {
@@ -439,49 +449,43 @@ class Stats extends Component {
                     <div className="chart-title">Mest använda källor</div>
                     <Doughnut data={this.getRecipesPerSource()} width={50}
                         height={100}
-                        options={defaultOptions} />
+                        options={defaultDoughnutOptions} />
                 </div>
                 <div className="chart">
                     <div className="chart-title">Tillfällen</div>
                     <Doughnut data={this.getRecipesPerOccasion()} width={50}
                         height={100}
-                        options={defaultOptions} />
+                        options={defaultDoughnutOptions} />
                 </div>
                 <div className="chart">
                     <div className="chart-title">Dieter</div>
                     <Doughnut data={this.getRecipesPerDiet()} width={100}
                         height={100}
-                        options={defaultOptions} />
+                        options={defaultDoughnutOptions} />
                 </div>
                 <div className="chart">
                     <div className="chart-title">Allergier</div>
                     <Doughnut data={this.getRecipesPerAllergy()} width={100}
                         height={100}
-                        options={defaultOptions} />
+                        options={defaultDoughnutOptions} />
                 </div>
                 <div className="chart">
                     <div className="chart-title">Ursprung</div>
                     <Doughnut data={this.getRecipesPerOrigin()} width={100}
                         height={100}
-                        options={defaultOptions} />
+                        options={defaultDoughnutOptions} />
                 </div>
                 <div className="chart">
                     <div className="chart-title">Svårgihetsgrad</div>
                     <Doughnut data={this.getRecipesPerLevel()} width={100}
                         height={100}
-                        options={defaultOptions} />
+                        options={defaultDoughnutOptions} />
                 </div>
                 <div className="chart">
                     <div className="chart-title">Mest använda ingredienser</div>
                     <HorizontalBar data={this.getRecipesPerFood()} width={100}
                         height={1250}
                         options={this.getRecipesPerFoodOptions()} />
-                </div>
-                <div className="chart">
-                    <div className="chart-title">Mest besökta recept</div>
-                    <HorizontalBar data={this.getRecipesPerVisits()} width={100}
-                        height={150}
-                        options={defaultOptions} />
                 </div>
             </div>
         );

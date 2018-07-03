@@ -75,11 +75,29 @@ function runRecipes() {
       let recipe = child.val();
       let changesmade = false;
       let pinne = "--------------";
-      if(recipe.description){
-        numberRec = numberRec + (recipe.description.length);
+      for(let i = 0; i<recipe.ingredients.length; i++){
+        let ingredient = recipe.ingredients[i];
+        if(ingredient.amount){
+          ingredient.amount = ingredient.amount+"";
+          if(ingredient.amount.endsWith(".0")){
+            log.push("ingredient amount changed from: " + recipe.ingredients[i].amount);
+
+            //changesmade=true;
+            recipe.ingredients[i].amount = recipe.ingredients[i].amount + "";
+            recipe.ingredients[i].amount = recipe.ingredients[i].amount.slice(0,-2);
+            log.push("ingredient amount changed to: " + recipe.ingredients[i].amount);
+
+            log.push("-------------------------------------------------");
+          }
+
+        }
 
       }
-      console.log(recipe.source)
+      if(changesmade){
+        //recipesRef.child(child.key).remove();
+        log.push(recipe.source);
+
+      }
 
 
     });

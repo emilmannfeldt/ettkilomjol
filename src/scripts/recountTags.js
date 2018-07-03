@@ -33,9 +33,6 @@ let filename = "test";
 let log = [];
 let foodLoaded = false;
 let recipeLoaded = false;
-//var väldig tid och skapar extremt många transactions.
-//alt1. dela upp så man kör 1000 i taget i loopen
-//skriv om scriptet så att vi skapar ett stort tags och foods objekt i javascript här och sen lägger in den en gång i firebase när allt är klart
 firebase.auth().signInAnonymously().catch(function (error) {
     console.log("error:" + error)
 });
@@ -43,7 +40,6 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         console.log("Start");
         firebase.database().ref("tags").remove();
-        //firebase.database().ref("recipes").remove();
         foodsRef.orderByChild("uses").once("value", function (snapshot) {
             snapshot.forEach(function (child) {
                 if (child.val().uses > 1) {
