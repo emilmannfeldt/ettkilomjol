@@ -10,38 +10,37 @@ class MySnackbar extends React.Component {
         this.handleClose = this.handleClose.bind(this);
 
     }
-    loginCall(){
+    loginCall() {
         document.querySelector('.login-btn').click();
     }
 
-    handleClose(){
+    handleClose() {
         this.props.setSnackbar('');
     }
 
     render() {
         let message = "";
-        let duration = 8000;
+        let duration = 6000;
         let actions = [];
         switch (this.props.variant) {
             case 'login_required':
                 message = "Du behöver vara inloggad för att spara recept";
                 actions = [<Button key="login" className="my_snackbar-login-btn" variant="outlined" size="small" onClick={this.loginCall}>
                     Logga in
-                </Button>,
-                <IconButton
-                    key="close"
-                    aria-label="Close"
-                    color="inherit"
-                    className="close-icon"
-                    onClick={this.handleClose}
-                >
-                    <CloseIcon />
-                </IconButton>
+                </Button>
                 ];
                 break;
             case 'fav_added':
                 message = "Recept sparat!";
                 duration = 3000;
+                break;
+            case 'grocerylist_delete':
+                message = "Inköpslistan borttagen";
+                duration = 3000;
+                actions = [<Button key="undo" className="my_snackbar-login-btn" color="secondary" variant="outlined" size="small" onClick={this.props.action}>
+                    ångra
+                </Button>
+                ];
                 break;
             default:
                 break;

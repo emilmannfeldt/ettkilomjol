@@ -15,6 +15,7 @@ import MyRecipes from './user/myRecipes/myRecipes';
 import MySnackbar from './mySnackbar/mySnackbar';
 import Button from '@material-ui/core/Button';
 import ScrollIcon from '@material-ui/icons/ExpandLess';
+import MyGrocerylists from './pages/myGrocerylists';
 
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 
@@ -28,6 +29,7 @@ class Home extends Component {
             units: [],
             users: [],
             favs: [],
+            grocerylists: [],
             MIN_USES_FOOD: 5,
             MIN_USES_TAG: 8,
             MIN_ACCEPTED_RECIPES: 17000,
@@ -35,11 +37,13 @@ class Home extends Component {
             contactOpen: false,
             contactSubject: '',
             snackbarType: '',
+            snackbarAction: null
         }
         this.localIsOld = this.localIsOld.bind(this);
         this.getRecipesIndexedDB = this.getRecipesIndexedDB.bind(this);
         this.hideSpinner = this.hideSpinner.bind(this);
         this.favListener = this.favListener.bind(this);
+        this.grocerylistListener = this.grocerylistListener.bind(this);
         this.setSnackbar = this.setSnackbar.bind(this);
         this.scrollFunction = this.scrollFunction.bind(this);
 
@@ -58,7 +62,6 @@ class Home extends Component {
         });
     };
     componentDidMount() {
-        //kanske kan sätta detta direkt i construktorn?
         this.setState({
             tags: JSON.parse(localStorage.getItem('tags')) || [],
             foods: JSON.parse(localStorage.getItem('foods')) || [],
@@ -141,12 +144,10 @@ class Home extends Component {
         fire.auth().onAuthStateChanged((user) => {
             if (user) {
                 this.favListener();
-
+                this.grocerylistListener();
             }
         });
         window.addEventListener("scroll", this.scrollFunction);
-
-
     }
 
     scrollFunction() {
@@ -179,11 +180,59 @@ class Home extends Component {
                     favs: [],
                 });
             }
-
         });
-
     }
-    //fixa tabort funktion. och sen fixa snackbaren så att den visar rätt info och även inloggningsrutan
+    grocerylistListener() {
+        //validate list name does not contain firebase invalid chars. and does not exist
+        //kolla på icas lösning
+        //varje lista ska ha en egen vy som ica.se. en enkel översyn på alla listor med namn och skap ny/radera lista
+        //sen måste man klicka på varje lista för att se innehåll och ändra ingredienser.
+        //lägg till en sida där listorna visas upp
+        //lägg till funktion för att lägga till items
+        //lägg till funktion för att skapa ny lista
+        //lägg till funktion för att ta bort item
+        //lägg till funktion för att ta bort lista
+        //lägg till funktion på recepcard att lägga till alla ingredienser på receptet. receptet source ska kopplas till listan
+        //lägg till funktion i recipecard/ingredientlist att lägga till en ignrediens som item
+
+        //hur kan man snabbt lägga till alla saknade ingredienser från receptet. ha en till knapp i ingredientlistcomponent? 
+        //ett val vid recipecard lägg till recept där man får välja alla/saknade eller 
+        //så får man upp en lista med förkryssade ingredienser och sen optout på dom man inte vill ha med? med synligt vilka som är missing
+        var groceryRef = fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists');
+        let that = this;
+        groceryRef.on('value', function (snapshot) {
+            if (snapshot.val()) {
+                let listTmp = [];
+                snapshot.forEach(function (child) {
+                    let groceryList = child.val();
+                    if (groceryList.items) {
+                        let itemKeys = Object.keys(groceryList.items);
+                        let tmpItems = [];
+                        for (let i = 0; i < itemKeys.length; i++) {
+                            let item = groceryList.items[itemKeys[i]];
+                            item.key = itemKeys[i];
+                            tmpItems.splice(0, 0, item);
+                        }
+                        tmpItems.sort(function (a, b) {
+                            return (a.done === b.done)? 0 : a.done? 1 : -1;
+                        });
+                        groceryList.items = tmpItems;
+                    }
+                    listTmp.splice(0, 0, groceryList);
+                });
+                listTmp.sort(function (a, b) {
+                    return b.created - a.created;
+                });
+                that.setState({
+                    grocerylists: listTmp
+                });
+            } else {
+                that.setState({
+                    grocerylists: [],
+                });
+            }
+        });
+    }
     decodeSource(source) {
         return source.replace(/,/g, '.').replace(/\+/g, '/');
     }
@@ -281,10 +330,11 @@ class Home extends Component {
     hideSpinner() {
         document.querySelector(".spinner").style.display = 'none';
     }
-    setSnackbar(snack) {
+    setSnackbar(type, action) {
         //Denna skapar en evig loop. updatering av state rerender och runt
         this.setState({
-            snackbarType: snack
+            snackbarType: type,
+            snackbarAction: action,
         });
     }
 
@@ -294,15 +344,16 @@ class Home extends Component {
                 <div>
                     <Header />
                     <div id="content">
+                        <Route exact path="/grocerylists" render={() => <MyGrocerylists grocerylists={this.state.grocerylists} foods={this.state.foods} units={this.state.units} recipes={this.state.recipes} setSnackbar={this.setSnackbar} />} />
                         <Route exact path="/favorites" render={() => <MyRecipes recipes={this.state.recipes} favs={this.state.favs} />} />
                         <Route exact path="/faq" render={() => <Faq openContact={this.handleContactOpen} />} />
                         <Route exact path="/stats" render={() => <Stats users={this.state.users} tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
                         <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />
                     </div>
                     <Footer openContact={this.handleContactOpen} />
-                    <Contact render={this.state.contactOpen} onClose={this.handleContactClose} subject={this.state.contactSubject}/>
-           
-                    <MySnackbar render={this.state.snackbarType !== ""} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />
+                    <Contact render={this.state.contactOpen} onClose={this.handleContactClose} subject={this.state.contactSubject} />
+
+                    <MySnackbar render={this.state.snackbarType !== ""} action={this.state.snackbarAction} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />
                     <Button variant="fab"
                         aria-label="Scrolla till toppen"
                         color="primary" id="scrolltop-btn" onClick={this.topFunction} title="Tillbaka till toppen"

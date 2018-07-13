@@ -22,7 +22,6 @@ class Favorite extends React.Component {
                 this.addToFav();
             }
         }
-        //och visa en loginknapp. (när man loggat in så vill jag om möjligt spara receptet man försökte spara, extra bra ifall receptlistan försvinner)
     }
     addToFav() {
         if (this.props.source.length > 1) {

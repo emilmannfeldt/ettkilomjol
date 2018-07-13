@@ -78,8 +78,8 @@ class Header extends Component {
         return (<div>
           <Link to={'/'}><MenuItem primaryText="Sök recept" /></Link>
           <Link to={'/favorites'}><MenuItem primaryText="Mina favoriter" /></Link>
+          <Link to={'/grocerylists'}><MenuItem primaryText="Mina inköpslistor" /></Link>
           <Link to={'/stats'}><MenuItem primaryText="Siffror" /></Link>
-          <MenuItem primaryText="Mina inköpslistor" />
           <MenuItem primaryText="Logga ut" onClick={props.logoutAction} />
         </div>);
       }
