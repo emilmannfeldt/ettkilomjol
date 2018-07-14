@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Home from './home';
+import Home from './main/home';
 import { fire } from '../base';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LinearProgress from '@material-ui/core/LinearProgress';

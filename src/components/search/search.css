@@ -1,0 +1,93 @@
+/* sort */
+
+#sort-select {
+    margin-top: 0;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* filterChip */
+
+.ingredient-chip {
+    margin-top: 4px !important;
+    margin-right: 4px !important;
+    background-color: rgba(255, 152, 0, 0.7) !important;
+}
+
+.tag-chip {
+    margin-top: 4px !important;
+    margin-right: 4px !important;
+    background-color: rgba(76, 175, 80, 0.7) !important;
+}
+
+.tag-chip span, .ingredient-chip span {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.tag-chip svg, .ingredient-chip svg {
+    fill: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* searchbar */
+
+.chip-wrapper {
+    flex-wrap: wrap;
+    display: flex;
+}
+
+.filter-clear-btn span {
+    text-transform: none !important;
+}
+
+.filter-clear-btn {
+    vertical-align: top;
+}
+
+.c-autocomplete {
+    height: 2.6em !important;
+    margin-top: 1.6em !important;
+    border-radius: 25px !important;
+    background-color: white !important;
+    border: 1px solid #44444444 !important;
+    padding-right: 1em;
+    padding-left: 1em;
+}
+
+.c-autocomplete label {
+    line-height: 40px !important;
+    top: 0px !important;
+}
+
+.c-autocomplete input {
+    margin-top: -8px !important;
+    top: 10px !important;
+}
+
+.c-autocomplete hr:first-child {
+    display: none !important;
+}
+
+.c-autocomplete hr {
+    position: inherit !important;
+}
+
+/* quickTags */
+
+.quick-tag {
+    margin-top: 4px !important;
+    margin-right: 4px !important;
+    background-color: rgba(76, 175, 80, 0.7) !important;
+}
+
+.quick-tag span {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.quick-tags-norecipes {
+    margin-top: 6em;
+}
+
+@media (max-width: 767px) {
+    .quick-tags-norecipes {
+        margin-top: 4em;
+    }
+}

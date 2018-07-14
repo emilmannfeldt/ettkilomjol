@@ -1,0 +1,36 @@
+.spinner .MuiLinearProgress-colorPrimary-2 {
+    background-color: #c1e1fb;
+}
+
+.spinner .MuiLinearProgress-barColorPrimary-10 {
+    background-color: #2196f3;
+}
+
+#content {
+    padding-bottom: 2em;
+}
+
+#scrolltop-btn {
+    display: none;
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    z-index: 99;
+    opacity: 0.7;
+}
+.searchbar-wrapper{
+    margin-top:5rem;
+}
+
+.popular-tags{
+    min-height: 4em;
+    margin-bottom: 1em;
+}
+@media (min-width: 1000px) {
+    .searchbar-wrapper{
+        margin-top:10rem;
+    }
+    .searchbar-wrapper{
+        min-height: 12em;
+    }
+  }
