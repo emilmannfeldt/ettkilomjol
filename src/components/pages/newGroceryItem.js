@@ -27,7 +27,7 @@ class NewGroceryItem extends Component {
     componentDidMount() {
         this.initUnitSuggestions();
     }
-    getError(){
+    getError() {
         return this.state.errorText;
     }
 
@@ -111,7 +111,7 @@ class NewGroceryItem extends Component {
 
     getFoodSuggestions() {
         let itemNames = [];
-        if(this.props.grocerylistItems){
+        if (this.props.grocerylistItems) {
             itemNames = this.props.grocerylistItems.map(a => a.name);
         }
         let foodNames = this.props.foods.map(a => a.name);
@@ -148,23 +148,26 @@ class NewGroceryItem extends Component {
     }
     render() {
         //behöver lära mig flexbox osv för att fixa till dessa fält.
+        //          menuProps={menuProps} kanske kan fixa mina problem i mobilen. med hur menyn better sig
+        //https://v0.material-ui.com/#/components/auto-complete
         let foodSuggestions = this.getFoodSuggestions();
-        return (<ListItem>
+        return (<div><ListItem className="groceryitem-new--container">
 
-            <AutoComplete className="c-autocomplete col-xs-12 col-md-4 groceryitem-autocomplete" ref="nameInput" searchText={this.state.name} floatingLabelText="Namn" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateName} dataSource={foodSuggestions}
+            <AutoComplete className="c-autocomplete groceryitem-autocomplete name" ref="nameInput" searchText={this.state.name} floatingLabelText="Namn" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateName} dataSource={foodSuggestions}
                 onNewRequest={this.handleNewName} maxSearchResults={6} fullWidth={true} />
 
-            <AutoComplete className="c-autocomplete col-xs-12 col-md-4 groceryitem-autocomplete" ref="amountInput" searchText={this.state.amount} floatingLabelText="Mängd" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateAmount} dataSource={[]}
+            <AutoComplete className="c-autocomplete groceryitem-autocomplete amount" ref="amountInput" searchText={this.state.amount} floatingLabelText="Mängd" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateAmount} dataSource={[]}
                 onNewRequest={this.handleNewAmount} maxSearchResults={6} fullWidth={true} />
 
-            <AutoComplete className="c-autocomplete col-xs-12 col-md-4 groceryitem-autocomplete" ref="unitInput" searchText={this.state.unit} floatingLabelText="Enhet" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateUnit} dataSource={this.state.unitFullNames}
+            <AutoComplete className="c-autocomplete groceryitem-autocomplete unit" ref="unitInput" searchText={this.state.unit} floatingLabelText="Enhet" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateUnit} dataSource={this.state.unitFullNames}
                 onNewRequest={this.handleNewUnit} maxSearchResults={6} fullWidth={true} />
-            <div>
-            {this.getError()}
 
+            </ListItem>
+            <ListItem>
                 <Button id="saveItem" ref="additembtn" onClick={this.addItem} color="secondary" variant="contained">Lägg till</Button>
-            </div>
-        </ListItem>);
+                {this.getError()}
+            </ListItem>
+        </div>);
 
     }
 }

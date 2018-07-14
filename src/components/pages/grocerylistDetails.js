@@ -7,6 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import NewGroceryItem from './newGroceryItem';
 import ListItem from '@material-ui/core/ListItem';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import PrintIcon from '@material-ui/icons/Print';
 import IconButton from '@material-ui/core/IconButton';
 
 
@@ -19,7 +20,10 @@ class GrocerylistDetails extends Component {
         this.updateItem = this.updateItem.bind(this);
         this.createItem = this.createItem.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
-
+        this.printPage = this.printPage.bind(this);
+    }
+    printPage(){
+        window.print();
     }
     createItem(item) {
         fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + this.props.grocerylist.name + '/items').push(item, function (error) {
@@ -59,10 +63,13 @@ class GrocerylistDetails extends Component {
         return (<div>
             <List className="grocerylist-itemlist">
                 <ListItem className="grocerylist-header">
-                <IconButton onClick={this.props.return}>
-                    <ChevronLeftIcon />
-                </IconButton>
+                    <IconButton onClick={this.props.return}>
+                        <ChevronLeftIcon />
+                    </IconButton>
                     {this.props.grocerylist.name}
+                    <IconButton onClick={this.printPage} className="print-btn">
+                        <PrintIcon />
+                    </IconButton>
                 </ListItem>
                 <NewGroceryItem foods={this.props.foods} units={this.props.units} createItem={this.createItem} grocerylistItems={this.props.grocerylist.items} />
                 {this.props.grocerylist.items ? (this.props.grocerylist.items.map((grocerytItem, index) =>

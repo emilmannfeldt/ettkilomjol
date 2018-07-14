@@ -6,6 +6,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import DoneIcon from '@material-ui/icons/Done';
+
 
 
 class GroceryItem extends Component {
@@ -105,7 +107,7 @@ class GroceryItem extends Component {
 
         if (this.state.editMode) {
             return (<ListItem>
-                <TextField className="contact-field"
+                <TextField className="contact-field grocertitem-edit--name"
                     label="Namn"
                     name="name"
                     value={this.state.editItemName || ""}
@@ -127,7 +129,9 @@ class GroceryItem extends Component {
                     margin="normal"
                 />
                 {this.getError()}
-                <Button id="saveItem" onClick={this.saveEdits} color="secondary" variant="contained">Save</Button>
+                <IconButton onClick={this.saveEdits}>
+                    <DoneIcon />
+                </IconButton>
             </ListItem>);
         } else {
             let item = this.props.groceryItem;

@@ -105,9 +105,9 @@ class Header extends Component {
     if (window.location.href.endsWith("/stats")) {
       backgroundImage = null;
     }
-    let titleText = "Ett kilo mjol";
+    let titleText = "Ett Kilo Mjöl";
     if(fire.options.projectId==="ettkilomjol-dev"){
-      titleText = "Ett kilo mjol DEV";
+      titleText = "Ett Kilo Mjöl DEV";
     }
 
     return (
