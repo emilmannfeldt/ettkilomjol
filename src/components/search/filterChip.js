@@ -20,6 +20,7 @@ class FilterChip extends Component {
   }
 
   render() {
+
     let chipClass = "";
     let chiptype = this.props.chipType;
     if (chiptype === 'ingredient') {

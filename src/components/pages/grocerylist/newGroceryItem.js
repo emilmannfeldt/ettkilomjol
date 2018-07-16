@@ -146,9 +146,7 @@ class NewGroceryItem extends Component {
         })
     }
     render() {
-        //behöver lära mig flexbox osv för att fixa till dessa fält.
-        //          menuProps={menuProps} kanske kan fixa mina problem i mobilen. med hur menyn better sig
-        //https://v0.material-ui.com/#/components/auto-complete
+
         let foodSuggestions = this.getFoodSuggestions();
         return (<div><ListItem className="groceryitem-new--container">
 

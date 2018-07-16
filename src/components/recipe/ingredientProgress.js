@@ -19,6 +19,7 @@ class IngredientProgress extends Component {
   };
 
   render() {
+
     let progress = this.props.matchedIngredients.length / (this.props.matchedIngredients.length + this.props.missingIngredients.length) * 100;
     return (<div>
       <LinearProgress mode="determinate" value={progress} onClick={this.props.toggleIngredientlist} />

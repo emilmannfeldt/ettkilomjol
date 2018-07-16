@@ -1,13 +1,13 @@
-.MuiCardHeader-content-77 {
+.grocerylist-cardheader-content {
     white-space: nowrap;
     overflow: hidden;
 }
 
-.MuiCardHeader-subheader-79 {
+.grocerylist-cardheader-subheader{
     text-overflow: ellipsis;
     overflow: hidden;
 }
-
+/* dessa två måste fixas så att de alltid slår. kan inte lita på siffrorna där*/
 .grocerylist-itemlist {
     background-color: #ffff;
     margin-top: 4em !important;

@@ -74,7 +74,7 @@ class Contact extends Component {
 
         return (
             <Dialog className="contact-dialog"
-                open={this.props.render}
+                open={true}
                 onClose={this.props.onClose}
                 aria-labelledby="form-dialog-title"
             >

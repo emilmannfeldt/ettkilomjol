@@ -1,15 +1,16 @@
 var firebase = require('firebase');
 var fs = require('fs');
+
 //Prod
-// let config = {
-//     apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
-//     authDomain: "ettkilomjol-10ed1.firebaseapp.com",
-//     databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
-//     storageBucket: "ettkilomjol-10ed1.appspot.com",
-//     messagingSenderId: "1028199106361"
-// };
+let prodConfig = {
+  apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
+  authDomain: "ettkilomjol-10ed1.firebaseapp.com",
+  databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
+  storageBucket: "ettkilomjol-10ed1.appspot.com",
+  messagingSenderId: "1028199106361"
+};
 //Dev
-let config = {
+let devConfig = {
   apiKey: "AIzaSyCRcK1UiO7j0x9OjC_8jq-kbFl9r9d38pk",
   authDomain: "ettkilomjol-dev.firebaseapp.com",
   databaseURL: "https://ettkilomjol-dev.firebaseio.com",
@@ -17,7 +18,17 @@ let config = {
   storageBucket: "ettkilomjol-dev.appspot.com",
   messagingSenderId: "425944588036"
 };
-firebase.initializeApp(config);
+let enviromentArg = process.argv[2];
+if (enviromentArg === "dev") {
+  firebase.initializeApp(devConfig);
+
+} else if (enviromentArg === "prod") {
+  firebase.initializeApp(prodConfig);
+
+} else {
+  console.log("missing enviroment arguement: dev / prod");
+  process.exit();
+}
 let recipesRef = firebase.database().ref("recipes");
 let foodRef = firebase.database().ref("foods");
 let tagRef = firebase.database().ref("tags");
@@ -71,34 +82,45 @@ function runRecipes() {
   recipesRef.once('value', function (snapshot) {
     console.log("receipes hämtade");
     snapshot.forEach(function (child) {
+
       let busted = false;
       let recipe = child.val();
       let changesmade = false;
       let pinne = "--------------";
-      for(let i = 0; i<recipe.ingredients.length; i++){
-        let ingredient = recipe.ingredients[i];
-        if(ingredient.amount){
-          ingredient.amount = ingredient.amount+"";
-          if(ingredient.amount.endsWith(".0")){
-            log.push("ingredient amount changed from: " + recipe.ingredients[i].amount);
+      for (let tag in recipe.tags) {
+        if (recipe.tags.hasOwnProperty(tag)) {
+          if (tag.indexOf("FAILEDTAG") > -1) {
+            let newTag = tag.substr(0, tag.indexOf("FAILEDTAG"));
 
-            //changesmade=true;
-            recipe.ingredients[i].amount = recipe.ingredients[i].amount + "";
-            recipe.ingredients[i].amount = recipe.ingredients[i].amount.slice(0,-2);
-            log.push("ingredient amount changed to: " + recipe.ingredients[i].amount);
+            //recipe.tags[tag]
+            recipe.tags[tag] = null;
+            recipe.tags[newTag] = true;
+            log.push(Object.keys(recipe.tags));
 
-            log.push("-------------------------------------------------");
+            changesmade = true;
           }
-
         }
+      }
+      if (!recipe.source || recipe.source.length < 10) {
+        log.push("short........")
+        log.push(JSON.stringify(recipe));
 
       }
-      if(changesmade){
-        //recipesRef.child(child.key).remove();
+      if (false) {
+        numberRec++;
+
+        recipesRef.child(child.key).set(recipe, function (error) {
+          if (error) {
+            console.log('Error has occured during saving process');
+          }
+          else {
+            console.log("Data hss been dleted succesfully");
+
+          }
+        })
         log.push(recipe.source);
 
       }
-
 
     });
     console.log("recipes: " + numberRec);

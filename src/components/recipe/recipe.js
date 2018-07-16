@@ -11,6 +11,19 @@ import Ingredientlist from './ingredientlist';
 import IngredientProgress from './ingredientProgress';
 import { Card, CardText } from 'material-ui/Card';
 import Fade from '@material-ui/core/Fade';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import Button from '@material-ui/core/Button';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import { encodeSource, millisecToDateString } from '../../util';
+
 
 class Recipe extends Component {
   constructor(props) {
@@ -21,6 +34,10 @@ class Recipe extends Component {
     this.toggleIngredientlist = this.toggleIngredientlist.bind(this);
     this.closeIngredientlist = this.closeIngredientlist.bind(this);
     this.visitSource = this.visitSource.bind(this);
+    this.showGroceryListDialog = this.showGroceryListDialog.bind(this);
+    this.addItemsToGroceryList = this.addItemsToGroceryList.bind(this);
+    this.showGroceryListDialogInternal = this.showGroceryListDialogInternal.bind(this);
+    this.closeGrocerylistDialog = this.closeGrocerylistDialog.bind(this);
   }
   styles = {
     recipeCard: {
@@ -60,8 +77,50 @@ class Recipe extends Component {
       });
     });
   }
-
+  addItemsToGroceryList(grocerylist) {
+    let ref = fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + grocerylist);
+    var updates = {};
+    for (let i = 0; i < this.state.itemsToAdd.length; i++) {
+      updates['/items/' + ref.push().key] = this.state.itemsToAdd[i];
+    }
+    updates['/recipes/' + encodeSource(this.state.recipeToAdd.source)] = true;
+    let that = this;
+    ref.update(updates, function (error) {
+      if (error) {
+        console.log('Error has occured during saving process');
+      }
+      else {
+      }
+    });
+    that.props.setSnackbar('recipe_added_grocerylist');
+    that.setState({
+      itemsToAdd: [],
+      showGroceryDialog: false,
+    })
+  }
+  showGroceryListDialogInternal() {
+    this.showGroceryListDialog(this.props.recipe, this.props.recipe.ingredients);
+  }
+  showGroceryListDialog(recipe, items) {
+    if (fire.auth().currentUser.isAnonymous) {
+      this.props.setSnackbar('login_required');
+    } else {
+      this.setState({
+        showGroceryDialog: true,
+        itemsToAdd: items,
+        recipeToAdd: recipe,
+      });
+    }
+  }
+  closeGrocerylistDialog() {
+    this.setState({
+      itemsToAdd: [],
+      showGroceryDialog: false,
+      recipeToAdd: {}
+    })
+  }
   render() {
+
     let matchedIngredients = [];
     let missingIngredients = [];
     let matchedTags = [];
@@ -97,6 +156,19 @@ class Recipe extends Component {
         return (null);
       }
     }
+    function GrocerylistComponent(props) {
+      return (<List className="grocerylist-itemlist">
+        {props.grocerylists.map((grocerylist, index) =>
+          <ListItem key={index} onClick={() => { props.handleClick(grocerylist.name) }} disableGutters={true}>
+            <Avatar>
+              <AssignmentIcon />
+            </Avatar>
+            <ListItemText primary={grocerylist.name} secondary={millisecToDateString(grocerylist.created)} />
+          </ListItem>
+        )}
+      </List>);
+
+    }
     //börja med att strukturera om components. ta bort mappar och slå ihop css.
     //en knapp "lägg till i inköslistan" som alltid visas men likt favorit så fungerar den bara när man är inloggad.
     //den fungerar likt ica där man får upp en dialog och får välja inköpslista eller skapa en ny som sedan ingredienserna läggs till som items på
@@ -109,8 +181,8 @@ class Recipe extends Component {
           <CardText className="recipe-card-info row">
             <div className="recipecard-title col-xs-12">
               {this.props.demo ? (<h2>{this.props.recipe.title}</h2>
-              ) : (<h2><a onClick={this.visitSource} target='_blank' 
-              href={this.props.recipe.source.indexOf('tasteline.com')>-1 ? '//www.' + this.props.recipe.source : '//' + this.props.recipe.source}>{this.props.recipe.title}</a></h2>
+              ) : (<h2><a onClick={this.visitSource} target='_blank'
+                href={this.props.recipe.source.indexOf('tasteline.com') > -1 ? '//www.' + this.props.recipe.source : '//' + this.props.recipe.source}>{this.props.recipe.title}</a></h2>
                 )}
             </div>
             <div className="col-xs-12 recipecard-author">
@@ -122,6 +194,7 @@ class Recipe extends Component {
             </div>
             <div className="col-xs-12 recipecard-favorite">
               <Favorite source={this.props.recipe.source} isFav={this.props.isFav} setSnackbar={this.props.setSnackbar} />
+              <Button onClick={this.showGroceryListDialogInternal} color="primary" variant="contained">Lägg till i inköpslistan</Button>
             </div>
             <div className="col-xs-12 recipecard-description">{this.props.recipe.description} </div>
             <div className="col-xs-12 recipecard-rating">
@@ -145,8 +218,20 @@ class Recipe extends Component {
           </CardText>
         </Card>
       </Fade>
+      <Dialog className="grocerylist-dialog" open={!!this.state.showGroceryDialog} aria-labelledby="form-dialog-title" onClose={this.closeGrocerylistDialog}>
+        <DialogTitle id="simple-dialog-title">Välj inköpslista</DialogTitle>
+        <DialogContent className="recipecard-grocerylist-content">
+          <DialogContentText>
+            snygga till. Fixa this.encoding som finns både här och i favorite.js till en util.js fil?? importeras likt base.js.
+
+          </DialogContentText>
+          <GrocerylistComponent grocerylists={this.props.grocerylists} handleClick={this.addItemsToGroceryList} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.newGroceryList} color="primary" variant="contained">Ny lista</Button>
+        </DialogActions>
+      </Dialog>
     </div>);
   }
 }
-//hur ska detta columnerna ändras i detail?? bootstrap 4?
 export default Recipe;

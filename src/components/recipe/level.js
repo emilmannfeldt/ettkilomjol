@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 class Level extends Component {
     render() {
+
         let level = "";
         if (this.props.index === 1) {
             level = "Lätt";

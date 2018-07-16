@@ -94,7 +94,12 @@ class App extends Component {
 
     }
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", ' https://us-central1-ettkilomjol-dev.cloudfunctions.net/verifyInvitation?code=' + this.state.inputCode, true);
+    if (fire.options.projectId === "ettkilomjol-dev") {
+      xmlHttp.open("GET", ' https://us-central1-ettkilomjol-dev.cloudfunctions.net/verifyInvitation?code=' + this.state.inputCode, true);
+    } else {
+      xmlHttp.open("GET", ' https://us-central1-ettkilomjol-10ed1.cloudfunctions.net/verifyInvitation?code=' + this.state.inputCode, true);
+    }
+
     xmlHttp.onload = function (e) {
       if (xmlHttp.readyState === 4) {
         if (xmlHttp.status === 200) {
@@ -132,7 +137,6 @@ class App extends Component {
   }
 
   render() {
-
     return (
       <MuiThemeProvider>
         <div>
@@ -142,28 +146,28 @@ class App extends Component {
           {this.state.user && this.state.verified ? (
             <Home />
           ) : (
-              !this.state.user ? (null) : (
-                <Dialog className="invitation-dialog" open={true} aria-labelledby="form-dialog-title">
-                  <DialogTitle id="simple-dialog-title">Välkommen till Ett kilo mjöl</DialogTitle>
-                  <DialogContent className="invitation-content">
-                    <DialogContentText>
-                      Ange den kod du fått i din inbjudan.
+              this.state.user &&
+              <Dialog className="invitation-dialog" open={true} aria-labelledby="form-dialog-title">
+                <DialogTitle id="simple-dialog-title">Välkommen till Ett kilo mjöl</DialogTitle>
+                <DialogContent className="invitation-content">
+                  <DialogContentText>
+                    Ange den kod du fått i din inbjudan.
                 </DialogContentText>
-                    <TextField className="verify-field"
-                      name="inbjudan"
-                      value={this.state.inputCode}
-                      onChange={this.handelChange}
-                      margin="normal"
-                    />
-                    <DialogContentText>
-                      {this.getError()}
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={this.verifyInvitation} color="primary" variant="contained">Verifiera</Button>
-                  </DialogActions>
-                </Dialog>
-              ))}
+                  <TextField className="verify-field"
+                    name="inbjudan"
+                    value={this.state.inputCode}
+                    onChange={this.handelChange}
+                    margin="normal"
+                  />
+                  <DialogContentText>
+                    {this.getError()}
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.verifyInvitation} color="primary" variant="contained">Verifiera</Button>
+                </DialogActions>
+              </Dialog>
+            )}
         </div>
       </MuiThemeProvider>
     );

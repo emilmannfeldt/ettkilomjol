@@ -43,9 +43,6 @@ nightmare
                         //cannot read property length of null
                         $('.page-content .recipe-description .category-list a').each(function () {
                             let t = $(this).text();
-                            if (t.match(/^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/)) {
-                                t = t + "FAILEDTAG";
-                            }
                             tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
 
 

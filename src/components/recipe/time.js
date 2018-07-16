@@ -17,6 +17,7 @@ class Time extends Component {
     }
 
     render() {
+
         if (this.props.time) {
             return (<div className='recipecard-time'> <TimerIcon /> {this.timeString() + " | "} </div>);
         } else {

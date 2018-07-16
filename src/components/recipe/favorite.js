@@ -3,6 +3,8 @@ import IconButton from '@material-ui/core/IconButton';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { fire } from '../../base';
+import {encodeSource} from '../../util';
+
 
 class Favorite extends React.Component {
     constructor(props) {
@@ -25,7 +27,7 @@ class Favorite extends React.Component {
     addToFav() {
         if (this.props.source.length > 1) {
             let fav = {};
-            let encodedSource = this.encodeSource(this.props.source);
+            let encodedSource = encodeSource(this.props.source);
             fav[encodedSource] = true;
             fire.database().ref('users/' + fire.auth().currentUser.uid + '/fav').update(fav);
             this.props.setSnackbar('fav_added');
@@ -34,13 +36,11 @@ class Favorite extends React.Component {
     removeFromFav() {
         console.log("remove fav");
         let fav = {};
-        let encodedSource = this.encodeSource(this.props.source);
+        let encodedSource = encodeSource(this.props.source);
         fav[encodedSource] = null;
         fire.database().ref('users/' + fire.auth().currentUser.uid + '/fav').update(fav);
     }
-    encodeSource(source) {
-        return source.replace(/\./g, ",").replace(/\//g, "+");
-    }
+
     render() {
         function MyFavoriteIcon(props) {
             if (props.isFav) {

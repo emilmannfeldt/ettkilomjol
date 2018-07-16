@@ -10,6 +10,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { fire } from '../../../base';
+import { getDayAndMonthString } from '../../../util';
+
 
 
 class MyGrocerylists extends Component {
@@ -33,8 +35,7 @@ class MyGrocerylists extends Component {
 
 
     }
-    monthNames = ["jan", "feb", "mar", "apr", "maj", "jun",
-        "jul", "aug", "sep", "oky", "nov", "dec"];
+
     handleChange = name => event => {
         this.setState({
             [name]: event.target.value,
@@ -73,11 +74,7 @@ class MyGrocerylists extends Component {
         return this.state.errorText;
     }
     openDialog() {
-        let today = new Date();
-        let dd = today.getDate();
-        let mm = today.getMonth();
-        let todayString = dd + " " + this.monthNames[mm];
-        let newName = 'Att handla ' + todayString;
+        let newName = 'Att handla ' + getDayAndMonthString(new Date());
         for (let i = 0; i < this.props.grocerylists.length; i++) {
             if (newName === this.props.grocerylists[i].name) {
                 newName = "";
@@ -169,6 +166,7 @@ class MyGrocerylists extends Component {
     }
 
     render() {
+
         if (this.state.currentList) {
             let activeGrocerylist = {};
             if (this.state.currentList) {

@@ -26,6 +26,7 @@ class QuickTags extends Component {
   }
 
   render() {
+
     let chips = [];
     let tagsToDisplay = 20;
     if(this.props.recipeListRendered){

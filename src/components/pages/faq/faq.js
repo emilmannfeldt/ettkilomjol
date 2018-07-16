@@ -8,9 +8,7 @@ import './faq.css'
 
 class Faq extends Component {
 
-
     render() {
-
         return (
             <div className="container"><h2>Frequently Asked Questions</h2>
                 <div className="faq-container">

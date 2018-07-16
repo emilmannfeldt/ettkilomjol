@@ -35,16 +35,18 @@ class GrocerylistCard extends Component {
     //måste köra denna deleteList-metod i mygrocerList.js för denna komponent försvinner ju när jag tar bort det så state för undo fungerar inte att ha här.
   }
   render() {
+
     let itemString = "";
     if (this.props.grocerylist.items) {
       for (let i = 0; i < this.props.grocerylist.items.length; i++) {
         let item = this.props.grocerylist.items[i];
-        let tmp = (item.amount || "") + " " + (item.unit || "") + " " + item.name + ",";
-        tmp = tmp.trim();
-        itemString += tmp + " ";
+        //let tmp = (item.amount || "") + " " + (item.unit || "") + " " + item.name + ",";
+        if (i > 0) {
+          itemString += ", ";
+        }
+        itemString += item.name;
       }
-      itemString = itemString.trim();
-    }else{
+    } else {
       itemString = "Inga varor tillagda.";
     }
     return (<div className="col-xs-12 list-item">
@@ -62,8 +64,12 @@ class GrocerylistCard extends Component {
                 <DeleteIcon />
               </IconButton>
             }
-            title={<span className="grocerylist-card-title" onClick={this.chooseList}>{this.props.grocerylist.name}</span>}
-            subheader={<span className="grocerylist-card-subheader">{itemString}</span>}
+            title={<span onClick={this.chooseList}>{this.props.grocerylist.name}</span>}
+            subheader={<span>{itemString}</span>}
+            classes={{
+              content: 'grocerylist-cardheader-content', // class name, e.g. `classes-nesting-root-x`
+              subheader: 'grocerylist-cardheader-subheader', // class name, e.g. `classes-nesting-label-x`
+            }}
           />
         </Card>
       </Fade>

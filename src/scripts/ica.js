@@ -20,11 +20,9 @@ var fs = require('fs');
 //6. Sätt filename enligt "ICA-RECEPTSRC-DATE.json"
 //6. kör node set DEBUG=nightmare & node ica.js
 //8. kör node createRecipes.js och ange namnet på filen som skapades här
-let urls = ["https://www.ica.se/recept/morots-och-halloumibiffar-720975/",
-"https://www.ica.se/recept/masala-med-kikarter-och-spenat-722624/",
-"https://www.ica.se/recept/spenatpannkaka-med-ortrora-722522/"
+let urls = ["https://www.ica.se/recept/lammfile-med-rosmarinstrossel-citronbulgur-och-morotsbearnaise-713147/"
 ];
-let filename = "ica/test-2018-07-02.json";
+let filename = "ica/test-2018-16-02.json";
 
 nightmare
     .goto('https://www.ica.se/recept')
@@ -52,9 +50,6 @@ nightmare
                         //cannot read property length of null
                         $('.related-recipes .related-recipe-tags__container a').each(function () {
                             let t = $(this).text();
-                            if (t.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g)) {
-                                t = t + "FAILEDTAG";
-                            }
                             tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
 
                         })

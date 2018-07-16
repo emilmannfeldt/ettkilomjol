@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import './util.css';
+import { Link } from 'react-router-dom';
 
 class MySnackbar extends React.Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class MySnackbar extends React.Component {
         let actions = [];
         switch (this.props.variant) {
             case 'login_required':
-                message = "Du behöver vara inloggad för att spara recept";
+                message = "Du behöver vara inloggad för att använda denna funktion";
                 actions = [<Button key="login" className="my_snackbar-login-btn" variant="outlined" size="small" onClick={this.loginCall}>
                     Logga in
                 </Button>
@@ -41,6 +42,11 @@ class MySnackbar extends React.Component {
                 </Button>
                 ];
                 break;
+            case 'recipe_added_grocerylist':
+                message = "Ingredienser tillagda i inköpslista!";
+                actions = [<Link key="grocerylists" to={'/grocerylists'}>Mina inköpslistor</Link>];
+                duration = 6000;
+                break;
             default:
                 break;
         }
@@ -52,7 +58,7 @@ class MySnackbar extends React.Component {
                         horizontal: 'center',
                     }}
                     className="my_snackbar"
-                    open={this.props.variant.length > 0}
+                    open={true}
                     autoHideDuration={duration}
                     onClose={this.handleClose}
                     message={message}

@@ -1,15 +1,15 @@
 var firebase = require('firebase');
 var fs = require('fs');
 //Prod
-// let config = {
-//     apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
-//     authDomain: "ettkilomjol-10ed1.firebaseapp.com",
-//     databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
-//     storageBucket: "ettkilomjol-10ed1.appspot.com",
-//     messagingSenderId: "1028199106361"
-// };
+let prodConfig = {
+  apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
+  authDomain: "ettkilomjol-10ed1.firebaseapp.com",
+  databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
+  storageBucket: "ettkilomjol-10ed1.appspot.com",
+  messagingSenderId: "1028199106361"
+};
 //Dev
-let config = {
+let devConfig = {
   apiKey: "AIzaSyCRcK1UiO7j0x9OjC_8jq-kbFl9r9d38pk",
   authDomain: "ettkilomjol-dev.firebaseapp.com",
   databaseURL: "https://ettkilomjol-dev.firebaseio.com",
@@ -17,7 +17,17 @@ let config = {
   storageBucket: "ettkilomjol-dev.appspot.com",
   messagingSenderId: "425944588036"
 };
-firebase.initializeApp(config);
+let enviromentArg = process.argv[2];
+if (enviromentArg === "dev") {
+  firebase.initializeApp(devConfig);
+
+} else if (enviromentArg === "prod") {
+  firebase.initializeApp(prodConfig);
+
+} else {
+  console.log("missing enviroment arguement: dev / prod");
+  process.exit();
+}
 let recipesRef = firebase.database().ref("recipes");
 let foodRef = firebase.database().ref("foods");
 let tagRef = firebase.database().ref("tags");
@@ -139,22 +149,22 @@ function runRecipes() {
             recipe.ingredients[i].amount = amount1 + amount2;
             ingredientIndexesToRemove.push(ingredientToMerge.index);
             changesmade = true;
-          } else if (!ingredient.unit && !ingredientToMerge.unit && !ingredientToMerge.amount && !ingredient.amount){
+          } else if (!ingredient.unit && !ingredientToMerge.unit && !ingredientToMerge.amount && !ingredient.amount) {
             ingredientIndexesToRemove.push(ingredientToMerge.index);
-            changesmade = true; 
-          }else if (isSameUnitScale(ingredient.unit, ingredientToMerge.unit)) {
+            changesmade = true;
+          } else if (isSameUnitScale(ingredient.unit, ingredientToMerge.unit)) {
             let mergedIngredient = mergeUnits(ingredient, ingredientToMerge);
-            if(mergedIngredient && mergedIngredient.unit && mergedIngredient.amount && mergedIngredient.name){
+            if (mergedIngredient && mergedIngredient.unit && mergedIngredient.amount && mergedIngredient.name) {
               recipe.ingredients[i] = mergedIngredient;
               ingredientIndexesToRemove.push(ingredientToMerge.index);
-              changesmade=true;
+              changesmade = true;
             }
             log.push("merge and checkunits done: " + JSON.stringify(mergedIngredient));
 
           }
           else {
             log.push("merge error:" + ingredientToMerge.unit + " " + recipe.ingredients[i].unit + "source:" + recipe.source);
-            if(ingredientToMerge.unit && recipe.ingredients[i].unit){
+            if (ingredientToMerge.unit && recipe.ingredients[i].unit) {
               deleteRecipe = true;
             }
             ingredientsToSkip.push(ingredientToMerge.index);
@@ -172,17 +182,17 @@ function runRecipes() {
         }
       }
 
-      if(ingredientsToSkip.length>0){
-        if(deleteRecipe){
+      if (ingredientsToSkip.length > 0) {
+        if (deleteRecipe) {
           log.push("---------------------------------------------------------------------------------------------");
           log.push("DELETING recipe>" + recipe.source);
           log.push("IngredientsToSKip:" + JSON.stringify(ingredientsToSkip))
           log.push("---------------------------------------------------------------------------------------------");
           recipesRef.child(child.key).remove();
-        }else{
+        } else {
           log.push("skip DELETING recipe>" + recipe.source);
         }
-      }else if(changesmade) {
+      } else if (changesmade) {
         for (let i = ingredientIndexesToRemove.length - 1; i >= 0; --i) {
           recipe.ingredients.splice(ingredientIndexesToRemove[i], 1);
           //flrändringads de andra indexarna nu då? tas fel bort? måste ta i rätt ordning? högst index först?
@@ -194,8 +204,8 @@ function runRecipes() {
         log.push(JSON.stringify(recipe.ingredients));
         log.push("---------------------------------------------------------------------------------------------");
 
-      var recipeRef = recipesRef.child(child.key);
-      recipeRef.update(recipe);
+        var recipeRef = recipesRef.child(child.key);
+        recipeRef.update(recipe);
       }
       function mergeUnits(ingredientA, ingredientB) {
         log.push("merging units ingredient A " + JSON.stringify(ingredientA) + "----------- INgredient B " + JSON.stringify(ingredientB));
@@ -343,11 +353,11 @@ function runRecipes() {
         var curr = arr[0];
         var diff = Math.abs(decimal - curr);
         for (let i = 0; i < arr.length; i++) {
-          if(arr[i] >= decimal){
+          if (arr[i] >= decimal) {
             curr = arr[i];
             break;
           }
-          if(i==arr.length-1){
+          if (i == arr.length - 1) {
             curr = 1;
           }
         }

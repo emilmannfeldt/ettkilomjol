@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 class Tags extends Component {
     render() {
+
         let tags = [];
         for (let i = 0; i < this.props.matchedTags.length; i++) {
             tags.push(<span key={this.props.matchedTags[i]} className="recipecard-tag-matched">{this.props.matchedTags[i]}</span>);

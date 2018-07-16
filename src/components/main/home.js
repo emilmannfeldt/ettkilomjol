@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FilterableRecipeList from './filterableRecipeList';
 import './main.css';
+import { decodeSource } from '../../util';
 import Header from '../header/header';
 import Footer from '../footer/footer';
 import { fire } from '../../base';
@@ -170,7 +171,7 @@ class Home extends Component {
             if (snapshot.val()) {
                 let favsTmp = Object.keys(snapshot.val());
                 for (let i = 0; i < favsTmp.length; i++) {
-                    favsTmp[i] = that.decodeSource(favsTmp[i]);
+                    favsTmp[i] = decodeSource(favsTmp[i]);
                 }
                 that.setState({
                     favs: favsTmp,
@@ -214,7 +215,7 @@ class Home extends Component {
                             tmpItems.splice(0, 0, item);
                         }
                         tmpItems.sort(function (a, b) {
-                            return (a.done === b.done)? 0 : a.done? 1 : -1;
+                            return (a.done === b.done) ? 0 : a.done ? 1 : -1;
                         });
                         groceryList.items = tmpItems;
                     }
@@ -233,10 +234,6 @@ class Home extends Component {
             }
         });
     }
-    decodeSource(source) {
-        return source.replace(/,/g, '.').replace(/\+/g, '/');
-    }
-
     localIsOld = function (localVar) {
         let yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - this.state.DAYS_TO_SAVE_LOCALSTORAGE);
@@ -348,12 +345,11 @@ class Home extends Component {
                         <Route exact path="/favorites" render={() => <MyRecipes recipes={this.state.recipes} favs={this.state.favs} />} />
                         <Route exact path="/faq" render={() => <Faq openContact={this.handleContactOpen} />} />
                         <Route exact path="/stats" render={() => <Stats users={this.state.users} tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
-                        <Route exact path="/" render={() => <FilterableRecipeList tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />
+                        <Route exact path="/" render={() => <FilterableRecipeList grocerylists={this.state.grocerylists} tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />
                     </div>
                     <Footer openContact={this.handleContactOpen} />
-                    <Contact render={this.state.contactOpen} onClose={this.handleContactClose} subject={this.state.contactSubject} />
-
-                    <MySnackbar render={this.state.snackbarType !== ""} action={this.state.snackbarAction} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />
+                    {this.state.contactOpen && <Contact onClose={this.handleContactClose} subject={this.state.contactSubject} />}
+                    {this.state.snackbarType && <MySnackbar action={this.state.snackbarAction} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />}
                     <Button variant="fab"
                         aria-label="Scrolla till toppen"
                         color="primary" id="scrolltop-btn" onClick={this.topFunction} title="Tillbaka till toppen"

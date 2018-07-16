@@ -21,7 +21,7 @@ class GrocerylistDetails extends Component {
         this.deleteItem = this.deleteItem.bind(this);
         this.printPage = this.printPage.bind(this);
     }
-    printPage(){
+    printPage() {
         window.print();
     }
     createItem(item) {
@@ -58,6 +58,7 @@ class GrocerylistDetails extends Component {
     }
 
     render() {
+
         //vill jag ha det precis som ica med att färdiga items hamnar i en egen lista? eller kan det räcka med att sortera items på done
         return (<div>
             <List className="grocerylist-itemlist">
@@ -71,14 +72,16 @@ class GrocerylistDetails extends Component {
                     </IconButton>
                 </ListItem>
                 <NewGroceryItem foods={this.props.foods} units={this.props.units} createItem={this.createItem} grocerylistItems={this.props.grocerylist.items} />
-                {this.props.grocerylist.items ? (this.props.grocerylist.items.map((grocerytItem, index) =>
-                    <div key={index}>
-                        <GroceryItem key={index} itemId={index} ref="child" foods={this.props.foods} units={this.props.units} updateItem={this.updateItem}
-                            groceryItem={grocerytItem} deleteItem={this.deleteItem}
-                            itemList={this.props.grocerylist.items} />
-                        {index === this.props.grocerylist.items.length - 1 ? (null) : (<Divider />)}
-                    </div>
-                )) : (null)}
+                {this.props.grocerylist.items &&
+                    this.props.grocerylist.items.map((grocerytItem, index) =>
+                        <div key={index}>
+                            <GroceryItem key={index} itemId={index} ref="child" foods={this.props.foods} units={this.props.units} updateItem={this.updateItem}
+                                groceryItem={grocerytItem} deleteItem={this.deleteItem}
+                                itemList={this.props.grocerylist.items} />
+                            {index === this.props.grocerylist.items.length - 1 ? (null) : (<Divider />)}
+                        </div>
+                    )
+                }
             </List>
         </div>);
     }

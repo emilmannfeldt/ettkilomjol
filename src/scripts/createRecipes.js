@@ -1,24 +1,33 @@
 var firebase = require('firebase');
 var fs = require('fs');
-
 //Prod
-// let config = {
-//     apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
-//     authDomain: "ettkilomjol-10ed1.firebaseapp.com",
-//     databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
-//     storageBucket: "ettkilomjol-10ed1.appspot.com",
-//     messagingSenderId: "1028199106361"
-// };
+let prodConfig = {
+    apiKey: "AIzaSyAPoXwInGdHakbqWzlhH62qSRBSxljMNn8",
+    authDomain: "ettkilomjol-10ed1.firebaseapp.com",
+    databaseURL: "https://ettkilomjol-10ed1.firebaseio.com",
+    storageBucket: "ettkilomjol-10ed1.appspot.com",
+    messagingSenderId: "1028199106361"
+};
 //Dev
-let config = {
+let devConfig = {
     apiKey: "AIzaSyCRcK1UiO7j0x9OjC_8jq-kbFl9r9d38pk",
     authDomain: "ettkilomjol-dev.firebaseapp.com",
     databaseURL: "https://ettkilomjol-dev.firebaseio.com",
     projectId: "ettkilomjol-dev",
     storageBucket: "ettkilomjol-dev.appspot.com",
     messagingSenderId: "425944588036"
-  };
-firebase.initializeApp(config);
+};
+let enviromentArg = process.argv[2];
+if (enviromentArg === "dev") {
+    firebase.initializeApp(devConfig);
+
+} else if (enviromentArg === "prod") {
+    firebase.initializeApp(prodConfig);
+
+} else {
+    console.log("missing enviroment arguement: dev / prod");
+    process.exit();
+}
 let foodRef = firebase.database().ref("foods");
 let unitsRef = firebase.database().ref("units");
 let tagRef = firebase.database().ref("tags");
@@ -127,8 +136,8 @@ function createRecipes() {
                 if (recipe.ingredients[h].amount && recipe.ingredients[h].amount.trim() == "") {
                     delete recipe.ingredients[h].amount;
                 }
-                if(recipe.ingredients[h].amount && isNaN(recipe.ingredients[h].amount)){
-                    recipe.ingredients[h].amount = recipe.ingredients[h].amount.replace(",/g",".");
+                if (recipe.ingredients[h].amount && isNaN(recipe.ingredients[h].amount)) {
+                    recipe.ingredients[h].amount = recipe.ingredients[h].amount.replace(",/g", ".");
                 }
             }
             //time temporary
@@ -143,9 +152,9 @@ function createRecipes() {
                     //skap aen till array i början med alla keys?
                     //skapa någon metod som query till firebase som hämtar rätt child utefter source
                     //när det funkar kör mittkok11 och nya ica urls
-//måste testas mer noga med att läsa in ett recept från backup med +1 på något etc
-                    recipesRef.orderByChild('source').equalTo(existingRecipes[i].source).once("value", function(snapshot) {
-                        snapshot.forEach(function(child) {
+                    //måste testas mer noga med att läsa in ett recept från backup med +1 på något etc
+                    recipesRef.orderByChild('source').equalTo(existingRecipes[i].source).once("value", function (snapshot) {
+                        snapshot.forEach(function (child) {
                             let recipeTmp = child.val();
                             console.log("updating..." + recipeTmp.source);
                             log.push("old recipe: " + JSON.stringify(recipeTmp));
@@ -156,7 +165,7 @@ function createRecipes() {
                     nrOfRecipesUpdated++;
                 }
             }
-            if(!exists){
+            if (!exists) {
                 recipesRef.push(recipe);
                 nrOfRecipesCreated++;
                 existingRecipes.push(recipe);

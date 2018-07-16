@@ -177,6 +177,7 @@ class Searchbar extends Component {
   };
 
   render() {
+
     let chips = [];
     for (let i = 0; i < this.props.filter.ingredients.length; i++) {
       chips.push(<FilterChip key={chips.length} chipType={'ingredient'} text={this.props.filter.ingredients[i]} onUserDelete={this.deleteIngredient} />);

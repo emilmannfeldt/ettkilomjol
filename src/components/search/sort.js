@@ -29,6 +29,7 @@ class Sort extends Component {
         this.props.onUserInput(newFilter);
 
     } render() {
+
         if (this.props.render) {
             return (<SelectField
                 style={this.styles.root}

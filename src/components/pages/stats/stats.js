@@ -390,6 +390,7 @@ class Stats extends Component {
     }
 
     render() {
+
         let visits = 0;
         let favs = 0;
         for (let i = 0; i < this.props.recipes.length; i++) {
@@ -412,16 +413,16 @@ class Stats extends Component {
                 position: 'top',
             }
         }
-        const defaultBarOptions = {
-            maintainAspectRatio: false,
-            responsiveAnimationDuration: 1000,
-            animation: {
-                easing: 'easeOutBack',
-            },
-            legend: {
-                position: 'top',
-            }
-        }
+        // const defaultBarOptions = {
+        //     maintainAspectRatio: false,
+        //     responsiveAnimationDuration: 1000,
+        //     animation: {
+        //         easing: 'easeOutBack',
+        //     },
+        //     legend: {
+        //         position: 'top',
+        //     }
+        // }
         return (
 
             <div className="container chart-container">

@@ -37,6 +37,7 @@ class Ingredientlist extends Component {
 
 
   render() {
+
     function IngredientList(props) {
       let ingredients = props.ingredients;
       let missing = props.missing;

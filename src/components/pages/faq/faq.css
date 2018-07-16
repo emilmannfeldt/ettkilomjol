@@ -1,11 +1,13 @@
 .faq-contact-btn {
-    width: 100%;
+  width: 100%;
 }
-.faq-panel{
-    display: block !important;
+
+.faq-panel {
+  display: block !important;
 }
-h2{
-    position: relative;
-    color: #444444;
-    text-align: center;
+
+h2 {
+  position: relative;
+  color: #444444;
+  text-align: center;
 }
