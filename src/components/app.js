@@ -141,7 +141,7 @@ class App extends Component {
       <MuiThemeProvider>
         <div>
           <div className='spinner'>
-            <LinearProgress />
+            <LinearProgress classes={{root:'progress-root', bar:'progress-bar'}}/>
           </div>
           {this.state.user && this.state.verified ? (
             <Home />
@@ -149,7 +149,7 @@ class App extends Component {
               this.state.user &&
               <Dialog className="invitation-dialog" open={true} aria-labelledby="form-dialog-title">
                 <DialogTitle id="simple-dialog-title">Välkommen till Ett kilo mjöl</DialogTitle>
-                <DialogContent className="invitation-content">
+                <DialogContent className="invitation-content dialog-content">
                   <DialogContentText>
                     Ange den kod du fått i din inbjudan.
                 </DialogContentText>

@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 
 class Level extends Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.index != this.props.index) {
+            return true;
+        }
+        return false;
+    }
     render() {
-
         let level = "";
         if (this.props.index === 1) {
             level = "Lätt";

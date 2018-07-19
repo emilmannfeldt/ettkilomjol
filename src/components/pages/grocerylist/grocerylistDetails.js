@@ -6,7 +6,7 @@ import Divider from '@material-ui/core/Divider';
 import NewGroceryItem from './newGroceryItem';
 import ListItem from '@material-ui/core/ListItem';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import PrintIcon from '@material-ui/icons/Print';
+import PrintIcon from '@material-ui/icons/PrintOutlined';
 import IconButton from '@material-ui/core/IconButton';
 
 
@@ -74,8 +74,8 @@ class GrocerylistDetails extends Component {
                 <NewGroceryItem foods={this.props.foods} units={this.props.units} createItem={this.createItem} grocerylistItems={this.props.grocerylist.items} />
                 {this.props.grocerylist.items &&
                     this.props.grocerylist.items.map((grocerytItem, index) =>
-                        <div key={index}>
-                            <GroceryItem key={index} itemId={index} ref="child" foods={this.props.foods} units={this.props.units} updateItem={this.updateItem}
+                        <div key={grocerytItem.key}>
+                            <GroceryItem itemId={index} ref="child" foods={this.props.foods} units={this.props.units} updateItem={this.updateItem}
                                 groceryItem={grocerytItem} deleteItem={this.deleteItem}
                                 itemList={this.props.grocerylist.items} />
                             {index === this.props.grocerylist.items.length - 1 ? (null) : (<Divider />)}

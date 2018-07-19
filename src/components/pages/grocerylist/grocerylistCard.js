@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { Card } from 'material-ui/Card';
 import Fade from '@material-ui/core/Fade';
 import CardHeader from '@material-ui/core/CardHeader';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import DeleteIcon from '@material-ui/icons/DeleteOutlined';
+import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 import IconButton from '@material-ui/core/IconButton';
+import Avatar from '@material-ui/core/Avatar';
 
 
 class GrocerylistCard extends Component {
@@ -55,7 +56,7 @@ class GrocerylistCard extends Component {
         <Card>
           <CardHeader className="grocerylist-card-header"
             avatar={
-              <IconButton onClick={this.chooseList}>
+              <IconButton onClick={this.chooseList} className="grocerylist-icon--primarycolor">
                 <AssignmentIcon />
               </IconButton>
             }
@@ -64,7 +65,7 @@ class GrocerylistCard extends Component {
                 <DeleteIcon />
               </IconButton>
             }
-            title={<span onClick={this.chooseList}>{this.props.grocerylist.name}</span>}
+            title={<span className="grocerylist-card--title" onClick={this.chooseList}>{this.props.grocerylist.name}</span>}
             subheader={<span>{itemString}</span>}
             classes={{
               content: 'grocerylist-cardheader-content', // class name, e.g. `classes-nesting-root-x`

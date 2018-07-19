@@ -21,6 +21,27 @@
     -webkit-transform: translateX(-50%);
 }
 
+header {
+    background-color: #f5f4f4 !important;
+}
+
+.appbar-login-avatar {
+    margin-right: 10px;
+}
+.appbar-nav-button svg{
+    margin-right: 2px;
+}
+
+.appbar-nav-button:hover {
+    color: #3f51b5ce;
+    text-decoration: underline !important;
+    background-color: inherit !important;
+}
+.appbar-nav-button{
+    text-transform: capitalize !important;
+    font-size: 1rem !important;
+}
+
 img {
     border: none;
     max-width: 100%;
@@ -29,23 +50,15 @@ img {
 }
 
 .login-btn {
-    min-width: 10rem !important;
-    color: #f5f4f4 !important;
     z-index: 1000;
     align-items: flex-end !important;
-    line-height: 1.4em !important;
-    font-size: 1em !important;
 }
 
-.toolbar-title {
-    color: rgba(255, 255, 255, 0.9) !important;
-    margin-left: 1.5rem;
+.appbar-title {
+    color: #444444 !important;
+    margin-right: 1rem;
     font-weight: 600;
     font-size: 1.5em !important;
-}
-
-.toolbar-more-icon {
-    color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .login-form:before {
@@ -126,8 +139,12 @@ img {
     color: #f5f4f4;
 }
 
+.appbar-container--right {
+    display: inline-flex;
+}
+
 .toolbar {
-    background-color: #616161 !important;
+    justify-content: space-between;
 }
 
 @media (max-width: 599px) {
@@ -135,24 +152,9 @@ img {
         height: 330px;
         margin-bottom: -330px;
     }
-    .login-btn {
-        margin-right: 0px !important;
-        margin-left: 0px !important;
-    }
-    .toolbar-more-btn {
-        width: 1rem !important;
-        padding-right: 0px !important;
-        padding-left: 0.4rem !important;
-    }
-    .toolbar-title {
-        font-weight: 400;
-        padding-right: 0px !important;
-    }
-    #headerimage{
+    #headerimage {
         left: -50%;
-
     }
-    
 }
 
 @media (max-width: 979px) {

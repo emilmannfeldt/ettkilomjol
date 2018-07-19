@@ -87,23 +87,10 @@ function runRecipes() {
       let recipe = child.val();
       let changesmade = false;
       let pinne = "--------------";
-      for (let tag in recipe.tags) {
-        if (recipe.tags.hasOwnProperty(tag)) {
-          if (tag.indexOf("FAILEDTAG") > -1) {
-            let newTag = tag.substr(0, tag.indexOf("FAILEDTAG"));
 
-            //recipe.tags[tag]
-            recipe.tags[tag] = null;
-            recipe.tags[newTag] = true;
-            log.push(Object.keys(recipe.tags));
-
-            changesmade = true;
-          }
-        }
-      }
-      if (!recipe.source || recipe.source.length < 10) {
-        log.push("short........")
-        log.push(JSON.stringify(recipe));
+      if (recipe.portions && isNaN(recipe.portions)) {
+        log.push(recipe.source);
+        log.push(recipe.portions);
 
       }
       if (false) {

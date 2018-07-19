@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
-import TimerIcon from 'material-ui/svg-icons/image/timer';
+import TimerIcon from '@material-ui/icons/Timer';
 
 class Time extends Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.time != this.props.time) {
+            return true;
+        }
+        return false;
+    }
     timeString() {
         let hours = Math.floor(this.props.time / 60)
         let minutes = this.props.time % 60;
@@ -17,7 +23,6 @@ class Time extends Component {
     }
 
     render() {
-
         if (this.props.time) {
             return (<div className='recipecard-time'> <TimerIcon /> {this.timeString() + " | "} </div>);
         } else {

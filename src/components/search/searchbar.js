@@ -26,16 +26,6 @@ class Searchbar extends Component {
     };
   }
 
-  styles = {
-    chipWrapper: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    whitecolor: {
-      color: 'rgba(255, 255, 255, 0.9)',
-    }
-  };
-
   handleChange() {
     let newFilter = this.props.filter;
     newFilter.ingredients = this.state.ingredients;

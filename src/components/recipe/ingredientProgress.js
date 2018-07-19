@@ -1,35 +1,28 @@
 import React, { Component } from 'react';
-import ShoppingBasketIcon from 'material-ui/svg-icons/action/shopping-basket';
-import LinearProgress from 'material-ui/LinearProgress';
-import FlatButton from 'material-ui/FlatButton';
+import ShoppingBasketIcon from '@material-ui/icons/List';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@material-ui/core/Button';
 
 class IngredientProgress extends Component {
-  handleTouchTap = (event) => {
-    event.preventDefault();
-    this.setState({
-      open: true,
-      anchorEl: event.currentTarget,
-    });
-  };
-
-  handleRequestClose = () => {
-    this.setState({
-      open: false,
-    });
-  };
-
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.matchedIngredients.length != this.props.matchedIngredients.length) {
+      return true;
+    }
+    if (nextProps.missingIngredients.length != this.props.missingIngredients.length) {
+      return true;
+    }
+    return false;
+  }
   render() {
-
     let progress = this.props.matchedIngredients.length / (this.props.matchedIngredients.length + this.props.missingIngredients.length) * 100;
     return (<div>
-      <LinearProgress mode="determinate" value={progress} onClick={this.props.toggleIngredientlist} />
-      <FlatButton onClick={this.props.toggleIngredientlist}
-        target="_blank"
-        label="Se ingredienser"
-        className="recipecard-expand-btn"
-        primary={true}
-        icon={<ShoppingBasketIcon />}
-      />
+      <LinearProgress variant="determinate" value={progress} onClick={this.props.toggleIngredientlist} />
+      <Button onClick={this.props.toggleIngredientlist}
+        color="primary"
+        className="recipecard-expand-btn">
+        <ShoppingBasketIcon />
+        Se ingredienser
+      </Button>
     </div>);
   }
 }

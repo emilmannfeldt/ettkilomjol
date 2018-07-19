@@ -10,8 +10,11 @@ class Faq extends Component {
 
     render() {
         return (
-            <div className="container"><h2>Frequently Asked Questions</h2>
-                <div className="faq-container">
+            <div className="container">
+                <div className="col-xs-12 faq-title">
+                    <h2>Frequently Asked Questions</h2>
+                </div>
+                <div className="faq-container col-xs-12">
                     <ExpansionPanel>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>Var kommer alla recept ifrån?
                         </ExpansionPanelSummary>

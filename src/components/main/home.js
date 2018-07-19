@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FilterableRecipeList from './filterableRecipeList';
 import './main.css';
-import { decodeSource } from '../../util';
+import Utils from '../../util';
 import Header from '../header/header';
 import Footer from '../footer/footer';
 import { fire } from '../../base';
@@ -42,7 +42,6 @@ class Home extends Component {
         }
         this.localIsOld = this.localIsOld.bind(this);
         this.getRecipesIndexedDB = this.getRecipesIndexedDB.bind(this);
-        this.hideSpinner = this.hideSpinner.bind(this);
         this.favListener = this.favListener.bind(this);
         this.grocerylistListener = this.grocerylistListener.bind(this);
         this.setSnackbar = this.setSnackbar.bind(this);
@@ -171,7 +170,7 @@ class Home extends Component {
             if (snapshot.val()) {
                 let favsTmp = Object.keys(snapshot.val());
                 for (let i = 0; i < favsTmp.length; i++) {
-                    favsTmp[i] = decodeSource(favsTmp[i]);
+                    favsTmp[i] = Utils.decodeSource(favsTmp[i]);
                 }
                 that.setState({
                     favs: favsTmp,
@@ -279,7 +278,7 @@ class Home extends Component {
                 });
                 localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
                 reloadedFromFirebase = true;
-                that.hideSpinner();
+                Utils.hideSpinner();
             }
             if (!reloadedFromFirebase && that.state.recipes.length < 1) {
                 console.log("inte hämtat från firebase och recepies är fortfarande tom");
@@ -306,7 +305,7 @@ class Home extends Component {
                             }
                         });
                         localStorage.setItem('lastupdatedrecipes', JSON.stringify(Date.now()));
-                        that.hideSpinner();
+                        Utils.hideSpinner();
                     } else {
                         console.log("Hämtar recept från indexDB");
                         let recipesTmp = [];
@@ -317,15 +316,12 @@ class Home extends Component {
                             recipes: recipesTmp
                         });
                         console.log(recipesTmp.length + " Recept laddade från indexedDB");
-                        that.hideSpinner();
+                        Utils.hideSpinner();
                     }
                     console.log("recipedb success end");
                 };
             }
         }
-    }
-    hideSpinner() {
-        document.querySelector(".spinner").style.display = 'none';
     }
     setSnackbar(type, action) {
         //Denna skapar en evig loop. updatering av state rerender och runt
@@ -342,7 +338,7 @@ class Home extends Component {
                     <Header />
                     <div id="content">
                         <Route exact path="/grocerylists" render={() => <MyGrocerylists grocerylists={this.state.grocerylists} foods={this.state.foods} units={this.state.units} recipes={this.state.recipes} setSnackbar={this.setSnackbar} />} />
-                        <Route exact path="/favorites" render={() => <MyRecipes recipes={this.state.recipes} favs={this.state.favs} />} />
+                        <Route exact path="/favorites" render={() => <MyRecipes grocerylists={this.state.grocerylists} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar}/> } />
                         <Route exact path="/faq" render={() => <Faq openContact={this.handleContactOpen} />} />
                         <Route exact path="/stats" render={() => <Stats users={this.state.users} tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
                         <Route exact path="/" render={() => <FilterableRecipeList grocerylists={this.state.grocerylists} tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />

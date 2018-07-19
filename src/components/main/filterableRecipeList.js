@@ -19,6 +19,7 @@ class FilterableRecipelist extends Component {
     this.handleFilterInput = this.handleFilterInput.bind(this);
     this.findRecipes = this.findRecipes.bind(this);
   }
+
   filterIsEmpty(filter) {
     if (filter.ingredients.length > 0) {
       return false;
@@ -76,7 +77,6 @@ class FilterableRecipelist extends Component {
     if (tagHits === 0) {
       return this.simpleFilter(filter.ingredients.length, recipe.ingredients.length, ingredientHits);
     }
-    //om det finns både tags och ingredients i filtret
     return this.simpleFilter(filter.ingredients.length + filter.tags.length, recipe.ingredients.length + Object.keys(recipe.tags).length, ingredientHits + tagHits);
 
   }
@@ -219,7 +219,7 @@ class FilterableRecipelist extends Component {
   }
   handleFilterInput(changedFilter) {
     this.setState({
-      filter: changedFilter
+      filter: changedFilter,
     });
     this.findRecipes();
   }
@@ -236,7 +236,6 @@ class FilterableRecipelist extends Component {
     recipes.sort(function (a, b) {
       return that.sortRecipes(a, b);
     });
-    console.log(recipes.length + " foundrecipes");
     if (recipes.length > this.state.maxHits) {
       recipes.length = this.state.maxHits;
     }
@@ -260,7 +259,7 @@ class FilterableRecipelist extends Component {
         <div className="row recipelist-wrapper">
           <div className="col-md-12 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept hämtade' : ''}</div>
           {this.state.foundRecipes.map((recipe, index) =>
-            <Recipe key={index} filter={this.state.filter} ref="child" grocerylists={this.props.grocerylists}
+            <Recipe key={recipe.source} filter={this.state.filter} ref="child" grocerylists={this.props.grocerylists}
               recipe={recipe} transitionDelay={index} isFav={this.props.favs.indexOf(recipe.source) > -1} setSnackbar={this.props.setSnackbar} />
           )}
         </div>

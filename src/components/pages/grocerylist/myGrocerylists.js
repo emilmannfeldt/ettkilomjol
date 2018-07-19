@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { fire } from '../../../base';
-import { getDayAndMonthString } from '../../../util';
+import Utils from '../../../util';
 
 
 
@@ -74,17 +74,22 @@ class MyGrocerylists extends Component {
         return this.state.errorText;
     }
     openDialog() {
-        let newName = 'Att handla ' + getDayAndMonthString(new Date());
-        for (let i = 0; i < this.props.grocerylists.length; i++) {
-            if (newName === this.props.grocerylists[i].name) {
-                newName = "";
-            }
-        }
+        if (fire.auth().currentUser.isAnonymous) {
+            this.props.setSnackbar('login_required');
+        } else {
 
-        this.setState({
-            showNewListDialog: true,
-            newName: newName
-        })
+            let newName = 'Att handla ' + Utils.getDayAndMonthString(new Date());
+            for (let i = 0; i < this.props.grocerylists.length; i++) {
+                if (newName === this.props.grocerylists[i].name) {
+                    newName = "";
+                }
+            }
+
+            this.setState({
+                showNewListDialog: true,
+                newName: newName
+            })
+        }
     }
     closeDialog = () => {
         this.setState({
@@ -125,14 +130,6 @@ class MyGrocerylists extends Component {
             return;
         }
 
-        //validera namnet 
-        //det får inte existera ett med samma namn
-        //det får inte ha några ogiltiga tecken (de som firebase förbjuder.)
-        //visa felmeddelandet på samma sätt som jag gör vid invitation
-        //lägg till en avbryt/stäng knapp/kryssruta
-
-        //lägg till delete funktion på alla cards och ta bort dem som är felaktiga
-
         let that = this;
         fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + grocerylist.name).set(grocerylist, function (error) {
             if (error) {
@@ -151,13 +148,9 @@ class MyGrocerylists extends Component {
                 });
 
 
-                //jag vet inte om det ser lika dant ut när jag får in på denna currentlist som andra redan existernade currentlist. kan jag updatera items osv korrekt?
 
             }
         })
-        //lägg till denna i firebase, ha en callback som sätter currentList och stänger dialogen. 
-        //går det inte att ha en callback eller sätta currentList direkt så stänga bara dialogen och så får man klicka in på receptet själv för att lägga till items.
-
     }
 
     undoDeletion() {
@@ -191,17 +184,17 @@ class MyGrocerylists extends Component {
 
                     </div>
                     {this.props.grocerylists.map((grocerylist, index) =>
-                        <GrocerylistCard key={index} ref="child" setCurrentList={this.setCurrentList}
+                        <GrocerylistCard key={grocerylist.name} ref="child" setCurrentList={this.setCurrentList}
                             grocerylist={grocerylist} transitionDelay={index} setSnackbar={this.props.setSnackbar} deleteList={this.deleteList} />
                     )}
                 </div>
-                <Dialog className="contact-dialog"
+                <Dialog
                     open={this.state.showNewListDialog}
                     onClose={this.props.closeDialog}
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="simple-dialog-title">Ny inköpslista</DialogTitle>
-                    <DialogContent className="contact-dialog-content">
+                    <DialogContent className="dialog-content">
                         <DialogContentText>
                             {this.state.helptext}
                         </DialogContentText>

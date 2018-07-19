@@ -5,9 +5,6 @@
 .faq-panel {
   display: block !important;
 }
-
-h2 {
-  position: relative;
-  color: #444444;
+.faq-title{
   text-align: center;
 }

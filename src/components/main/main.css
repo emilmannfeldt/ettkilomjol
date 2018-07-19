@@ -1,13 +1,13 @@
-.spinner .MuiLinearProgress-colorPrimary-2 {
-    background-color: #c1e1fb;
+.progress-root {
+    background-color: #c1e1fb !important;
 }
 
-.spinner .MuiLinearProgress-barColorPrimary-10 {
-    background-color: #2196f3;
+.progress-bar {
+    background-color: #2196f3 !important;
 }
 
 #content {
-    padding-bottom: 2em;
+    padding-bottom: 70px;
 }
 
 #scrolltop-btn {
@@ -18,19 +18,3 @@
     z-index: 99;
     opacity: 0.7;
 }
-.searchbar-wrapper{
-    margin-top:5rem;
-}
-
-.popular-tags{
-    min-height: 4em;
-    margin-bottom: 1em;
-}
-@media (min-width: 1000px) {
-    .searchbar-wrapper{
-        margin-top:10rem;
-    }
-    .searchbar-wrapper{
-        min-height: 12em;
-    }
-  }

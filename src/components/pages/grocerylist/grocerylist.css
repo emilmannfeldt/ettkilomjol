@@ -3,11 +3,11 @@
     overflow: hidden;
 }
 
-.grocerylist-cardheader-subheader{
+.grocerylist-cardheader-subheader {
     text-overflow: ellipsis;
     overflow: hidden;
 }
-/* dessa två måste fixas så att de alltid slår. kan inte lita på siffrorna där*/
+
 .grocerylist-itemlist {
     background-color: #ffff;
     margin-top: 4em !important;
@@ -60,6 +60,18 @@
 
 .print-btn {
     float: right;
+}
+
+.grocerylist-icon--primarycolor {
+    background-color: #3f51b5 !important;
+    color:white !important;
+}
+.grocerylist-icon--primarycolor:hover {
+    background-color: #3f51b5 !important;
+    color:white !important;
+}
+.grocerylist-card--title{
+    cursor: pointer;
 }
 
 @media print {

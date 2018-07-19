@@ -31,8 +31,25 @@ body {
 a:focus, a:hover {
   text-decoration: none;
 }
+.dialog-content{
+  min-width: 20rem;
+}
 
 html, body {
   margin: 0;
   height: 100%;
+  font-size: 16px;
+  color: #444444;
+}
+
+@media (max-width: 1199px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hide-desktop {
+    display: none !important;
+  }
 }

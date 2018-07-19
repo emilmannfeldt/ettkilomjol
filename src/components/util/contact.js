@@ -80,7 +80,7 @@ class Contact extends Component {
             >
                 <form action="https://formspree.io/info.ettkilomjol@gmail.com" method="POST">
                     <DialogTitle id="simple-dialog-title">Kontakta mig</DialogTitle>
-                    <DialogContent className="contact-dialog-content">
+                    <DialogContent className="dialog-content">
                         <DialogContentText>
                             {this.state.helptext}
                         </DialogContentText>

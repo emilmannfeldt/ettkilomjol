@@ -4,8 +4,7 @@
   color: rgba(255, 255, 255, 0.9);
   text-align: left;
   display: inline-block;
-  width: 14em;
-  margin-top: 2.7em;
+  margin-top: 2.4rem;
 }
 
 @media (max-width: 470px) {
@@ -15,6 +14,34 @@
 }
 
 /* recipeCard */
+
+.recipe-grocerylist--btn {
+  float: right;
+}
+
+.recipecard-grocerylist-content {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.grocerydialog-listitem {
+  padding-right: 24px;
+  padding-left: 24px;
+  cursor: pointer;
+}
+
+.grocerydialog-listitem:hover {
+  background-color: #f3f0eb;
+}
+
+.grocerylist-dialog--padding {
+  padding-right: 24px !important;
+  padding-left: 24px !important;
+}
+
+.grocerylist-dialog--padding label {
+  left: auto;
+}
 
 .recipe-card-image {
   display: block;
@@ -48,18 +75,22 @@
 }
 
 .recipecard-title {
-  font-size: 12;
-  text-align: center;
   text-overflow: ellipsis;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-align: center;
 }
 
 .recipecard-author {
   text-align: center;
   opacity: 0.6;
 }
+.ingredient-list{
+  padding-bottom: 1rem;
+}
 
 .recipecard-description {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
@@ -82,21 +113,6 @@
   float: right;
 }
 
-.save-icon__label {
-  padding-left: 8px;
-  color: #ec5050;
-  vertical-align: middle;
-  font-size: 15px;
-  font-size: .9375rem;
-  line-height: 20px;
-}
-
-.save-icon__button {
-  border: 1px solid #e1e1dc;
-  border-radius: 25px;
-  padding: 7px 14px;
-}
-
 .toggle-page-icon {
   cursor: pointer;
   display: inline-block;
@@ -110,15 +126,11 @@
 }
 
 .recipecard-rating {
-  padding-bottom: 1em;
+  padding-bottom: 1rem;
 }
 
 .ingredient-list {
   float: right;
-}
-
-h2 {
-  font-size: 1.5em;
 }
 
 /* ingredientlist */
@@ -128,15 +140,13 @@ h2 {
 }
 
 .ingredient-text {
-  margin-top: 1em;
+  margin-top: 1rem;
 }
 
 /* ingredientProgress */
 
 .recipecard-expand-btn {
   float: Right;
-  margin-right: -1.6rem !important;
-  min-width: 16rem !important;
 }
 
 .recipecard-expand-btn span {
@@ -160,9 +170,9 @@ h2 {
 .rating-wrapper {
   unicode-bidi: bidi-override;
   color: #c5c5c5;
-  font-size: 2.5rem;
-  height: 2.5rem;
-  width: 10.5rem;
+  font-size: 1.5rem;
+  height: 1.5rem;
+  width: 6.25rem;
   position: relative;
   display: inline-block;
   margin-right: 0.5rem;
@@ -184,11 +194,6 @@ h2 {
   padding: 0;
   display: block;
   z-index: 0;
-}
-
-.rating-votes {
-  top: -0.1rem;
-  position: relative;
 }
 
 /* tags */
@@ -221,27 +226,30 @@ h2 {
 
 .recipecard-time {
   display: inline-block;
-  margin-right: 0.4rem;
+  margin-right: 0.25rem;
 }
 
 @media (max-width: 767px) {
-  h2 {
-    font-size: 2rem;
-  }
-  .recipecard-description{
+  .recipecard-description {
     display: none;
+  }
+  .recipecard-title a {
+    font-size: 20px;
   }
 }
 
 @media (max-width: 991px) {
   .recipecard-ingredients {
-    padding-top: 1.5em;
-    padding-bottom: 1.5em;
+    padding-top: 1.5rem;
   }
 }
 
 @media (min-width: 1200px) {
   .recipecard-save-btn {
-    margin-top: -7rem !important;
+    margin-top: -4.7rem !important;
+  }
+  .recipe-grocerylist--btn {
+    margin-top: -4.7rem !important;
+    margin-right: 3rem !important;
   }
 }

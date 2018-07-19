@@ -3,8 +3,7 @@ import IconButton from '@material-ui/core/IconButton';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { fire } from '../../base';
-import {encodeSource} from '../../util';
-
+import { encodeSource } from '../../util';
 
 class Favorite extends React.Component {
     constructor(props) {
@@ -12,6 +11,15 @@ class Favorite extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.addToFav = this.addToFav.bind(this);
         this.removeFromFav = this.removeFromFav.bind(this);
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.source != this.props.source) {
+            return true;
+        }
+        if (nextProps.isFav != this.props.isFav) {
+            return true;
+        }
+        return false;
     }
     handleClick() {
         if (fire.auth().currentUser.isAnonymous) {

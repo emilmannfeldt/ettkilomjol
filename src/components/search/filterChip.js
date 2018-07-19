@@ -7,13 +7,6 @@ class FilterChip extends Component {
     this.handleDelete = this.handleDelete.bind(this);
 
   }
-  styles = {
-    chip: {
-      marginTop: 4,
-      marginRight: 4,
-      backgroundColor: (239, 108, 0, 0.7),
-    }
-  };
 
   handleDelete() {
     this.props.onUserDelete(this.props.text);

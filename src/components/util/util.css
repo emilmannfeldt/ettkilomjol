@@ -6,6 +6,9 @@
 .my_snackbar {
     color: #f5f4f4;
 }
+.my_snackbar a {
+    font-size: 1rem;
+}
 /* contact */
 .contact-field {
     width: 100% !important;
@@ -13,8 +16,4 @@
 
 .contact-dialog button {
     width: 100% !important;
-}
-
-.contact-dialog-content {
-    width: 30em;
 }

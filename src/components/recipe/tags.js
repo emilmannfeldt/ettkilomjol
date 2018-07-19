@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 
 class Tags extends Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.matchedTags.length != this.props.matchedTags.length) {
+            return true;
+        }
+        if (nextProps.recipeTags.length != this.props.recipeTags.length) {
+            return true;
+        }
+        return false;
+    }
     render() {
-
         let tags = [];
         for (let i = 0; i < this.props.matchedTags.length; i++) {
             tags.push(<span key={this.props.matchedTags[i]} className="recipecard-tag-matched">{this.props.matchedTags[i]}</span>);
