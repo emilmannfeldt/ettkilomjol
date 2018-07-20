@@ -76,6 +76,47 @@ nightmare
                         //portions  "4småpotioner" trattkantarellsoppan. replace alla bokstäver med ""?
                         if (document.querySelector('.recipepage .servings-picker')) {
                             recipe.portions = document.querySelector('.recipepage .servings-picker').getAttribute('data-default-portions');
+                            if(recipe.portions.toUpperCase().startsWith("GER ")){
+                                recipe.portions = recipe.portions.substr(4);
+                            }
+                            if(recipe.portions.toUpperCase().startsWith("CA ")){
+                                recipe.portions = recipe.portions.substr(3);
+                            }
+                            if(recipe.portions.indexOf("1/2")>-1){
+                                recipe.portions = recipe.portions.replace("1/2","+.5");
+                                let parts = recipe.portions.split(" ");
+                                if(!isNaN(parts[0]) && !isNaN(parts[1])){
+                                    let nr = eval(parts[0] + parts[1]);
+                                    recipe.portions = nr + recipe.portions.substr(parts[0].length + parts[1].length + 1);
+                                }else if(!isNaN(parts[0])){
+                                    let nr = eval(parts[0]);
+                                    recipe.portions = nr + recipe.portions.substr(parts[0].length + 1);
+                                }else{
+                                    recipe.portions = recipe.portions.replace("+.5","1/2");
+                                }
+
+                            }
+                            let firstString = recipe.portions.split(" ")[0];
+                            let seperateArray = firstString.split(/([0-9]+)/).filter(Boolean);
+                            if(seperateArray.length===2){
+                                let newFirstString = seperateArray[0] + " " + seperateArray[1];
+                                recipe.portions = newFirstString + recipe.portions.substr(firstString.length);
+                            }
+
+                            if(recipe.portions.toUpperCase().startsWith("GER ")){
+                                recipe.portions = recipe.portions.substr(4);
+                            }
+                            if(recipe.portions.toUpperCase().startsWith("CA ")){
+                                recipe.portions = recipe.portions.substr(3);
+                            }
+                            let parts = recipe.portions.split(" ")[0].split("-");
+                            if (parts.length === 2) {
+                                let tmp = ((parts[0] - 0) + (parts[1] - 0)) / 2;
+                                if(recipe.portions.split(" ").length>1){
+                                   tmp = tmp + recipe.portions.substr(recipe.portions.indexOf(recipe.portions.split(" ")[1])-1);
+                                }
+                                recipe.portion =tmp;
+                            } 
                         }
                         //created
 
@@ -194,7 +235,7 @@ nightmare
                                 if (ingredient.unit.length > 0) {
                                     namepart = innerText.slice(innerText.indexOf(ingredient.unit) + ingredient.unit.length + 1).trim();
                                 } else if (ingredient.amount.length > 0) {
-                                    if (ingredient.amount % 1 != 0) {
+                                    if (ingredient.amount % 1 !== 0) {
                                         let parts = innerText.split(" ");
                                         if (ingredient.amount > 1) {
                                             namepart = innerText.slice(innerText.indexOf(parts[2])).trim();

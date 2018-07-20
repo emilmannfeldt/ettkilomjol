@@ -259,7 +259,7 @@ class FilterableRecipelist extends Component {
         <div className="row recipelist-wrapper">
           <div className="col-md-12 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept hämtade' : ''}</div>
           {this.state.foundRecipes.map((recipe, index) =>
-            <Recipe key={recipe.source} filter={this.state.filter} ref="child" grocerylists={this.props.grocerylists}
+            <Recipe key={recipe.source} filter={this.state.filter} ref="child" grocerylists={this.props.grocerylists} units={this.props.units}
               recipe={recipe} transitionDelay={index} isFav={this.props.favs.indexOf(recipe.source) > -1} setSnackbar={this.props.setSnackbar} />
           )}
         </div>

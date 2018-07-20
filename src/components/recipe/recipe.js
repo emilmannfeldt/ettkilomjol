@@ -14,6 +14,7 @@ import Fade from '@material-ui/core/Fade';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import AddGroceryDialog from './addGroceryDialog';
+import Utils from '../../util';
 
 
 class Recipe extends Component {
@@ -58,16 +59,22 @@ class Recipe extends Component {
   updatePortions(newPortionMultiplier) {
     //en tanke är att sätta this.props.recipe = till state igen. och sen ändra de faktiska amount/unit i denna metod på this.state.recipe så slipper jag skicka runt multipliern
     let recipe = this.state.recipe;
-    for(let i = 0; i<recipe.ingredients.length; i++){
-      if(recipe.ingredients[i].amount){
-        recipe.ingredients[i].amount = recipe.ingredients[i].amount * (newPortionMultiplier / this.state.portionsMultiplier);
-        if(recipe.ingredients[i].unit){
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+      if (recipe.ingredients[i].amount) {
+        recipe.ingredients[i].amount = Utils.closestDecimals(recipe.ingredients[i].amount * (newPortionMultiplier / this.state.portionsMultiplier));
+        if (recipe.ingredients[i].unit) {
+          recipe.ingredients[i] = Utils.correctIngredientUnit(recipe.ingredients[i], this.props.units);
           //recipe.ingredients[i] = Util.checkUnit(recipe.ingredients[i], this.props.units);
           //kollar om uniten känns igen, och om den överskrider någon min- max värde. och såfall sätts unit om och amount korreigeras där efter
           //finns mycket att ta av från mina script.
 
           //finns lite problm med att ingredienserna sorteras om vid ändrat portins
           //kanske behöver något mer urskiljande styling för de portions som bara blir en sträng ohc inte en select. flytter igohp lite med ingredienserna?+ kanske inte
+          //sök upp och ersätt alla 'material-ui
+          //      5. Lägg till varning om att "du redan har lagt till detta recept i denna inköpslista"
+          // 6. Kolla om ingrediensen man försöker lägga till redan finns i listan med samma Enhet isåfall så updatera bara amount och ev unit . använd util.js för att lägga till metoder kring unit och amount konvertering. kan även användas i portions. metoden tar in this.props.units
+          //7. importera dev till prod datbas
+          //gå ut med detta till gruppen i helgen. vår chatgrupp först kanske :)
         }
       }
     }
@@ -134,16 +141,6 @@ class Recipe extends Component {
       }
     }
 
-    /*                todo:
-      1. kolla upp buggen med render som körs vid snackbar/dialoger när inga states/props ändras? lägg till componentshouldupdate
-      2. Fixa appbar
-      3. Lägg funktion att ändra portions på receptet. fungerar det då automatiskt med ingredientsToAdd? behöver spara portionsMultiplyer i Recipe.state kanske?
-      4. Man ska även kunna ändra portions i dialogen?
-      5. Lägg till varning om att "du redan har lagt till detta recept i denna inköpslista"
-      6. Kolla om ingrediensen man försöker lägga till redan finns i listan med samma Enhet isåfall så updatera bara amount och ev unit . använd util.js för att lägga till metoder kring unit och amount konvertering. kan även användas i portions. metoden tar in this.props.units
-      7. importera dev till prod datbas
-      8.positionen av action knapparna är berodne på hur lång description är....
-      */
     //börja med att strukturera om components. ta bort mappar och slå ihop css.
     //en knapp "lägg till i inköslistan" som alltid visas men likt favorit så fungerar den bara när man är inloggad.
     //den fungerar likt ica där man får upp en dialog och får välja inköpslista eller skapa en ny som sedan ingredienserna läggs till som items på
@@ -195,7 +192,7 @@ class Recipe extends Component {
           </CardText>
         </Card>
       </Fade>
-      <AddGroceryDialog open={!!this.state.showGroceryDialog} onClose={this.closeGrocerylistDialog} grocerylists={this.props.grocerylists}
+      <AddGroceryDialog units={this.props.units} open={!!this.state.showGroceryDialog} onClose={this.closeGrocerylistDialog} grocerylists={this.props.grocerylists}
         itemsToAdd={this.state.itemsToAdd} recipeToAdd={this.state.recipeToAdd} setSnackbar={this.props.setSnackbar} />
     </div>);
   }

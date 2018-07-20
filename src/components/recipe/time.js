@@ -3,7 +3,7 @@ import TimerIcon from '@material-ui/icons/Timer';
 
 class Time extends Component {
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.time != this.props.time) {
+        if (nextProps.time !== this.props.time) {
             return true;
         }
         return false;

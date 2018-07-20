@@ -65,10 +65,30 @@ class AddGroceryDialog extends Component {
     });
   };
   addItemsToGroceryList(grocerylist) {
-    let ref = fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + grocerylist);
-    var updates = {};
+    let ref = fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + grocerylist.name);
+    let updates = {};
+    let mergedIngredient;
     for (let i = 0; i < this.props.itemsToAdd.length; i++) {
-      updates['/items/' + ref.push().key] = this.props.itemsToAdd[i];
+      let mergeKey= "";
+      let itemToAdd = this.props.itemsToAdd[i];
+      for(let j = 0; j < grocerylist.items.length; j++){
+        if(grocerylist.items[j].name === itemToAdd.name && Utils.ingredientsCanMerge(grocerylist.items[j], itemToAdd, this.props.units)){
+          let tmp = Utils.mergeIngredients(grocerylist.items[j], itemToAdd, this.props.units);
+          mergedIngredient = {
+            name: tmp.name,
+            unit: tmp.unit || null,
+            amount: tmp.amount || null
+          }
+          mergeKey = grocerylist.items[j].key;
+        }
+      }
+      if(mergedIngredient){
+        updates['/items/' +mergeKey ] = mergedIngredient;
+
+      }else{
+        updates['/items/' + ref.push().key] = this.props.itemsToAdd[i];
+      }
+
     }
     if (this.props.recipeToAdd) {
       updates['/recipes/' + Utils.encodeSource(this.props.recipeToAdd.source)] = true;
@@ -142,7 +162,6 @@ class AddGroceryDialog extends Component {
         });
       }
       else {
-        console.log("Data hss been saved succesfully");
         that.props.setSnackbar('recipe_added_grocerylist');
       }
     })
@@ -155,7 +174,7 @@ class AddGroceryDialog extends Component {
     function GrocerylistComponent(props) {
       return (<List>
         {props.grocerylists.map((grocerylist, index) =>
-          <ListItem className="grocerydialog-listitem" key={grocerylist.name} onClick={() => { props.handleClick(grocerylist.name) }} disableGutters={true}>
+          <ListItem className="grocerydialog-listitem" key={grocerylist.name} onClick={() => { props.handleClick(grocerylist) }} disableGutters={true}>
             <Avatar className="grocerylist-icon--primarycolor">
               <AssignmentIcon />
             </Avatar>

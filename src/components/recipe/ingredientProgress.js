@@ -5,10 +5,10 @@ import Button from '@material-ui/core/Button';
 
 class IngredientProgress extends Component {
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.matchedIngredients.length != this.props.matchedIngredients.length) {
+    if (nextProps.matchedIngredients.length !== this.props.matchedIngredients.length) {
       return true;
     }
-    if (nextProps.missingIngredients.length != this.props.missingIngredients.length) {
+    if (nextProps.missingIngredients.length !== this.props.missingIngredients.length) {
       return true;
     }
     return false;

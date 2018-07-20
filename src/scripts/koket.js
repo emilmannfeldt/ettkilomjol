@@ -318,6 +318,48 @@ nightmare
             //portions  "4småpotioner" trattkantarellsoppan. replace alla bokstäver med ""?
             if (document.querySelector('.recipe-content-wrapper .recipe-info.portions span.amount')) {
               recipe.portions = document.querySelector('.recipe-content-wrapper .recipe-info.portions span.amount').innerHTML.replace(/(\r\n|\n|\r| )/gm, "").trim();
+              //generall portion parser
+              if (recipe.portions.toUpperCase().startsWith("GER ")) {
+                recipe.portions = recipe.portions.substr(4);
+              }
+              if (recipe.portions.toUpperCase().startsWith("CA ")) {
+                recipe.portions = recipe.portions.substr(3);
+              }
+              if (recipe.portions.indexOf("1/2") > -1) {
+                recipe.portions = recipe.portions.replace("1/2", "+.5");
+                let parts = recipe.portions.split(" ");
+                if (!isNaN(parts[0]) && !isNaN(parts[1])) {
+                  let nr = eval(parts[0] + parts[1]);
+                  recipe.portions = nr + recipe.portions.substr(parts[0].length + parts[1].length + 1);
+                } else if (!isNaN(parts[0])) {
+                  let nr = eval(parts[0]);
+                  recipe.portions = nr + recipe.portions.substr(parts[0].length + 1);
+                } else {
+                  recipe.portions = recipe.portions.replace("+.5", "1/2");
+                }
+
+              }
+              let firstString = recipe.portions.split(" ")[0];
+              let seperateArray = firstString.split(/([0-9]+)/).filter(Boolean);
+              if (seperateArray.length === 2) {
+                let newFirstString = seperateArray[0] + " " + seperateArray[1];
+                recipe.portions = newFirstString + recipe.portions.substr(firstString.length);
+              }
+
+              if (recipe.portions.toUpperCase().startsWith("GER ")) {
+                recipe.portions = recipe.portions.substr(4);
+              }
+              if (recipe.portions.toUpperCase().startsWith("CA ")) {
+                recipe.portions = recipe.portions.substr(3);
+              }
+              let parts = recipe.portions.split(" ")[0].split("-");
+              if (parts.length === 2) {
+                let tmp = ((parts[0] - 0) + (parts[1] - 0)) / 2;
+                if (recipe.portions.split(" ").length > 1) {
+                  tmp = tmp + recipe.portions.substr(recipe.portions.indexOf(recipe.portions.split(" ")[1]) - 1);
+                }
+                recipe.portion = tmp;
+              }
             }
             //created
             if (document.querySelector('.recipe-content-wrapper .description meta[itemprop="datePublished"]')) {
@@ -402,22 +444,22 @@ nightmare
                     }
                   }
                 }
-                if(ingredient.amount.trim()==""){
+                if (ingredient.amount.trim() == "") {
                   delete ingredient.amount;
                 }
-                if(ingredient.unit.trim()==""){
-                    delete ingredient.unit;
+                if (ingredient.unit.trim() == "") {
+                  delete ingredient.unit;
                 }
-                if(ingredient.amount && isNaN(ingredient.amount)){
+                if (ingredient.amount && isNaN(ingredient.amount)) {
                   ingredient.amount = ingredient.amount.replace(/,/g, ".");
-                  if(ingredient.amount.indexOf("-")>-1){
+                  if (ingredient.amount.indexOf("-") > -1) {
                     let splited = ingredient.amount.split("-");
                     let first = +splited[0];
                     let second = +splited[1];
-                    ingredient.amount = (first+second)/2;
+                    ingredient.amount = (first + second) / 2;
                     ingredient.amount = ingredient.amount + "";
                   }
-                  if(ingredient.amount.indexOf("/")> -1){
+                  if (ingredient.amount.indexOf("/") > -1) {
                     ingredient.amount = eval(ingredient.amount).toFixed(2) + "";
                   }
                 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class Level extends Component {
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.index != this.props.index) {
+        if (nextProps.index !== this.props.index) {
             return true;
         }
         return false;

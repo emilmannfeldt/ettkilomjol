@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 
 class Rating extends Component {
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.value != this.props.value) {
+        if (nextProps.value !== this.props.value) {
             return true;
         }
-        if (nextProps.votes != this.props.votes) {
+        if (nextProps.votes !== this.props.votes) {
             return true;
         }
         return false;

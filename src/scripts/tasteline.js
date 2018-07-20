@@ -71,7 +71,49 @@ nightmare
 
                         //portions
                         if (document.querySelector('.page-content .recipe-content .portions')) {
-                            recipe.portions = document.querySelector('.page-content .recipe-content .portions').getAttribute('data-portions');
+                            recipe.portions = document.querySelector('.page-content .recipe-content .portions option[selected]').innerHTML.trim();
+                            //generall portion parser
+                            if (recipe.portions.toUpperCase().startsWith("GER ")) {
+                                recipe.portions = recipe.portions.substr(4);
+                            }
+                            if (recipe.portions.toUpperCase().startsWith("CA ")) {
+                                recipe.portions = recipe.portions.substr(3);
+                            }
+                            if (recipe.portions.indexOf("1/2") > -1) {
+                                recipe.portions = recipe.portions.replace("1/2", "+.5");
+                                let parts = recipe.portions.split(" ");
+                                if (!isNaN(parts[0]) && !isNaN(parts[1])) {
+                                    let nr = eval(parts[0] + parts[1]);
+                                    recipe.portions = nr + recipe.portions.substr(parts[0].length + parts[1].length + 1);
+                                } else if (!isNaN(parts[0])) {
+                                    let nr = eval(parts[0]);
+                                    recipe.portions = nr + recipe.portions.substr(parts[0].length + 1);
+                                } else {
+                                    recipe.portions = recipe.portions.replace("+.5", "1/2");
+                                }
+
+                            }
+                            let firstString = recipe.portions.split(" ")[0];
+                            let seperateArray = firstString.split(/([0-9]+)/).filter(Boolean);
+                            if (seperateArray.length === 2) {
+                                let newFirstString = seperateArray[0] + " " + seperateArray[1];
+                                recipe.portions = newFirstString + recipe.portions.substr(firstString.length);
+                            }
+
+                            if (recipe.portions.toUpperCase().startsWith("GER ")) {
+                                recipe.portions = recipe.portions.substr(4);
+                            }
+                            if (recipe.portions.toUpperCase().startsWith("CA ")) {
+                                recipe.portions = recipe.portions.substr(3);
+                            }
+                            let parts = recipe.portions.split(" ")[0].split("-");
+                            if (parts.length === 2) {
+                                let tmp = ((parts[0] - 0) + (parts[1] - 0)) / 2;
+                                if (recipe.portions.split(" ").length > 1) {
+                                    tmp = tmp + recipe.portions.substr(recipe.portions.indexOf(recipe.portions.split(" ")[1]) - 1);
+                                }
+                                recipe.portion = tmp;
+                            }
                         }
                         //created
 
@@ -110,11 +152,11 @@ nightmare
                                     //när en lösning finns på plats. ta bort alla recpet från tasteline
                                     //läs om dem från backup. måste läsa om hrefs, då recepten i backup är fel
                                     let amountElement = ingredientsDom[j].getElementsByClassName("quantity")[0];
-                                    if(!amountElement.classList.contains('hidden')){
+                                    if (!amountElement.classList.contains('hidden')) {
                                         ingredient.amount = amountElement.getAttribute('data-quantity');
                                     }
                                     let unitElement = ingredientsDom[j].getElementsByClassName("unit")[0];
-                                    if(!unitElement.classList.contains('hidden')){
+                                    if (!unitElement.classList.contains('hidden')) {
                                         ingredient.unit = unitElement.getAttribute('data-unit-name');
                                     }
                                     if (!ingredientsDom[j].getElementsByClassName("ingredient")[0]) {

@@ -338,10 +338,10 @@ class Home extends Component {
                     <Header />
                     <div id="content">
                         <Route exact path="/grocerylists" render={() => <MyGrocerylists grocerylists={this.state.grocerylists} foods={this.state.foods} units={this.state.units} recipes={this.state.recipes} setSnackbar={this.setSnackbar} />} />
-                        <Route exact path="/favorites" render={() => <MyRecipes grocerylists={this.state.grocerylists} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar}/> } />
+                        <Route exact path="/favorites" render={() => <MyRecipes grocerylists={this.state.grocerylists} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} units={this.state.units}/> } />
                         <Route exact path="/faq" render={() => <Faq openContact={this.handleContactOpen} />} />
                         <Route exact path="/stats" render={() => <Stats users={this.state.users} tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} units={this.state.units} />} />
-                        <Route exact path="/" render={() => <FilterableRecipeList grocerylists={this.state.grocerylists} tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />
+                        <Route exact path="/" render={() => <FilterableRecipeList units={this.state.units} grocerylists={this.state.grocerylists} tags={this.state.tags} foods={this.state.foods} recipes={this.state.recipes} favs={this.state.favs} setSnackbar={this.setSnackbar} />} />
                     </div>
                     <Footer openContact={this.handleContactOpen} />
                     {this.state.contactOpen && <Contact onClose={this.handleContactClose} subject={this.state.contactSubject} />}

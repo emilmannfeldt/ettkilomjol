@@ -71,14 +71,17 @@ firebase.auth().onAuthStateChanged(function (user) {
       }
     });
     unitsRef.once("value", function (snapshot) {
-      units.length = 0;
-      snapshot.forEach(function (child) {
-        units = Object.keys(snapshot.val()).map(function (key) { return snapshot.val()[key]; });
-        units.sort(function (a, b) {
-          return a.ref - b.ref;
-        });
-
-      });
+      let unitsTmp = snapshot.val();
+      for (let type in unitsTmp) {
+        if (unitsTmp.hasOwnProperty(type)) {
+          let unit = Object.keys(unitsTmp[type]).map(function (key) { return unitsTmp[type][key]; });
+          unit.sort(function (a, b) {
+            return a.ref - b.ref;
+          });
+          unitsTmp[type] = unit;
+        }
+      }
+      units = unitsTmp;
       unitsLoaded = true;
       if (foodLoaded && tagLoaded && unitsLoaded) {
 
@@ -213,15 +216,17 @@ function runRecipes() {
         ingredientResult.name = ingredientA.name;
         let foundUnitA;
         let foundUnitB;
-        for (let i = 0; i < units.length; i++) {
-          for (let unit in units[i]) {
-            if (units[i].hasOwnProperty(unit)) {
-              let curUnit = units[i][unit];
-              if (curUnit.name === ingredientA.unit || curUnit.fullName === ingredientA.unit) {
-                foundUnitA = curUnit;
-              }
-              if (curUnit.name === ingredientB.unit || curUnit.fullName === ingredientB.unit) {
-                foundUnitB = curUnit;
+        for (let type in units) {
+          if (units.hasOwnProperty(type)) {
+            for (let unit in units[type]) {
+              if (units[type].hasOwnProperty(unit)) {
+                let curUnit = units[type][unit];
+                if (curUnit.name === ingredientA.unit || curUnit.fullName === ingredientA.unit) {
+                  foundUnitA = curUnit;
+                }
+                if (curUnit.name === ingredientB.unit || curUnit.fullName === ingredientB.unit) {
+                  foundUnitB = curUnit;
+                }
               }
             }
           }
@@ -248,15 +253,17 @@ function runRecipes() {
       function isSameUnitScale(unitA, unitB) {
         let foundUnitA;
         let foundUnitB;
-        for (let i = 0; i < units.length; i++) {
-          for (let unit in units[i]) {
-            if (units[i].hasOwnProperty(unit)) {
-              let curUnit = units[i][unit];
-              if (curUnit.name === unitA || curUnit.fullName === unitA) {
-                foundUnitA = curUnit;
-              }
-              if (curUnit.name === unitB || curUnit.fullName === unitB) {
-                foundUnitB = curUnit;
+        for (let type in units) {
+          if (units.hasOwnProperty(type)) {
+            for (let unit in units[type]) {
+              if (units[type].hasOwnProperty(unit)) {
+                let curUnit = units[type][unit];
+                if (curUnit.name === unitA || curUnit.fullName === unitA) {
+                  foundUnitA = curUnit;
+                }
+                if (curUnit.name === unitB || curUnit.fullName === unitB) {
+                  foundUnitB = curUnit;
+                }
               }
             }
           }
@@ -276,12 +283,14 @@ function runRecipes() {
 
       function checkUnit(ingredient) {
         let foundUnit = {};
-        for (let i = 0; i < units.length; i++) {
-          for (let unit in units[i]) {
-            if (units[i].hasOwnProperty(unit)) {
-              let curUnit = units[i][unit];
-              if (curUnit.name === ingredient.unit) {
-                foundUnit = curUnit;
+        for (let type in units) {
+          if (units.hasOwnProperty(type)) {
+            for (let unit in units[type]) {
+              if (units[type].hasOwnProperty(unit)) {
+                let curUnit = units[type][unit];
+                if (curUnit.name === ingredient.unit) {
+                  foundUnit = curUnit;
+                }
               }
             }
           }
@@ -304,22 +313,19 @@ function runRecipes() {
         let selectedRef = ingredient.amount * selectedUnit.ref;
         let finalIngredient = ingredient;
         let newUnit;
-        let unitsIndex;
-        if (selectedUnit.type === 'volume') {
-          unitsIndex = 0;
-        } else if (selectedUnit.type === 'weight') {
-          unitsIndex = 1;
-        }
-        for (let unit in units[unitsIndex]) {
-          if (units[unitsIndex].hasOwnProperty(unit)) {
-            let curUnit = units[unitsIndex][unit];
-            if ((selectedRef / curUnit.ref > curUnit.min) && (!newUnit || curUnit.ref > newUnit.ref)) {
+
+        for (let unit in units[selectedUnit.type]) {
+          if (units[selectedUnit.type].hasOwnProperty(unit)) {
+            let curUnit = units[selectedUnit.type][unit];
+            if ((selectedRef / curUnit.ref > curUnit.min) && (selectedRef / curUnit.ref < curUnit.max) && (!newUnit || curUnit.ref > newUnit.ref)) {
               newUnit = curUnit;
             }
           }
         }
-        finalIngredient.amount = selectedRef / newUnit.ref;
-        finalIngredient.unit = newUnit.name;
+        if (newUnit) {
+          finalIngredient.amount = selectedRef / newUnit.ref;
+          finalIngredient.unit = newUnit.name;
+        }
         return finalIngredient;
       }
 
@@ -328,22 +334,19 @@ function runRecipes() {
         let selectedRef = ingredient.amount * selectedUnit.ref;
         let finalIngredient = ingredient;
         let newUnit;
-        let unitsIndex;
-        if (selectedUnit.type === 'volume') {
-          unitsIndex = 0;
-        } else if (selectedUnit.type === 'weight') {
-          unitsIndex = 1;
-        }
-        for (let unit in units[unitsIndex]) {
-          if (units[unitsIndex].hasOwnProperty(unit)) {
-            let curUnit = units[unitsIndex][unit];
-            if ((selectedRef / curUnit.ref < curUnit.max) && (!newUnit || curUnit.ref < newUnit.ref)) {
+
+        for (let unit in units[selectedUnit.type]) {
+          if (units[selectedUnit.type].hasOwnProperty(unit)) {
+            let curUnit = units[selectedUnit.type][unit];
+            if ((selectedRef / curUnit.ref < curUnit.max) && (selectedRef / curUnit.ref > curUnit.min) && (!newUnit || curUnit.ref < newUnit.ref)) {
               newUnit = curUnit;
             }
           }
         }
-        finalIngredient.amount = selectedRef / newUnit.ref;
-        finalIngredient.unit = newUnit.name;
+        if (newUnit) {
+          finalIngredient.amount = selectedRef / newUnit.ref;
+          finalIngredient.unit = newUnit.name;
+        }
         return finalIngredient;
       }
       function closestDecimals(num) {

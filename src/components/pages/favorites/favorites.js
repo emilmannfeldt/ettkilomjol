@@ -71,11 +71,11 @@ class Favorites extends Component {
                         />
                     </div>
                     {demoRecipe && recipesTmp.length === 0 ? (
-                        <Recipe demo={true} transitionDelay={12} isFav={false} recipe={demoRecipe} filter={this.state.filter} setSnackbar={this.dummy} />
+                        <Recipe demo={true} transitionDelay={12} isFav={false} recipe={demoRecipe} filter={this.state.filter} setSnackbar={this.dummy} units={this.props.units}/>
                     )
                         : (recipesTmp.map((recipe, index) =>
                         <Recipe key={recipe.source} filter={this.state.filter} ref="child" grocerylists={this.props.grocerylists}
-                        recipe={recipe} transitionDelay={index} isFav={true} setSnackbar={this.props.setSnackbar} />
+                        recipe={recipe} transitionDelay={index} isFav={true} setSnackbar={this.props.setSnackbar} units={this.props.units} />
                         )
                         )}
                 </div>

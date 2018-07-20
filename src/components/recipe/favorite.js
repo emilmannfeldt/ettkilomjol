@@ -13,10 +13,10 @@ class Favorite extends React.Component {
         this.removeFromFav = this.removeFromFav.bind(this);
     }
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.source != this.props.source) {
+        if (nextProps.source !== this.props.source) {
             return true;
         }
-        if (nextProps.isFav != this.props.isFav) {
+        if (nextProps.isFav !== this.props.isFav) {
             return true;
         }
         return false;
