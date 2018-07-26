@@ -1,7 +1,5 @@
 var firebase = require('firebase');
 var fs = require('fs');
-let Fuse = require('fuse.js');
-
 
 //Prod
 let prodConfig = {
@@ -87,33 +85,15 @@ firebase.auth().onAuthStateChanged(function (user) {
 });
 
 function runRecipes() {
-  let namel = 0;
   let numberRec = 0;
-  let invalids = [",", "+", "$", "#", "[", "]", "."];
-  var options = {
-    threshold: 0.1,
-    location: 0,
-    distance: 800,
-    maxPatternLength: 32,
-    minMatchCharLength: 2,
-    includeScore: true,
-    keys: [
-      "title",
-      "author",
-      "createdFor",
-      "tags"
-    ]
-  };
+
   console.log(existingRecipes.length + " existrinrec")
 
   recipesRef.once('value', function (snapshot) {
     console.log("receipes hämtade");
     snapshot.forEach(function (child) {
-      //kanske kan använda Fuse.js? som används i favorites.js? för att testa likehten på hela recept.
-      let busted = false;
       let recipe = child.val();
       let deleteRecipe = false;
-      let pinne = "--------------";
       let cause = "";
 
       if (recipe.rating < 2) {
@@ -151,44 +131,13 @@ function runRecipes() {
         deleteRecipe = true;
         cause = cause + "-----lång desc -----";
       }
-      /*
-            for (let i = 0; i < existingRecipes.length; i++) {
-              let existingRecipe = existingRecipes[i];
-              if (existingRecipe.source === recipe.source) {
-                continue;
-              }
-              if(existingRecipe.description && existingRecipe.description === recipe.existingRecipe && existingRecipe.title === recipe.title){
-                deleteRecipe = true;
-                cause = cause + "-----samma desc och title som: "+ existingRecipe.source +" -----";
-              }
-              if (recipe.ingredients.length > 14) {
-                let sameIngredientNames = 0;
-                for (let j = 0; j < existingRecipe.ingredients.length; j++) {
-                  let existingIngredient = existingRecipe.ingredients[j];
-                  for (let h = 0; h < recipe.ingredients.length; h++) {
-                    let ing = recipe.ingredients[h];
-                    if (ing.name === existingIngredient.name) {
-                      sameIngredientNames++;
-                    }
-                  }
-                }
-                if ((sameIngredientNames / existingRecipe.ingredients.length) > 0.8 && (sameIngredientNames / recipe.ingredients.length) > 0.8) {
-                  deleteRecipe = true;
-                  cause = cause + "-----liknande ingredienser som" + existingRecipe.source + "-----";
-                  break;
-                }
-              }
-            }
-            */
-
-
 
       numberRec++;
       if (numberRec % 100 == 0) {
         console.log(numberRec);
       }
       if (deleteRecipe) {
-        //recipesRef.child(child.key).remove();
+        recipesRef.child(child.key).remove();
         log.push("Deleteing:" + recipe.source);
         log.push("cause:" + cause)
 

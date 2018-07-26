@@ -104,7 +104,7 @@ function runRecipes() {
 
     for (let prop in tags) {
         let tag = tags[prop];
-        if (tag.uses < 5) {
+        if (tag.uses < 10) {
             delete tags[prop];
         }
     }

@@ -56,7 +56,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "mittkok/mittkok3_2018-07-25";
+let filename = "tasteline/Newtasteline-2400-2018-07-24";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -157,11 +157,7 @@ function createRecipes() {
                     //måste testas mer noga med att läsa in ett recept från backup med +1 på något etc
                     recipesRef.orderByChild('source').equalTo(existingRecipes[i].source).once("value", function (snapshot) {
                         snapshot.forEach(function (child) {
-                            let recipeTmp = child.val();
-                            console.log("updating..." + recipeTmp.source);
-                            log.push("old recipe: " + JSON.stringify(recipeTmp));
                             recipesRef.child(child.key).update(recipe);
-                            log.push("new recipe: " + JSON.stringify(recipe));
                         });
                     });
                     nrOfRecipesUpdated++;

@@ -82,7 +82,7 @@ function runRecipes() {
     console.log(foods.length)
     for (let prop in foods) {
         let food = foods[prop];
-        if (food.uses < 5) {
+        if (food.uses < 8) {
             delete foods[prop];
         }
     }
