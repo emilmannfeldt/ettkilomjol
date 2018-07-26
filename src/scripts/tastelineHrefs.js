@@ -19,12 +19,12 @@ var fs = require('fs');
 //2-100 kan köras en gång i månaden
 let urls = [
 ];
-for (let i = 2; i < 100; i++) {
+for (let i = 2200; i < 2400; i++) {
     urls.push('http://www.tasteline.com/recept/?sida=' + i + '#sok');
 }
 
 
-let filename = "Newtasteline-hrefs-10-2018-02-22.json";
+let filename = "Newtasteline-hrefs-2400-2018-07-24.json";
 
 nightmare
     .goto('http://www.tasteline.com/recept/')

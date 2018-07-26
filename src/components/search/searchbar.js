@@ -14,7 +14,6 @@ class Searchbar extends Component {
       sort: this.props.filter.sort,
       searchText: '',
     };
-    this.handleChange = this.handleChange.bind(this);
     this.handleUpdateInputText = this.handleUpdateInputText.bind(this);
     this.deleteIngredient = this.deleteIngredient.bind(this);
     this.deleteTag = this.deleteTag.bind(this);
@@ -26,35 +25,21 @@ class Searchbar extends Component {
     };
   }
 
-  handleChange() {
-    let newFilter = this.props.filter;
-    newFilter.ingredients = this.state.ingredients;
-    newFilter.tags = this.state.tags;
-    newFilter.sort = this.state.sort;
-    this.props.onFilterChange(newFilter);
-  }
-
   deleteIngredient(ingredientName) {
     let index = this.state.ingredients.indexOf(ingredientName);
     if (index !== -1) {
-      let newIngredients = this.state.ingredients;
-      newIngredients.splice(index, 1);
-      this.setState({
-        ingredients: newIngredients,
-      });
-      this.handleChange();
+      let newFilter = this.props.filter;
+      newFilter.ingredients.splice(index, 1);
+      this.props.onFilterChange(newFilter);
     }
   }
 
   deleteTag(tagName) {
-    let index = this.state.tags.indexOf(tagName);
+    let index = this.props.filter.tags.indexOf(tagName);
     if (index !== -1) {
-      let newTags = this.state.tags;
-      newTags.splice(index, 1);
-      this.setState({
-        tags: newTags,
-      });
-      this.handleChange();
+      let newFilter = this.props.filter;
+      newFilter.tags.splice(index, 1);
+      this.props.onFilterChange(newFilter);
     }
   }
 
@@ -72,13 +57,12 @@ class Searchbar extends Component {
       });
       return;
     }
-    let newIngredients = this.state.ingredients;
-    newIngredients.push(ingredientName);
+    let newFilter = this.props.filter;
+    newFilter.ingredients.push(ingredientName);
+    this.props.onFilterChange(newFilter);
     this.setState({
-      ingredients: newIngredients,
       searchText: '',
     });
-    this.handleChange();
   }
 
   addTag(tagName) {
@@ -95,13 +79,12 @@ class Searchbar extends Component {
       });
       return;
     }
-    let newTags = this.state.tags;
-    newTags.push(tagName);
+    let newFilter = this.props.filter;
+    newFilter.tags.push(tagName);
+    this.props.onFilterChange(newFilter);
     this.setState({
-      tags: newTags,
       searchText: '',
     });
-    this.handleChange();
   }
 
   getAutoCompletteFoods() {
@@ -182,7 +165,7 @@ class Searchbar extends Component {
         <div className="chip-wrapper">
           {chips}
         </div>
-        <AutoComplete className="c-autocomplete" ref="filterSearchbar" searchText={this.state.searchText} floatingLabelText="Sök ingredienser & preferenser" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.handleUpdateInputText} dataSource={searchables}
+        <AutoComplete floatingLabelFocusStyle={{ color: '#303f9f' }} className="c-autocomplete" ref="filterSearchbar" searchText={this.state.searchText} floatingLabelText="Sök ingredienser & preferenser" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.handleUpdateInputText} dataSource={searchables}
           onNewRequest={this.handleNewRequest} maxSearchResults={6} fullWidth={true} />
         {chips.length > 0 ?
           <FlatButton label="Rensa sökning"

@@ -46,9 +46,8 @@ firebase.auth().onAuthStateChanged(function (user) {
     foodRef.orderByChild("uses").once("value", function (snapshot) {
       console.log("startfood");
       snapshot.forEach(function (child) {
-        if (child.val().uses == 0) {
-          existingFoods.splice(0, 0, child.val().name);
-        }
+        existingFoods.splice(0, 0, child.val().name);
+
       });
       console.log("fooddone");
 
@@ -87,10 +86,20 @@ function runRecipes() {
       let recipe = child.val();
       let changesmade = false;
       let pinne = "--------------";
+      //lös problemte med 30-40 dumplings som inte blir rätt iscriptet här? why??
+      //jag kan plocka ut alla recept vars portion är bara en siffra? ta ut de soruces för de ska updateras.
+      //resulterar i 4 filer med sources som jag sedan ska köra om i respektiva ica.js script. se så att resultatet blir bra och sen updatera mot createrecipes.js
+      //
 
-      if (recipe.portions && isNaN(recipe.portions)) {
-        log.push(recipe.source);
-        log.push(recipe.portions);
+      //läs om alla recept som finns från varje source.
+      //ica done
+      //tasteline påväg
+      //mittkok behöver samla in hrefs, hitta script som funkar bra likt icas
+      //koket.se samma som ovan
+      if (recipe.portions) {
+        if (!isNaN(recipe.portions) && recipe.source.indexOf("ica.se") == -1) {
+          log.push(recipe.source);
+        }
 
       }
       if (false) {
@@ -105,7 +114,6 @@ function runRecipes() {
 
           }
         })
-        log.push(recipe.source);
 
       }
 

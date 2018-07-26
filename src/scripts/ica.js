@@ -20,9 +20,27 @@ var fs = require('fs');
 //6. Sätt filename enligt "ICA-RECEPTSRC-DATE.json"
 //6. kör node set DEBUG=nightmare & node ica.js
 //8. kör node createRecipes.js och ange namnet på filen som skapades här
-let urls = ["https://www.ica.se/recept/lammfile-med-rosmarinstrossel-citronbulgur-och-morotsbearnaise-713147/"
+let urls = ["https://www.ica.se/recept/sojabonsburgare-med-avokadokram-724092/",
+"https://www.ica.se/recept/somrig-mazarintarta-med-farska-bar-724036/",
+"https://www.ica.se/recept/stekt-torskrygg-med-medelhavssalsa-724071/",
+"https://www.ica.se/recept/vitlokssill-med-citron-724123/",
+"https://www.ica.se/recept/brantevikssill-724122/",
+"https://www.ica.se/recept/frasch-basilikasill-724121/",
+"https://www.ica.se/recept/tre-goda-silltapas-724119/",
+"https://www.ica.se/recept/matjessill-pa-fat-724120/",
+"https://www.ica.se/recept/stekta-thaifiskbollar-i-salladsknyten-724069/",
+"https://www.ica.se/recept/parmesanpopcorn-724047/",
+"https://www.ica.se/recept/popcorn-med-chili-och-lime-724046/",
+"https://www.ica.se/recept/kycklingvingar-med-koriandermajonnas-724045/",
+"https://www.ica.se/recept/kottfarspaj-med-mozzarella-724000/",
+"https://www.ica.se/recept/shrimp-rolls-724048/",
+"https://www.ica.se/recept/padrones-med-parmesandipp-724049/",
+"https://www.ica.se/recept/pigs-in-a-blanket-smordegsinbakad-korv-724050/",
+"https://www.ica.se/recept/snabba-quesadillas-med-spenat-och-mozzarella-724051/",
+
 ];
-let filename = "ica/test-2018-16-02.json";
+let filename = "ica/urls1-2018-07-24.json";
+let errors = 0;
 
 nightmare
     .goto('https://www.ica.se/recept')
@@ -59,8 +77,8 @@ nightmare
                         recipe.source = recipe.source.substr(recipe.source.indexOf("ica.se"));
                         //rating
                         recipe.rating = document.querySelector('.recipepage header .recipe-header a.rating-stars').getAttribute("title");
-                        if(recipe.rating.endsWith(".0")){
-                            recipe.rating = recipe.rating.slice(0,-2);
+                        if (recipe.rating.endsWith(".0")) {
+                            recipe.rating = recipe.rating.slice(0, -2);
 
                         }
                         //votes
@@ -76,47 +94,51 @@ nightmare
                         //portions  "4småpotioner" trattkantarellsoppan. replace alla bokstäver med ""?
                         if (document.querySelector('.recipepage .servings-picker')) {
                             recipe.portions = document.querySelector('.recipepage .servings-picker').getAttribute('data-default-portions');
-                            if(recipe.portions.toUpperCase().startsWith("GER ")){
+                            if (recipe.portions.toUpperCase().startsWith("GER ")) {
                                 recipe.portions = recipe.portions.substr(4);
                             }
-                            if(recipe.portions.toUpperCase().startsWith("CA ")){
+                            if (recipe.portions.toUpperCase().startsWith("CA ")) {
                                 recipe.portions = recipe.portions.substr(3);
                             }
-                            if(recipe.portions.indexOf("1/2")>-1){
-                                recipe.portions = recipe.portions.replace("1/2","+.5");
+                            recipe.portions = recipe.portions.replace(",", ".");
+                            if (recipe.portions.indexOf("1/2") > -1) {
+                                recipe.portions = recipe.portions.replace("1/2", "+.5");
                                 let parts = recipe.portions.split(" ");
-                                if(!isNaN(parts[0]) && !isNaN(parts[1])){
+                                if (!isNaN(parts[0]) && !isNaN(parts[1])) {
                                     let nr = eval(parts[0] + parts[1]);
                                     recipe.portions = nr + recipe.portions.substr(parts[0].length + parts[1].length + 1);
-                                }else if(!isNaN(parts[0])){
+                                } else if (!isNaN(parts[0])) {
                                     let nr = eval(parts[0]);
-                                    recipe.portions = nr + recipe.portions.substr(parts[0].length + 1);
-                                }else{
-                                    recipe.portions = recipe.portions.replace("+.5","1/2");
+                                    recipe.portions = nr + recipe.portions.substr(parts[0].length);
+                                } else {
+                                    recipe.portions = recipe.portions.replace("+.5", "1/2");
                                 }
 
                             }
                             let firstString = recipe.portions.split(" ")[0];
                             let seperateArray = firstString.split(/([0-9]+)/).filter(Boolean);
-                            if(seperateArray.length===2){
+                            if (seperateArray[1] === "-" && seperateArray.length === 4) {
+                                let newFirstString = seperateArray[0] + seperateArray[1] + seperateArray[2] + " " + seperateArray[3];
+                                recipe.portions = newFirstString + recipe.portions.substr(firstString.length);
+                            } else if (seperateArray.length === 2) {
                                 let newFirstString = seperateArray[0] + " " + seperateArray[1];
                                 recipe.portions = newFirstString + recipe.portions.substr(firstString.length);
                             }
 
-                            if(recipe.portions.toUpperCase().startsWith("GER ")){
+                            if (recipe.portions.toUpperCase().startsWith("GER ")) {
                                 recipe.portions = recipe.portions.substr(4);
                             }
-                            if(recipe.portions.toUpperCase().startsWith("CA ")){
+                            if (recipe.portions.toUpperCase().startsWith("CA ")) {
                                 recipe.portions = recipe.portions.substr(3);
                             }
                             let parts = recipe.portions.split(" ")[0].split("-");
                             if (parts.length === 2) {
                                 let tmp = ((parts[0] - 0) + (parts[1] - 0)) / 2;
-                                if(recipe.portions.split(" ").length>1){
-                                   tmp = tmp + recipe.portions.substr(recipe.portions.indexOf(recipe.portions.split(" ")[1])-1);
+                                if (recipe.portions.split(" ").length > 1) {
+                                    tmp = tmp + recipe.portions.substr(recipe.portions.indexOf(recipe.portions.split(" ")[1]) - 1);
                                 }
-                                recipe.portion =tmp;
-                            } 
+                                recipe.portions = tmp;
+                            }
                         }
                         //created
 
@@ -196,10 +218,10 @@ nightmare
                                     continue;
                                 }
 
-                                if(ingredient.amount.trim()==""){
+                                if (ingredient.amount.trim() == "") {
                                     delete ingredient.amount;
                                 }
-                                if(ingredient.unit.trim()==""){
+                                if (ingredient.unit.trim() == "") {
                                     delete ingredient.unit;
                                 }
                                 ingredientNames.push(ingredient.name);
@@ -222,8 +244,8 @@ nightmare
                                 let ingredientDom = ingredientsDom[i];
                                 let innerText = ingredientDom.innerText;
                                 ingredient.amount = ingredientDom.getAttribute("data-amount");
-                                if(ingredient.amount.endsWith(".0")){
-                                    ingredient.amount= ingredient.amount.slice(0,-2);
+                                if (ingredient.amount.endsWith(".0")) {
+                                    ingredient.amount = ingredient.amount.slice(0, -2);
                                 }
                                 if (ingredient.amount === "0") {
                                     ingredient.amount = "";
@@ -272,7 +294,27 @@ nightmare
                     })
                     .then(function (html) {
                         results.push(html);
+                        if (results.length % 500 == 0) {
+                            console.log("saving " + results.length);
+                            fs.writeFile("C:/react/" + filename, JSON.stringify(results), function (err) {
+
+                            });
+                        }
                         return results;
+                    }, error => {
+                        console.log("ERROR: finished " + results.length + " recipes before error");
+                        errors = errors + 1;
+                        fs.writeFile("C:/react/" + filename, JSON.stringify(results), function (err) {
+                            if (err) {
+                                return console.log(err);
+                            }
+                
+                        });
+                        if(errors<10){
+                            return results;
+                        }
+                        console.log("end. to many errors")
+
                     })
 
             });

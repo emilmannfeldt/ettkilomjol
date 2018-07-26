@@ -38,7 +38,3 @@
 .my_recipes-search div::before {
     border-bottom: none !important;
 }
-
-.my_recipes-search div::after {
-    border-bottom: 2px solid #00bcd4 !important;
-}

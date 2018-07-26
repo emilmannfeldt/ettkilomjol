@@ -12,7 +12,7 @@ class NewGroceryItem extends Component {
             unit: '',
             unitFullNames: [],
             unitNames: [],
-            errorText: '',
+            errors: {},
         };
         this.addItem = this.addItem.bind(this);
         this.getFoodSuggestions = this.getFoodSuggestions.bind(this);
@@ -21,13 +21,9 @@ class NewGroceryItem extends Component {
         this.updateUnit = this.updateUnit.bind(this);
         this.updateName = this.updateName.bind(this);
         this.validateItem = this.validateItem.bind(this);
-        this.getError = this.getError.bind(this);
     }
     componentDidMount() {
         this.initUnitSuggestions();
-    }
-    getError() {
-        return this.state.errorText;
     }
 
     addItem() {
@@ -52,36 +48,40 @@ class NewGroceryItem extends Component {
                 name: '',
                 amount: '',
                 unit: '',
-                errorText: '',
+                errors: {},
             });
             this.refs.nameInput.focus();
         }
 
     }
     validateItem(item) {
-        //lägga alla felmeddelanden i snackbar eller under det relevanta inputfältet?
+        let valid = true;
+        let errors = {};
         if (!item.name) {
-            this.setState({
-                errorText: 'Namn saknas',
-            });
-            return false;
+            errors['name'] = 'Fyll i namn'
+            valid = false;
         }
         if (!item.amount && item.unit) {
-            this.setState({
-                errorText: 'Mängd måste anges om enhet angets',
-            });
-            return false;
+            errors['amount'] = 'Om enhet är anget behöver även mängd anges'
+            valid = false;
         }
-        return true;
+        this.setState({ errors: errors });
+        return valid;
     }
     updateName(name) {
+        let errors = this.state.errors;
+        delete errors['name'];
         this.setState({
-            name: name
+            name: name,
+            errors: errors
         });
     }
     updateAmount(amount) {
+        let errors = this.state.errors;
+        delete errors['amount'];
         this.setState({
-            amount: amount
+            amount: amount,
+            errors: errors
         });
     }
     updateUnit(unit) {
@@ -150,19 +150,18 @@ class NewGroceryItem extends Component {
         let foodSuggestions = this.getFoodSuggestions();
         return (<div><ListItem className="groceryitem-new--container">
 
-            <AutoComplete className="c-autocomplete groceryitem-autocomplete name" ref="nameInput" searchText={this.state.name} floatingLabelText="Namn" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateName} dataSource={foodSuggestions}
-                onNewRequest={this.handleNewName} maxSearchResults={6} fullWidth={true} />
+            <AutoComplete underlineStyle={{display: this.state.errors['name'] ? 'none' : 'block'}} floatingLabelFocusStyle={{ color: '#303f9f' }} className="c-autocomplete groceryitem-autocomplete name" ref="nameInput" searchText={this.state.name} floatingLabelText="Namn" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateName} dataSource={foodSuggestions}
+                onNewRequest={this.handleNewName} maxSearchResults={6} fullWidth={true} errorText={this.state.errors['name']} errorStyle={{ marginTop: '16px', color: '#f44336' }} />
 
-            <AutoComplete className="c-autocomplete groceryitem-autocomplete amount" ref="amountInput" searchText={this.state.amount} floatingLabelText="Mängd" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateAmount} dataSource={[]}
-                onNewRequest={this.handleNewAmount} maxSearchResults={6} fullWidth={true} />
+            <AutoComplete underlineStyle={{display: this.state.errors['amount'] ? 'none' : 'block'}} floatingLabelFocusStyle={{ color: '#303f9f' }} className="c-autocomplete groceryitem-autocomplete amount" ref="amountInput" searchText={this.state.amount} floatingLabelText="Mängd" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateAmount} dataSource={[]}
+                onNewRequest={this.handleNewAmount} maxSearchResults={6} fullWidth={true} errorText={this.state.errors['amount']} errorStyle={{ marginTop: '16px', color: '#f44336' }} />
 
-            <AutoComplete className="c-autocomplete groceryitem-autocomplete unit" ref="unitInput" searchText={this.state.unit} floatingLabelText="Enhet" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateUnit} dataSource={this.state.unitFullNames}
+            <AutoComplete floatingLabelFocusStyle={{ color: '#303f9f' }} className="c-autocomplete groceryitem-autocomplete unit" ref="unitInput" searchText={this.state.unit} floatingLabelText="Enhet" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.updateUnit} dataSource={this.state.unitFullNames}
                 onNewRequest={this.handleNewUnit} maxSearchResults={6} fullWidth={true} />
 
-            </ListItem>
+        </ListItem>
             <ListItem>
-                <Button id="saveItem" ref="additembtn" onClick={this.addItem} color="secondary" variant="contained">Lägg till</Button>
-                {this.getError()}
+                <Button id="saveItem" ref="additembtn" onClick={this.addItem} color="primary" variant="contained">Lägg till</Button>
             </ListItem>
         </div>);
 

@@ -14,9 +14,1573 @@ var fs = require('fs');
 //3. Sätt filename enligt "TASTELINE-RECEPTSRC-DATE.json"
 //4. kör node set DEBUG=nightmare && node tasteline.js
 //5. kör node createRecipes.js och ange namnet på filen som skapades här
-let urls = [];
-let filename = "tasteline/Newtasteline-100-2018-02-22.json";
-
+let urls = [
+    "http://www.tasteline.com/recept/marinad-till-kott-och-fagel/",
+    "http://www.tasteline.com/recept/jordgubbs-och-limepannacotta/",
+    "http://www.tasteline.com/recept/ugnsrostade-gronsaker-2/",
+    "http://www.tasteline.com/recept/min-basta-marinad/",
+    "http://www.tasteline.com/recept/fisk-rucola-sill/",
+    "http://www.tasteline.com/recept/pasta-rakravioli/",
+    "http://www.tasteline.com/recept/makrill-med-ansjovissmor-och-purjo/",
+    "http://www.tasteline.com/recept/ra-sparrissallad/",
+    "http://www.tasteline.com/recept/peppriga-biffar/",
+    "http://www.tasteline.com/recept/couscous-med-mandlar/",
+    "http://www.tasteline.com/recept/laxwok/",
+    "http://www.tasteline.com/recept/fisk-med-fankal/",
+    "http://www.tasteline.com/recept/sommarsmoothie-med-smakakor/",
+    "http://www.tasteline.com/recept/fullkornsbrod-med-potatis-kaviar-och-purjo/",
+    "http://www.tasteline.com/recept/caesarsallad-med-rakor/",
+    "http://www.tasteline.com/recept/rostbiff-med-italiensk-tonfisksas/",
+    "http://www.tasteline.com/recept/smala-sommarmackan/",
+    "http://www.tasteline.com/recept/kyckling-och-avokadosub/",
+    "http://www.tasteline.com/recept/musselsas-och-penne/",
+    "http://www.tasteline.com/recept/het-bonsallad-med-chipotledressing/",
+    "http://www.tasteline.com/recept/farskpotatis-och-kasslersallad/",
+    "http://www.tasteline.com/recept/hokifile-med-tomat-och-bonrora/",
+    "http://www.tasteline.com/recept/solgul-kyckling/",
+    "http://www.tasteline.com/recept/gazpacho-kall-gronsakssoppa/",
+    "http://www.tasteline.com/recept/veggie-sandwich/",
+    "http://www.tasteline.com/recept/plommonkompott-med-citron/",
+    "http://www.tasteline.com/recept/risonisallad-2-2/",
+    "http://www.tasteline.com/recept/fruktsallad-med-kardemummakeso-och-pepparkakskross/",
+    "http://www.tasteline.com/recept/appelkompott-med-vaniljyoghurt-musli-och-honung/",
+    "http://www.tasteline.com/recept/papaya-med-lime/",
+    "http://www.tasteline.com/recept/pan-bagna-sydfransk-lunchmacka/",
+    "http://www.tasteline.com/recept/gron-pastasallad-med-citronsmak/",
+    "http://www.tasteline.com/recept/heta-vegotacos/",
+    "http://www.tasteline.com/recept/grillade-kalvkotletter-med-ananasnudlar/",
+    "http://www.tasteline.com/recept/rabarberskalar/",
+    "http://www.tasteline.com/recept/gron-sparrissoppa-2-2/",
+    "http://www.tasteline.com/recept/sparris-morot-och-citronflask/",
+    "http://www.tasteline.com/recept/ost-och-lokrisotto/",
+    "http://www.tasteline.com/recept/kyckling-med-sparris/",
+    "http://www.tasteline.com/recept/kalv-och-citrongryta/",
+    "http://www.tasteline.com/recept/sallad-pa-sparris-och-tonfisk/",
+    "http://www.tasteline.com/recept/bakade-potatisar/",
+    "http://www.tasteline.com/recept/saffranssoppa/",
+    "http://www.tasteline.com/recept/biff-och-halloumispett-med-apelsingryn/",
+    "http://www.tasteline.com/recept/knaprig-kyckling/",
+    "http://www.tasteline.com/recept/tva-kal-med-rokt-lax/",
+    "http://www.tasteline.com/recept/farspytt/",
+    "http://www.tasteline.com/recept/sallad-med-bakade-tomater/",
+    "http://www.tasteline.com/recept/ost-och-spenatomelett-med-rokt-lax/",
+    "http://www.tasteline.com/recept/stekt-flask-med-palsternacka/",
+    "http://www.tasteline.com/recept/sjomanshoki-i-het-tomatbuljong/",
+    "http://www.tasteline.com/recept/mikrad-lax-med-ruccola-och-stuvad-potatis/",
+    "http://www.tasteline.com/recept/sotsur-flaskfile/",
+    "http://www.tasteline.com/recept/mexikackel/",
+    "http://www.tasteline.com/recept/ugnsomelett-2/",
+    "http://www.tasteline.com/recept/scones-med-valnotter/",
+    "http://www.tasteline.com/recept/gorgonzolagratinerade-flaskkotletter/",
+    "http://www.tasteline.com/recept/yoghurtrisotto/",
+    "http://www.tasteline.com/recept/ost-ostpaj/",
+    "http://www.tasteline.com/recept/marinad-med-thaismak-till-grillat/",
+    "http://www.tasteline.com/recept/smal-avokadorora/",
+    "http://www.tasteline.com/recept/vegopankisar/",
+    "http://www.tasteline.com/recept/pastasallad-med-kyckling-3/",
+    "http://www.tasteline.com/recept/fruktsallad-med-variation/",
+    "http://www.tasteline.com/recept/inlindad-flaskfile-med-pressad-potatis/",
+    "http://www.tasteline.com/recept/paprikor-fyllda-med-svamp-och-ris/",
+    "http://www.tasteline.com/recept/kycklingcurry-3/",
+    "http://www.tasteline.com/recept/fattiga-riddare-och-rika/",
+    "http://www.tasteline.com/recept/vild-flaskkarre-med-klyftpotatis/",
+    "http://www.tasteline.com/recept/tomatstromming/",
+    "http://www.tasteline.com/recept/violas-banankaka/",
+    "http://www.tasteline.com/recept/aggrora-med-renstek/",
+    "http://www.tasteline.com/recept/rodkalsallad/",
+    "http://www.tasteline.com/recept/kokt-blomkal-med-skinksas/",
+    "http://www.tasteline.com/recept/flaskfilespett-med-potatis-och-pinjenotssallad/",
+    "http://www.tasteline.com/recept/ansjovis-och-tomatrora-i-frasigt-pajskal/",
+    "http://www.tasteline.com/recept/panerad-fetaost-med-citruscouscous/",
+    "http://www.tasteline.com/recept/omelett-med-musslor-och-bacon/",
+    "http://www.tasteline.com/recept/pizza-som-i-italien/",
+    "http://www.tasteline.com/recept/crabfish-och-nudelpanna-med-smak-av-saffran/",
+    "http://www.tasteline.com/recept/lammfars-som-i-orienten/",
+    "http://www.tasteline.com/recept/stekta-jordartskockor-med-lovbiff/",
+    "http://www.tasteline.com/recept/laxsallad-2/",
+    "http://www.tasteline.com/recept/pasta-med-broccolipesto/",
+    "http://www.tasteline.com/recept/ostgratinerad-korv/",
+    "http://www.tasteline.com/recept/tropik-musli/",
+    "http://www.tasteline.com/recept/laxburgare-med-mangosalsa-2/",
+    "http://www.tasteline.com/recept/kokta-endiver-med-flask/",
+    "http://www.tasteline.com/recept/senvintergryta/",
+    "http://www.tasteline.com/recept/juggebiffar-med-klyftpotatis/",
+    "http://www.tasteline.com/recept/saltbakad-gos-med-tomater/",
+    "http://www.tasteline.com/recept/stuffad-zucchini/",
+    "http://www.tasteline.com/recept/sweet-chili-kyckling-2-2/",
+    "http://www.tasteline.com/recept/couscous-med-kottbullar/",
+    "http://www.tasteline.com/recept/notfarsspett-med-mangosas/",
+    "http://www.tasteline.com/recept/havrepannkakor-med-hjortron/",
+    "http://www.tasteline.com/recept/snabbmarinerad-skinkstek/",
+    "http://www.tasteline.com/recept/vegonudlar-med-marinerad-tofu/",
+    "http://www.tasteline.com/recept/lata-och-supergoda-baguetter-fran-annas-kokbok/",
+    "http://www.tasteline.com/recept/drinktilltugg-2/",
+    "http://www.tasteline.com/recept/matig-skinkbaguette/",
+    "http://www.tasteline.com/recept/pastasallad-med-dill-och-citron-och-grillad-halloumi/",
+    "http://www.tasteline.com/recept/lax-under-ort-och-mandeltacke/",
+    "http://www.tasteline.com/recept/inkokt-makrill-med-rabarbersas/",
+    "http://www.tasteline.com/recept/dubbelmarinerad-flaskfile/",
+    "http://www.tasteline.com/recept/kraftsoppa-phiadelphia/",
+    "http://www.tasteline.com/recept/hot-sambalmango-chicken/",
+    "http://www.tasteline.com/recept/att-nagot-sa-enkelt-kan-vara-sa-gott/",
+    "http://www.tasteline.com/recept/min-kycklinggryta-fran-vardag-till-fest/",
+    "http://www.tasteline.com/recept/min-quattro-pasta-som-gor-mig-vild-o-galen/",
+    "http://www.tasteline.com/recept/min-gronsaksrora-som-passar-till-precis-allt/",
+    "http://www.tasteline.com/recept/kottgryta-med-smak-av-lime-och-kokos/",
+    "http://www.tasteline.com/recept/sockerkaksbruschetta-med-myntagubbar/",
+    "http://www.tasteline.com/recept/paron-i-folie-med-adelost/",
+    "http://www.tasteline.com/recept/ugnsbakad-lax-med-citronsas-2/",
+    "http://www.tasteline.com/recept/pastasallad-med-pestodressing/",
+    "http://www.tasteline.com/recept/basta-sommargronsalladen/",
+    "http://www.tasteline.com/recept/fisksoppa-sweet-chili/",
+    "http://www.tasteline.com/recept/spagetti-marinara/",
+    "http://www.tasteline.com/recept/saffransrisotto-med-chorizo/",
+    "http://www.tasteline.com/recept/kyckling-a-la-medelhavet/",
+    "http://www.tasteline.com/recept/grilla-bbq-sauces/",
+    "http://www.tasteline.com/recept/rora-med-soltorkade-tomater/",
+    "http://www.tasteline.com/recept/mexikansk-chorizosoppa/",
+    "http://www.tasteline.com/recept/glassfylld-ananas/",
+    "http://www.tasteline.com/recept/rabarbersoppa-2/",
+    "http://www.tasteline.com/recept/jordgubbsgazpacho-2/",
+    "http://www.tasteline.com/recept/smala-brownies/",
+    "http://www.tasteline.com/recept/biffsallad-med-bonor-och-bovete/",
+    "http://www.tasteline.com/recept/freddagskvalls-gratang/",
+    "http://www.tasteline.com/recept/kycklingsoppa-med-dill-och-potatis/",
+    "http://www.tasteline.com/recept/carinas-ostlada/",
+    "http://www.tasteline.com/recept/fransk-potatissallad-med-brackt-kassler/",
+    "http://www.tasteline.com/recept/asas-sallad/",
+    "http://www.tasteline.com/recept/kottfarspiroger-med-smak-av-senapsfro-och-dill/",
+    "http://www.tasteline.com/recept/kassler-med-teriyakismak/",
+    "http://www.tasteline.com/recept/limesill/",
+    "http://www.tasteline.com/recept/snabba-goda-restroran/",
+    "http://www.tasteline.com/recept/medelhavspaj-med-tonfisk-och-sardeller/",
+    "http://www.tasteline.com/recept/ugnsstekt-torsk-med-dillpesto/",
+    "http://www.tasteline.com/recept/guldgul-fisksoppa/",
+    "http://www.tasteline.com/recept/seranoskinka-med-roquefortost-och-flagad-mandel/",
+    "http://www.tasteline.com/recept/belgisk-rabiff/",
+    "http://www.tasteline.com/recept/supergod-sas-till-varmrokt-lax/",
+    "http://www.tasteline.com/recept/jattefrasch-och-smal-raksallad/",
+    "http://www.tasteline.com/recept/evas-vitlokssas/",
+    "http://www.tasteline.com/recept/aggakaka-med-bacon-och-apple/",
+    "http://www.tasteline.com/recept/pepparrotssill/",
+    "http://www.tasteline.com/recept/skaldjurssallad-med-lime-och-koriander/",
+    "http://www.tasteline.com/recept/stekta-applen-med-kanelmandelknack-och-vaniljglass/",
+    "http://www.tasteline.com/recept/anders-heta-salsiccia-med-penne/",
+    "http://www.tasteline.com/recept/apelsinsallad-med-feta/",
+    "http://www.tasteline.com/recept/nyttigt-snacks/",
+    "http://www.tasteline.com/recept/rivig-appelkaka/",
+    "http://www.tasteline.com/recept/kottgryta-med-polenta/",
+    "http://www.tasteline.com/recept/kottfarsgulasch-med-ryska-morotter/",
+    "http://www.tasteline.com/recept/lasagne-med-spenat-och-getost/",
+    "http://www.tasteline.com/recept/sas-med-feta/",
+    "http://www.tasteline.com/recept/myntayoghurt/",
+    "http://www.tasteline.com/recept/avokadorora-3-2/",
+    "http://www.tasteline.com/recept/teriyakisas-2/",
+    "http://www.tasteline.com/recept/basilikaolja/",
+    "http://www.tasteline.com/recept/tomatsas-3-2/",
+    "http://www.tasteline.com/recept/mild-grillmarinad/",
+    "http://www.tasteline.com/recept/syrlig-och-frisk-grillmarinad/",
+    "http://www.tasteline.com/recept/sot-och-salt-grillmarinad/",
+    "http://www.tasteline.com/recept/stark-och-het-grillmarinad/",
+    "http://www.tasteline.com/recept/kryddoftande-marinad/",
+    "http://www.tasteline.com/recept/pasta-med-oliv-och-kronartskockspesto-2/",
+    "http://www.tasteline.com/recept/kraft-och-fankalspaj/",
+    "http://www.tasteline.com/recept/kyckling-vindalooh/",
+    "http://www.tasteline.com/recept/mexikansk-biff-med-bonsallad/",
+    "http://www.tasteline.com/recept/ljummen-pastasallad-med-smak-av-kardemumma-och-paron/",
+    "http://www.tasteline.com/recept/flaskfile-med-basilikaolja/",
+    "http://www.tasteline.com/recept/sherrykarre-i-stekpase/",
+    "http://www.tasteline.com/recept/kalkon-med-rostad-pumpa/",
+    "http://www.tasteline.com/recept/rotmos-med-skinka-och-saltkott/",
+    "http://www.tasteline.com/recept/kalkonpasta/",
+    "http://www.tasteline.com/recept/sparrissoppa-med-quesadilla/",
+    "http://www.tasteline.com/recept/knaprig-tomatlada/",
+    "http://www.tasteline.com/recept/apelsin-och-fankalssallad/",
+    "http://www.tasteline.com/recept/laxpudding-4-2/",
+    "http://www.tasteline.com/recept/texmex-soppa-med-osttak/",
+    "http://www.tasteline.com/recept/rabiff-pa-flera-satt/",
+    "http://www.tasteline.com/recept/vitvinswokad-kyckling/",
+    "http://www.tasteline.com/recept/lax-med-apelsin-selleripure/",
+    "http://www.tasteline.com/recept/vinbarsbiff/",
+    "http://www.tasteline.com/recept/artsoppa-2/",
+    "http://www.tasteline.com/recept/spenatris-med-kikartor/",
+    "http://www.tasteline.com/recept/kyckling-i-cider/",
+    "http://www.tasteline.com/recept/flaskpannkaka-4/",
+    "http://www.tasteline.com/recept/texmex-lasagne/",
+    "http://www.tasteline.com/recept/snabb-thaigryta/",
+    "http://www.tasteline.com/recept/sportlovsmackor/",
+    "http://www.tasteline.com/recept/kycklinglever-med-hallonsas-och-pinjenotter/",
+    "http://www.tasteline.com/recept/lamm-med-korsbarstomater-och-oliver/",
+    "http://www.tasteline.com/recept/paulus-pizza/",
+    "http://www.tasteline.com/recept/kyckling-och-potatissoppa/",
+    "http://www.tasteline.com/recept/musli-appelpaj/",
+    "http://www.tasteline.com/recept/pastakuddar-med-ruccola-och-tomat/",
+    "http://www.tasteline.com/recept/lady-och-lufsens-pasta/",
+    "http://www.tasteline.com/recept/kraftstjartar-med-basilika-aioli/",
+    "http://www.tasteline.com/recept/fisk-pa-knaprig-potatis/",
+    "http://www.tasteline.com/recept/macaroni-and-cheese/",
+    "http://www.tasteline.com/recept/kraft-och-kokossoppa/",
+    "http://www.tasteline.com/recept/hemmagjorda-fiskpinnar-med-bostonsas/",
+    "http://www.tasteline.com/recept/ris-med-bonor-och-tomat/",
+    "http://www.tasteline.com/recept/bankad-kyckling/",
+    "http://www.tasteline.com/recept/korvobonor/",
+    "http://www.tasteline.com/recept/uppstickarparon/",
+    "http://www.tasteline.com/recept/farsbiff-med-ajvar-ris/",
+    "http://www.tasteline.com/recept/fankalssoppa-2/",
+    "http://www.tasteline.com/recept/tonfisk-med-pasta/",
+    "http://www.tasteline.com/recept/kyckling-under-tacket/",
+    "http://www.tasteline.com/recept/couscous-wrap/",
+    "http://www.tasteline.com/recept/gratinerad-getost-pa-rodbeta/",
+    "http://www.tasteline.com/recept/rod-linssoppa-2/",
+    "http://www.tasteline.com/recept/sydeuropeiska-agg/",
+    "http://www.tasteline.com/recept/italiensk-rakmacka/",
+    "http://www.tasteline.com/recept/gubbvaffla/",
+    "http://www.tasteline.com/recept/texmexvaffla/",
+    "http://www.tasteline.com/recept/italiensk-vaffla/",
+    "http://www.tasteline.com/recept/rom-vaffla/",
+    "http://www.tasteline.com/recept/enkel-vaffelsmet/",
+    "http://www.tasteline.com/recept/frasigaste-vafflorna/",
+    "http://www.tasteline.com/recept/sweet-chili-kyckling-2/",
+    "http://www.tasteline.com/recept/firre-i-ortbuljong-med-smorkokta-wokgronsaker/",
+    "http://www.tasteline.com/recept/kottfars-och-tacopaj/",
+    "http://www.tasteline.com/recept/banankaka-13/",
+    "http://www.tasteline.com/recept/rulle-med-fetarora-och-tapenade/",
+    "http://www.tasteline.com/recept/omelettrulle-med-avokadosallad-och-rostade-mandlar/",
+    "http://www.tasteline.com/recept/sallad-med-paron-och-brieflarn-med-honungsdressing/",
+    "http://www.tasteline.com/recept/couscous-med-brynta-rotsaker-och-sas-pa-rostad-vitlok/",
+    "http://www.tasteline.com/recept/kramig-jordartskockssoppa/",
+    "http://www.tasteline.com/recept/pollo-tonnato-kyckling-med-tonfisksas/",
+    "http://www.tasteline.com/recept/bruschetta-med-persiljesvamp-och-insalata-caprese/",
+    "http://www.tasteline.com/recept/apelsinsallad-i-kryddig-lag/",
+    "http://www.tasteline.com/recept/falska-gass-med-vasterbottengratinerad-selleri-och-potatispure/",
+    "http://www.tasteline.com/recept/pasta-pesto/",
+    "http://www.tasteline.com/recept/biffar-med-tacosmak-och-fruktsalsa/",
+    "http://www.tasteline.com/recept/kycklingbullar-med-mustig-tomatsas/",
+    "http://www.tasteline.com/recept/citron-och-lime-stilldrink/",
+    "http://www.tasteline.com/recept/torsk-och-olivgryta/",
+    "http://www.tasteline.com/recept/kyckling-och-crabfishwok-med-smak-av-jordnotter-och-lime/",
+    "http://www.tasteline.com/recept/pasjka/",
+    "http://www.tasteline.com/recept/flaskfile-puttanesca/",
+    "http://www.tasteline.com/recept/paj-med-chevre-och-oliver/",
+    "http://www.tasteline.com/recept/broccoli-och-ostsoppa/",
+    "http://www.tasteline.com/recept/vitvinswokad-kyckling-2/",
+    "http://www.tasteline.com/recept/lax-och-spenatfyllda-piroger-med-smal-bearnese/",
+    "http://www.tasteline.com/recept/ostfondue-2/",
+    "http://www.tasteline.com/recept/sukiyaki-japansk-fondue-2-2/",
+    "http://www.tasteline.com/recept/gron-sas/",
+    "http://www.tasteline.com/recept/pasta-med-hasselnotspesto/",
+    "http://www.tasteline.com/recept/latt-bearnaise/",
+    "http://www.tasteline.com/recept/rod-salsa/",
+    "http://www.tasteline.com/recept/fondue-bourguignonne/",
+    "http://www.tasteline.com/recept/fruktfondue/",
+    "http://www.tasteline.com/recept/wasabimajo/",
+    "http://www.tasteline.com/recept/thaisas-2/",
+    "http://www.tasteline.com/recept/graddfil-med-orter/",
+    "http://www.tasteline.com/recept/lammkotletter-i-apelsin-och-konjakssas/",
+    "http://www.tasteline.com/recept/tonfisk-och-kikartsburgare/",
+    "http://www.tasteline.com/recept/caesarsallad-2-2/",
+    "http://www.tasteline.com/recept/choklad-och-hasselnotsrutor/",
+    "http://www.tasteline.com/recept/vegetarisk-rotfruktsgratang/",
+    "http://www.tasteline.com/recept/stor-grotfrukost/",
+    "http://www.tasteline.com/recept/vafflor-med-rakkeso/",
+    "http://www.tasteline.com/recept/thailandsk-kycklingcurry/",
+    "http://www.tasteline.com/recept/korv-och-rotfruktslada/",
+    "http://www.tasteline.com/recept/lyxig-hallon-och-fladersmoothie/",
+    "http://www.tasteline.com/recept/saffransrisotto-med-rimmad-torsk/",
+    "http://www.tasteline.com/recept/stromming-pa-fullkornsbrod-med-hovmastarsas/",
+    "http://www.tasteline.com/recept/katrinplommon-och-flaskkarregryta/",
+    "http://www.tasteline.com/recept/sweet-chilinudlar/",
+    "http://www.tasteline.com/recept/kycklingpasta-med-feta-2/",
+    "http://www.tasteline.com/recept/tortellinisoppa/",
+    "http://www.tasteline.com/recept/laxpudding-3/",
+    "http://www.tasteline.com/recept/torskbiffar-med-lime-och-pepparrotssas/",
+    "http://www.tasteline.com/recept/kycklinglimpa-med-svartrot/",
+    "http://www.tasteline.com/recept/messmors-och-syltmacka/",
+    "http://www.tasteline.com/recept/getost-pa-rodbeta/",
+    "http://www.tasteline.com/recept/rotfruktslasagne-2/",
+    "http://www.tasteline.com/recept/gratinerade-ostron/",
+    "http://www.tasteline.com/recept/sparris-med-parmaskinka/",
+    "http://www.tasteline.com/recept/quorn-i-yoghurtmarinad/",
+    "http://www.tasteline.com/recept/roding-med-grovrivet/",
+    "http://www.tasteline.com/recept/krabbcocktail-2/",
+    "http://www.tasteline.com/recept/konjak-och-ingefarste/",
+    "http://www.tasteline.com/recept/semlor-fran-viktklubben/",
+    "http://www.tasteline.com/recept/fetaostbiffar-med-grekisk-potatissallad/",
+    "http://www.tasteline.com/recept/sherrymarinerad-kyckling-med-limesas/",
+    "http://www.tasteline.com/recept/citrontorsk-i-traktorpanna/",
+    "http://www.tasteline.com/recept/kyckling-med-gurksallad/",
+    "http://www.tasteline.com/recept/gratang-a-la-george-bush-senior/",
+    "http://www.tasteline.com/recept/bakad-potatis-med-skaldjur/",
+    "http://www.tasteline.com/recept/ugnsstekta-saker-med-pepparrotssas/",
+    "http://www.tasteline.com/recept/bulgursallad-3/",
+    "http://www.tasteline.com/recept/hoki-med-rodvinssas/",
+    "http://www.tasteline.com/recept/huevos-rancheros-mexarfrukost/",
+    "http://www.tasteline.com/recept/citronlax/",
+    "http://www.tasteline.com/recept/kyckling-med-morotslada/",
+    "http://www.tasteline.com/recept/ugnsstekta-applen/",
+    "http://www.tasteline.com/recept/grillade-havspaket/",
+    "http://www.tasteline.com/recept/rodbetssoppa-med-chevrekram/",
+    "http://www.tasteline.com/recept/alltiallofisk/",
+    "http://www.tasteline.com/recept/texmexspjall/",
+    "http://www.tasteline.com/recept/musselspett-med-linssallad/",
+    "http://www.tasteline.com/recept/fyllda-tomater-2/",
+    "http://www.tasteline.com/recept/kryddig-lammpita/",
+    "http://www.tasteline.com/recept/vildfras/",
+    "http://www.tasteline.com/recept/potatissallad-med-kyckling/",
+    "http://www.tasteline.com/recept/ris-med-currypinnar/",
+    "http://www.tasteline.com/recept/fru-sjomans-musslor/",
+    "http://www.tasteline.com/recept/tyrolerkotletter/",
+    "http://www.tasteline.com/recept/bakad-potatis-med-majs/",
+    "http://www.tasteline.com/recept/laxpasta-3/",
+    "http://www.tasteline.com/recept/kalles-lammfars-med-halloumi/",
+    "http://www.tasteline.com/recept/kokosrakor/",
+    "http://www.tasteline.com/recept/algstek-med-potatisstrimlor/",
+    "http://www.tasteline.com/recept/hulkburgare/",
+    "http://www.tasteline.com/recept/strommingslada-3/",
+    "http://www.tasteline.com/recept/linser-med-spenat/",
+    "http://www.tasteline.com/recept/ostpaj-med-paron-och-valnotssallad/",
+    "http://www.tasteline.com/recept/laxtartar-2/",
+    "http://www.tasteline.com/recept/rostbiff-med-karl-johan/",
+    "http://www.tasteline.com/recept/kokosapplen-2/",
+    "http://www.tasteline.com/recept/algbullar-med-lingon/",
+    "http://www.tasteline.com/recept/kalkon-med-valnotssas/",
+    "http://www.tasteline.com/recept/libanesisk-sallad/",
+    "http://www.tasteline.com/recept/lax-och-krabburgare/",
+    "http://www.tasteline.com/recept/kassler-med-applen-och-plommon/",
+    "http://www.tasteline.com/recept/flaskfile-med-kantareller-2-2/",
+    "http://www.tasteline.com/recept/gos-med-wasabimajonnas/",
+    "http://www.tasteline.com/recept/hannas-hallonmarang/",
+    "http://www.tasteline.com/recept/mikrad-fisk-med-svart-smor/",
+    "http://www.tasteline.com/recept/heta-och-spanska-rakor/",
+    "http://www.tasteline.com/recept/skinka-med-spenat/",
+    "http://www.tasteline.com/recept/semifreddo-2-2/",
+    "http://www.tasteline.com/recept/mina-indiska-rotter/",
+    "http://www.tasteline.com/recept/smarrig-kottfarssas-2/",
+    "http://www.tasteline.com/recept/kalpudding-med-sirapssas/",
+    "http://www.tasteline.com/recept/strimlad-biff-med-vattenkastanjer/",
+    "http://www.tasteline.com/recept/soppa-med-trattisar-och-renstek/",
+    "http://www.tasteline.com/recept/kyckling-med-fankal/",
+    "http://www.tasteline.com/recept/robins-kycklinglasagne/",
+    "http://www.tasteline.com/recept/uppsalakaka/",
+    "http://www.tasteline.com/recept/purjo-och-potatissoppa-2/",
+    "http://www.tasteline.com/recept/osso-fusco/",
+    "http://www.tasteline.com/recept/sojastekt-lax-med-svart-trumpet/",
+    "http://www.tasteline.com/recept/pasta-med-renskav-och-svamp/",
+    "http://www.tasteline.com/recept/rodbetsburgare/",
+    "http://www.tasteline.com/recept/korv-med-senapsmos/",
+    "http://www.tasteline.com/recept/tiramisu-3-2/",
+    "http://www.tasteline.com/recept/vartefter-soppa/",
+    "http://www.tasteline.com/recept/spatta-med-mos/",
+    "http://www.tasteline.com/recept/loklada-med-halloumi-och-chokladquorn/",
+    "http://www.tasteline.com/recept/kinakal-nastan-som-i-kina/",
+    "http://www.tasteline.com/recept/kryddkyckling-med-selleritomater/",
+    "http://www.tasteline.com/recept/laxmacka/",
+    "http://www.tasteline.com/recept/anna-lenas-blomkal/",
+    "http://www.tasteline.com/recept/violas-falulada/",
+    "http://www.tasteline.com/recept/rod-mojo-med-lammentrecote/",
+    "http://www.tasteline.com/recept/anettes-pastasoppa/",
+    "http://www.tasteline.com/recept/ann-britts-laxfile/",
+    "http://www.tasteline.com/recept/bon-och-tonfisksallad-2/",
+    "http://www.tasteline.com/recept/pannbiff-med-lok/",
+    "http://www.tasteline.com/recept/asiatisk-fisksoppa-2/",
+    "http://www.tasteline.com/recept/potatisgratang-3/",
+    "http://www.tasteline.com/recept/biffgryta-fran-medelhavstrakten/",
+    "http://www.tasteline.com/recept/rarakor-3-2/",
+    "http://www.tasteline.com/recept/saffranspasta-med-rodbetor/",
+    "http://www.tasteline.com/recept/sjomansbiff-4/",
+    "http://www.tasteline.com/recept/ostris-med-varmrokt-lax/",
+    "http://www.tasteline.com/recept/pasta-alle-vongole/",
+    "http://www.tasteline.com/recept/flaskfile-med-champinjontacke-och-lattkokt-isbergssallad/",
+    "http://www.tasteline.com/recept/uppiffade-nudlar/",
+    "http://www.tasteline.com/recept/isterband-och-linser-med-rostad-lok/",
+    "http://www.tasteline.com/recept/fisk-med-kaviarpotatis/",
+    "http://www.tasteline.com/recept/morotter-med-apelsin-och-kyckling/",
+    "http://www.tasteline.com/recept/stekt-njure-i-senapssas-med-artor/",
+    "http://www.tasteline.com/recept/kyckling-med-bakad-smapotatis/",
+    "http://www.tasteline.com/recept/stek-i-rodvin/",
+    "http://www.tasteline.com/recept/spenatsoppa-3-2/",
+    "http://www.tasteline.com/recept/skocksallad-med-rakor/",
+    "http://www.tasteline.com/recept/recond-sill/",
+    "http://www.tasteline.com/recept/skinkpytt/",
+    "http://www.tasteline.com/recept/spjallets-sista-strid/",
+    "http://www.tasteline.com/recept/dadelpaj-med-apelsinfrasch/",
+    "http://www.tasteline.com/recept/ansjovisburken-gud-glomde-ansjovis-vinaigrette/",
+    "http://www.tasteline.com/recept/trepepparlax-med-potatismos/",
+    "http://www.tasteline.com/recept/biffar-med-kantarellgratang-och-broccolipure/",
+    "http://www.tasteline.com/recept/bonsoppa/",
+    "http://www.tasteline.com/recept/spatta-med-raksas/",
+    "http://www.tasteline.com/recept/potatismos-med-stekflask-och-broccolirora/",
+    "http://www.tasteline.com/recept/calamari-med-limedip/",
+    "http://www.tasteline.com/recept/rostbiff-med-potatissallad/",
+    "http://www.tasteline.com/recept/vintersallad-med-rostbiff-apple-och-pepparrot/",
+    "http://www.tasteline.com/recept/roda-bonor-med-flask/",
+    "http://www.tasteline.com/recept/eftermarinerad-fisk/",
+    "http://www.tasteline.com/recept/spett-med-jordnotssas/",
+    "http://www.tasteline.com/recept/swiss-i-glas/",
+    "http://www.tasteline.com/recept/kikartsgryta-med-curry-3/",
+    "http://www.tasteline.com/recept/kyckling-med-vitlokssas/",
+    "http://www.tasteline.com/recept/tomatsoppa-i-full-fart/",
+    "http://www.tasteline.com/recept/lamm-med-linser/",
+    "http://www.tasteline.com/recept/fattee/",
+    "http://www.tasteline.com/recept/snabb-oliv-och-ansjovispizza/",
+    "http://www.tasteline.com/recept/fylld-lovbiff-pa-gronsaksbadd-med-tryffelmos/",
+    "http://www.tasteline.com/recept/indisk-tonfiskgryta/",
+    "http://www.tasteline.com/recept/glass-med-3-saser/",
+    "http://www.tasteline.com/recept/saffranspannkaka-2/",
+    "http://www.tasteline.com/recept/broccoli-och-vitlokssoppa/",
+    "http://www.tasteline.com/recept/lax-i-apelsin-och-rosmarinsas/",
+    "http://www.tasteline.com/recept/risotto-med-sparris-och-pecorino/",
+    "http://www.tasteline.com/recept/tomatfyllda-skinkrullader-med-rotfruktsgratang/",
+    "http://www.tasteline.com/recept/asas-brunostmacka/",
+    "http://www.tasteline.com/recept/kottgryta-med-svenska-smaker/",
+    "http://www.tasteline.com/recept/enkel-tomatsallad/",
+    "http://www.tasteline.com/recept/revbensspjall-med-smak-av-apelsin-och-ingefara/",
+    "http://www.tasteline.com/recept/rodkalsfras/",
+    "http://www.tasteline.com/recept/laxtartar-med-raka-och-rom/",
+    "http://www.tasteline.com/recept/gronsaker-med-gronkalspesto/",
+    "http://www.tasteline.com/recept/enbars-och-konjakssill/",
+    "http://www.tasteline.com/recept/kycklingspett-med-vitkalsyoghurt/",
+    "http://www.tasteline.com/recept/creme-caramel-med-stjarnanis-och-mangopure/",
+    "http://www.tasteline.com/recept/lackat-ankbrost-med-wokade-gronsaker/",
+    "http://www.tasteline.com/recept/ra-tonfisk-med-thaidressing/",
+    "http://www.tasteline.com/recept/sorbet-med-mandelflarn-och-frukt/",
+    "http://www.tasteline.com/recept/renfile-med-rotsakstrassel/",
+    "http://www.tasteline.com/recept/potatiscarpaccio-med-lojrom-och-rakor/",
+    "http://www.tasteline.com/recept/skaldjursmeny/",
+    "http://www.tasteline.com/recept/kobe-mandlar/",
+    "http://www.tasteline.com/recept/fetaost-och-oliver/",
+    "http://www.tasteline.com/recept/smala-kardemummascones/",
+    "http://www.tasteline.com/recept/appelkaka-med-kardemummakram/",
+    "http://www.tasteline.com/recept/appel-och-chevrebruschetta/",
+    "http://www.tasteline.com/recept/kristinas-klyftpotatis/",
+    "http://www.tasteline.com/recept/sondagsstek-med-blomkalspure/",
+    "http://www.tasteline.com/recept/bon-och-tonfisksallad-2-2/",
+    "http://www.tasteline.com/recept/hannas-hallonhit/",
+    "http://www.tasteline.com/recept/lingonstrutar/",
+    "http://www.tasteline.com/recept/lingonparon-2-2/",
+    "http://www.tasteline.com/recept/pepparkaks-muffins-pa-mix/",
+    "http://www.tasteline.com/recept/klassisk-jansson/",
+    "http://www.tasteline.com/recept/minipizzor-med-skinka/",
+    "http://www.tasteline.com/recept/apelsinskal-i-choklad/",
+    "http://www.tasteline.com/recept/hasselnotsfudge/",
+    "http://www.tasteline.com/recept/chokladplattor/",
+    "http://www.tasteline.com/recept/juldadlar/",
+    "http://www.tasteline.com/recept/pepparmintskyssar/",
+    "http://www.tasteline.com/recept/kaffetryfflar/",
+    "http://www.tasteline.com/recept/mandelmandariner/",
+    "http://www.tasteline.com/recept/nissarnas-notkakor/",
+    "http://www.tasteline.com/recept/ingefarskakor/",
+    "http://www.tasteline.com/recept/mimmis-jitterbuggar/",
+    "http://www.tasteline.com/recept/uppakrakakor/",
+    "http://www.tasteline.com/recept/chokladdrommar-2/",
+    "http://www.tasteline.com/recept/sota-spjall/",
+    "http://www.tasteline.com/recept/apelsinspjall/",
+    "http://www.tasteline.com/recept/avokadorora-4-2/",
+    "http://www.tasteline.com/recept/tomat-och-paprikarora/",
+    "http://www.tasteline.com/recept/heta-spjall/",
+    "http://www.tasteline.com/recept/spjall-med-ingefarsglaze/",
+    "http://www.tasteline.com/recept/asas-julkottbullar/",
+    "http://www.tasteline.com/recept/russinbullar-2/",
+    "http://www.tasteline.com/recept/lammbullar-med-mandelsas/",
+    "http://www.tasteline.com/recept/rostbiff-2/",
+    "http://www.tasteline.com/recept/gammaldags-kryddskinka-2/",
+    "http://www.tasteline.com/recept/kalkonstek/",
+    "http://www.tasteline.com/recept/julskinka-2-2/",
+    "http://www.tasteline.com/recept/mor-ullas-pressylta/",
+    "http://www.tasteline.com/recept/snabb-favoritkal/",
+    "http://www.tasteline.com/recept/rodkal-3-2/",
+    "http://www.tasteline.com/recept/svampknyten/",
+    "http://www.tasteline.com/recept/tomat-och-parmesanflarn/",
+    "http://www.tasteline.com/recept/fankals-och-apelsinsallad-2/",
+    "http://www.tasteline.com/recept/vita-bonor-med-rodlok/",
+    "http://www.tasteline.com/recept/het-laxtartar-med-chili-och-koriander/",
+    "http://www.tasteline.com/recept/gravlax-med-enbarssmak/",
+    "http://www.tasteline.com/recept/ugnsbakad-lax-2/",
+    "http://www.tasteline.com/recept/sillsallad-3/",
+    "http://www.tasteline.com/recept/fyllda-agghalvor-2/",
+    "http://www.tasteline.com/recept/rodbetssallad-med-sardeller/",
+    "http://www.tasteline.com/recept/attiksstromming-2/",
+    "http://www.tasteline.com/recept/eriks-kraft-och-romrora/",
+    "http://www.tasteline.com/recept/pepparkaka-och-adelost/",
+    "http://www.tasteline.com/recept/rodkalssallad-2/",
+    "http://www.tasteline.com/recept/knacke-med-julskinka/",
+    "http://www.tasteline.com/recept/macka-med-julskinka/",
+    "http://www.tasteline.com/recept/saffranspasta/",
+    "http://www.tasteline.com/recept/bakad-potatis-a-la-jansson/",
+    "http://www.tasteline.com/recept/rodbetor-med-adelost/",
+    "http://www.tasteline.com/recept/sandys-svanbergasill/",
+    "http://www.tasteline.com/recept/loksill-2/",
+    "http://www.tasteline.com/recept/matjessill/",
+    "http://www.tasteline.com/recept/inlagd-sill-grundrecept/",
+    "http://www.tasteline.com/recept/mackor-med-bockling/",
+    "http://www.tasteline.com/recept/mackor-med-renstek/",
+    "http://www.tasteline.com/recept/pepparkakor-med-gronmogelost/",
+    "http://www.tasteline.com/recept/oststanger/",
+    "http://www.tasteline.com/recept/gor-det-sjalv-glogg/",
+    "http://www.tasteline.com/recept/kotlett-i-lingon-och-graddsas/",
+    "http://www.tasteline.com/recept/frukt-i-citrontoddy/",
+    "http://www.tasteline.com/recept/morby-tryfflar/",
+    "http://www.tasteline.com/recept/marsipanlimpor/",
+    "http://www.tasteline.com/recept/chokladskal/",
+    "http://www.tasteline.com/recept/smakrika-kottbullar-med-gronkalsrisotto/",
+    "http://www.tasteline.com/recept/tomatbrod-2-2/",
+    "http://www.tasteline.com/recept/rostad-paprika/",
+    "http://www.tasteline.com/recept/fetakuber-i-olivolja-med-krossad-svartpeppar-och-citronskal/",
+    "http://www.tasteline.com/recept/oliver-i-olja-med-rosmarin-2/",
+    "http://www.tasteline.com/recept/kyckling-och-bacongryta-med-pommes-frites/",
+    "http://www.tasteline.com/recept/musligodis/",
+    "http://www.tasteline.com/recept/chokladdoppad-frukt-2/",
+    "http://www.tasteline.com/recept/mandelfyllda-dadlar/",
+    "http://www.tasteline.com/recept/marmeladgodis/",
+    "http://www.tasteline.com/recept/gammaldags-apelsingodis/",
+    "http://www.tasteline.com/recept/fikon-och-punschgodis/",
+    "http://www.tasteline.com/recept/varm-choklad-med-smak-av-kaffe-och-apelsin/",
+    "http://www.tasteline.com/recept/lax-och-musselgryta/",
+    "http://www.tasteline.com/recept/soppa-med-trattkantareller/",
+    "http://www.tasteline.com/recept/sardinmacka-2/",
+    "http://www.tasteline.com/recept/thailandsk-torskbiff-med-spenatnudlar/",
+    "http://www.tasteline.com/recept/notkaka-med-mersmak/",
+    "http://www.tasteline.com/recept/paj-med-chicken-a-la-king/",
+    "http://www.tasteline.com/recept/rak-och-baconpaj/",
+    "http://www.tasteline.com/recept/spetsad-vitvinsglogg/",
+    "http://www.tasteline.com/recept/bacon-och-olivpizza/",
+    "http://www.tasteline.com/recept/fisk-under-spenattacke/",
+    "http://www.tasteline.com/recept/chili-sin-carne-3-2/",
+    "http://www.tasteline.com/recept/guldfargad-pumpasoppa/",
+    "http://www.tasteline.com/recept/rostade-pumpakarnor-2-2/",
+    "http://www.tasteline.com/recept/rostad-pumpa/",
+    "http://www.tasteline.com/recept/pumpa-aioli/",
+    "http://www.tasteline.com/recept/het-pumpasoppa/",
+    "http://www.tasteline.com/recept/halloweenlasange-pa-pumpa/",
+    "http://www.tasteline.com/recept/flaskfile-2/",
+    "http://www.tasteline.com/recept/fias-vegopaj/",
+    "http://www.tasteline.com/recept/rostbiff-och-potatissallad/",
+    "http://www.tasteline.com/recept/lammfarserad-squash/",
+    "http://www.tasteline.com/recept/norrlandsrullar/",
+    "http://www.tasteline.com/recept/kycklingsallad-med-orientkrydning/",
+    "http://www.tasteline.com/recept/indisk-dhal/",
+    "http://www.tasteline.com/recept/aubergine-och-tomatgratang/",
+    "http://www.tasteline.com/recept/kycklingfileer-med-ortsas-och-rotfruktsrosti/",
+    "http://www.tasteline.com/recept/rokt-kalkon-med-sellerisallad/",
+    "http://www.tasteline.com/recept/pestooverbakad-torskfile/",
+    "http://www.tasteline.com/recept/kassler-med-champinjoner-och-tomatrora/",
+    "http://www.tasteline.com/recept/gron-blomkal-med-agg/",
+    "http://www.tasteline.com/recept/het-biff-stroganoff/",
+    "http://www.tasteline.com/recept/algfarsspett-med-potatisplattar/",
+    "http://www.tasteline.com/recept/melonsallad-med-skinka/",
+    "http://www.tasteline.com/recept/fylld-bakpotatis/",
+    "http://www.tasteline.com/recept/tonfisksallad-3-2/",
+    "http://www.tasteline.com/recept/laxkotlett-i-mikro/",
+    "http://www.tasteline.com/recept/flaskfile-med-potatismos/",
+    "http://www.tasteline.com/recept/gratinerad-kycklinglever-pa-selleribadd/",
+    "http://www.tasteline.com/recept/raksallad-med-raris/",
+    "http://www.tasteline.com/recept/norsk-koke-torsk-med-ansjovissas/",
+    "http://www.tasteline.com/recept/kall-blomkalssoppa-med-rakor/",
+    "http://www.tasteline.com/recept/sologa/",
+    "http://www.tasteline.com/recept/pannbiffar-med-kalrot/",
+    "http://www.tasteline.com/recept/lammkotletter-med-fankalsgryta/",
+    "http://www.tasteline.com/recept/krabbsticks-med-potatissallad/",
+    "http://www.tasteline.com/recept/bocklingsallad/",
+    "http://www.tasteline.com/recept/fisksoppa-med-vitloksbrod/",
+    "http://www.tasteline.com/recept/orientalisk-kycklingsallad/",
+    "http://www.tasteline.com/recept/gravlaxsallad/",
+    "http://www.tasteline.com/recept/rabiff/",
+    "http://www.tasteline.com/recept/bongryta-fran-orienten/",
+    "http://www.tasteline.com/recept/lax-och-spenatpiroger/",
+    "http://www.tasteline.com/recept/sjomansbiff-5/",
+    "http://www.tasteline.com/recept/melon-och-skinka-pa-sallad/",
+    "http://www.tasteline.com/recept/grillad-lammnjure/",
+    "http://www.tasteline.com/recept/grekisk-fetaostsallad/",
+    "http://www.tasteline.com/recept/quorn-i-pitabrod/",
+    "http://www.tasteline.com/recept/ratatouille-2-2/",
+    "http://www.tasteline.com/recept/sallad-med-renskav/",
+    "http://www.tasteline.com/recept/blomkalssallad/",
+    "http://www.tasteline.com/recept/rotmos/",
+    "http://www.tasteline.com/recept/ansjovisstromming-3-2/",
+    "http://www.tasteline.com/recept/thailandskt-kycklingspett/",
+    "http://www.tasteline.com/recept/sparris-med-lojromssabayone/",
+    "http://www.tasteline.com/recept/ljummen-laxsallad/",
+    "http://www.tasteline.com/recept/selleribottnar-med-chaminjoner/",
+    "http://www.tasteline.com/recept/haricots-verts-sallad-med-champinjoner/",
+    "http://www.tasteline.com/recept/kraftstjartar-i-minitunnbrod/",
+    "http://www.tasteline.com/recept/gronsaksfat-med-primorer/",
+    "http://www.tasteline.com/recept/rotfruktspytt/",
+    "http://www.tasteline.com/recept/stekt-ostronskivling/",
+    "http://www.tasteline.com/recept/tunnbrodsrullar-med-groddar/",
+    "http://www.tasteline.com/recept/jattemusslor-med-lattkokta-gronsaker/",
+    "http://www.tasteline.com/recept/snabbminipizza/",
+    "http://www.tasteline.com/recept/sellerisoppa/",
+    "http://www.tasteline.com/recept/halstrad-slatvarsfile-med-paprikapure/",
+    "http://www.tasteline.com/recept/gurksoppa-2/",
+    "http://www.tasteline.com/recept/rabarbersoppa-med-bar/",
+    "http://www.tasteline.com/recept/chai-te-2/",
+    "http://www.tasteline.com/recept/chokladtryffel-2/",
+    "http://www.tasteline.com/recept/farsk-ananas-med-lime-och-florsocker/",
+    "http://www.tasteline.com/recept/glassfyllda-citroner-och-apelsiner/",
+    "http://www.tasteline.com/recept/hallonsas-2/",
+    "http://www.tasteline.com/recept/blomkalsgratang-med-basilikasmak/",
+    "http://www.tasteline.com/recept/chokladkaka-med-notter-fikon-och-apelsinskal/",
+    "http://www.tasteline.com/recept/hot-yoghurtsas/",
+    "http://www.tasteline.com/recept/cool-yoghurtsas/",
+    "http://www.tasteline.com/recept/marinerad-pastasallad-med-sparris-och-broccoli/",
+    "http://www.tasteline.com/recept/couscous-3/",
+    "http://www.tasteline.com/recept/quorn-tandoori-spett/",
+    "http://www.tasteline.com/recept/lax-teriyaki-spett/",
+    "http://www.tasteline.com/recept/flaskfile-pa-langden-spett/",
+    "http://www.tasteline.com/recept/partynotter-2/",
+    "http://www.tasteline.com/recept/kir-royale/",
+    "http://www.tasteline.com/recept/pashka-rysk-paskpudding/",
+    "http://www.tasteline.com/recept/italiensallad/",
+    "http://www.tasteline.com/recept/fankals-och-apelsinsallad-3/",
+    "http://www.tasteline.com/recept/fisksoppa-med-smak-av-citrongras-och-ingefara/",
+    "http://www.tasteline.com/recept/ankbrost-med-kanelsas-och-rostade-gronsaker/",
+    "http://www.tasteline.com/recept/portergryta-med-frasch-coleslaw/",
+    "http://www.tasteline.com/recept/snittar-med-harlig-rakrora/",
+    "http://www.tasteline.com/recept/kyckling-och-pestorora-i-ciabatta/",
+    "http://www.tasteline.com/recept/bookmaker-pa-halleflundra-3/",
+    "http://www.tasteline.com/recept/nan-brod-fran-indien-2/",
+    "http://www.tasteline.com/recept/skansk-hamburgare/",
+    "http://www.tasteline.com/recept/vegetariska-varrullar/",
+    "http://www.tasteline.com/recept/laxspett-med-kronartskocka-och-kaprissas/",
+    "http://www.tasteline.com/recept/kackelklubbor/",
+    "http://www.tasteline.com/recept/focaccia-med-sma-tomater-och-svarta-oliver/",
+    "http://www.tasteline.com/recept/ugnsbakade-rotsaker/",
+    "http://www.tasteline.com/recept/lammstek-med-orttacke/",
+    "http://www.tasteline.com/recept/paskris/",
+    "http://www.tasteline.com/recept/pistagefylld-lammstek/",
+    "http://www.tasteline.com/recept/agg-med-sparris-och-brodstavs-dopp/",
+    "http://www.tasteline.com/recept/paron-med-gronmogelost/",
+    "http://www.tasteline.com/recept/lingonparfait/",
+    "http://www.tasteline.com/recept/vitkalssoppa-med-baconkottbullar/",
+    "http://www.tasteline.com/recept/bonsallad-med-champinjoner/",
+    "http://www.tasteline.com/recept/grillad-oxfile-med-paprika/",
+    "http://www.tasteline.com/recept/rokt-kalkonbrost/",
+    "http://www.tasteline.com/recept/indiska-lammfarsbullar/",
+    "http://www.tasteline.com/recept/klassisk-kraftstromming/",
+    "http://www.tasteline.com/recept/vaniljparon-med-bjornbarssas/",
+    "http://www.tasteline.com/recept/grand-dessert-med-karolinskas-chokladkaka/",
+    "http://www.tasteline.com/recept/skaldjursgurka/",
+    "http://www.tasteline.com/recept/marinerade-kronartskockhjartan/",
+    "http://www.tasteline.com/recept/fiskbullsgryta/",
+    "http://www.tasteline.com/recept/apelsin-vin-torsk-med-vitlok-a-la-melcher/",
+    "http://www.tasteline.com/recept/fladerblomsparfait-2/",
+    "http://www.tasteline.com/recept/bakad-lok/",
+    "http://www.tasteline.com/recept/vilt-i-romargryta/",
+    "http://www.tasteline.com/recept/wallenbergare-3-2/",
+    "http://www.tasteline.com/recept/foliefisk-med-spenat/",
+    "http://www.tasteline.com/recept/sommarbar-med-mascarponekram/",
+    "http://www.tasteline.com/recept/kraftsoppa-6-2/",
+    "http://www.tasteline.com/recept/ugnsstekt-gos/",
+    "http://www.tasteline.com/recept/fiskfile-i-tomatsky/",
+    "http://www.tasteline.com/recept/pasta-med-valnotssas/",
+    "http://www.tasteline.com/recept/porterstek-3/",
+    "http://www.tasteline.com/recept/rossners-broccolisallad/",
+    "http://www.tasteline.com/recept/kottfars-med-gronsaksfras/",
+    "http://www.tasteline.com/recept/plommonkaka-3-2/",
+    "http://www.tasteline.com/recept/indisk-linssoppa-2-2/",
+    "http://www.tasteline.com/recept/torta-pasqualina-argentinsk-paskpaj/",
+    "http://www.tasteline.com/recept/romstinn-sill/",
+    "http://www.tasteline.com/recept/mimosaansjovis/",
+    "http://www.tasteline.com/recept/vegogryta-med-smak-av-nejlika-och-kanel/",
+    "http://www.tasteline.com/recept/colafloat/",
+    "http://www.tasteline.com/recept/kryddiga-kotletter-med-kantarell-och-aprikos/",
+    "http://www.tasteline.com/recept/trattkantarellsoppa-3-2/",
+    "http://www.tasteline.com/recept/hostsoppa-pa-trattkantareller/",
+    "http://www.tasteline.com/recept/het-och-sot-kiwisas/",
+    "http://www.tasteline.com/recept/apelsinsallad-3-2/",
+    "http://www.tasteline.com/recept/thailandsk-fiskburgare/",
+    "http://www.tasteline.com/recept/fiskburgare-med-ishavsrom/",
+    "http://www.tasteline.com/recept/varm-rodbetssallad/",
+    "http://www.tasteline.com/recept/rosepepparfile/",
+    "http://www.tasteline.com/recept/stephan-rossner-citronkyckling/",
+    "http://www.tasteline.com/recept/lammfarsbullar/",
+    "http://www.tasteline.com/recept/fankalskram-med-getost/",
+    "http://www.tasteline.com/recept/tomatsalsa-3-2/",
+    "http://www.tasteline.com/recept/renskavsgryta-5/",
+    "http://www.tasteline.com/recept/tomat-och-appelsalsa-med-mexikansk-smak/",
+    "http://www.tasteline.com/recept/varm-sydindisk-loksallad/",
+    "http://www.tasteline.com/recept/grillad-sommarsalsa/",
+    "http://www.tasteline.com/recept/rastekta-rotsaker-med-doft-av-rod-curry/",
+    "http://www.tasteline.com/recept/potatismos-med-ost-och-kummin/",
+    "http://www.tasteline.com/recept/stekta-bonor-med-senapsfron/",
+    "http://www.tasteline.com/recept/grekade-champinjoner/",
+    "http://www.tasteline.com/recept/citronris-med-vallmofron/",
+    "http://www.tasteline.com/recept/emirens-skattkista/",
+    "http://www.tasteline.com/recept/augustipate/",
+    "http://www.tasteline.com/recept/prickiga-potatisbullar-med-ost-och-mandel/",
+    "http://www.tasteline.com/recept/artdip-med-apple/",
+    "http://www.tasteline.com/recept/pepparrotssas-2-2/",
+    "http://www.tasteline.com/recept/rodbetor-med-apelsin-och-ingefara/",
+    "http://www.tasteline.com/recept/orientalisk-lax/",
+    "http://www.tasteline.com/recept/flaskkottbullar-med-plommon/",
+    "http://www.tasteline.com/recept/vitloksspackad-lammstek-pa-gronsaksbadd/",
+    "http://www.tasteline.com/recept/krusbarskram-3-2/",
+    "http://www.tasteline.com/recept/fetafylld-rostbiff-med-melon/",
+    "http://www.tasteline.com/recept/fruktfyllda-petits-chouxer/",
+    "http://www.tasteline.com/recept/laxtartar-3/",
+    "http://www.tasteline.com/recept/ugnsstekt-gos-2/",
+    "http://www.tasteline.com/recept/musselstuvning/",
+    "http://www.tasteline.com/recept/tomatsallad-med-konjak/",
+    "http://www.tasteline.com/recept/lattglass-pa-barspegel/",
+    "http://www.tasteline.com/recept/turboglass-2/",
+    "http://www.tasteline.com/recept/kokt-svintunga/",
+    "http://www.tasteline.com/recept/mager-korv/",
+    "http://www.tasteline.com/recept/rabarberkram-2/",
+    "http://www.tasteline.com/recept/ugnsbakad-lax-med-fusksuffle/",
+    "http://www.tasteline.com/recept/sydamerikansk-fisksallad/",
+    "http://www.tasteline.com/recept/pastasallad-7/",
+    "http://www.tasteline.com/recept/het-flaskfile/",
+    "http://www.tasteline.com/recept/koriandergravad-halleflundra/",
+    "http://www.tasteline.com/recept/karolinskas-smala-chokladdkaka/",
+    "http://www.tasteline.com/recept/smal-limesorbet/",
+    "http://www.tasteline.com/recept/roda-rakor-med-sval-sas/",
+    "http://www.tasteline.com/recept/varm-musselsmorgas/",
+    "http://www.tasteline.com/recept/bocklinglada-2/",
+    "http://www.tasteline.com/recept/grekisk-sallad-3-2/",
+    "http://www.tasteline.com/recept/tigerbiff-2/",
+    "http://www.tasteline.com/recept/appeldessert/",
+    "http://www.tasteline.com/recept/purjolokslax-2/",
+    "http://www.tasteline.com/recept/matjesbrod/",
+    "http://www.tasteline.com/recept/krabbsallad-i-grapefruktskal/",
+    "http://www.tasteline.com/recept/smal-fisksoppa-med-lattaioli/",
+    "http://www.tasteline.com/recept/lattfils-eller-yoghurtdressing/",
+    "http://www.tasteline.com/recept/kumminpotatis/",
+    "http://www.tasteline.com/recept/klyftpotatis-4/",
+    "http://www.tasteline.com/recept/rodbetstimbal/",
+    "http://www.tasteline.com/recept/kokta-kronartskockor/",
+    "http://www.tasteline.com/recept/franks-gratinerad-loksoppa/",
+    "http://www.tasteline.com/recept/svartrotter/",
+    "http://www.tasteline.com/recept/skansk-appelkaka-2/",
+    "http://www.tasteline.com/recept/rodbetstimbal-med-graslokssas/",
+    "http://www.tasteline.com/recept/krusbarsmousse/",
+    "http://www.tasteline.com/recept/purjo-och-tomatgratang-med-kallt-rokt-kott/",
+    "http://www.tasteline.com/recept/kalsoppa-2-2/",
+    "http://www.tasteline.com/recept/enkel-tomatsoppa/",
+    "http://www.tasteline.com/recept/stephan-rossners-morotssoppa/",
+    "http://www.tasteline.com/recept/klassisk-musselsoppa/",
+    "http://www.tasteline.com/recept/fuskwokad-gronsaksblandning/",
+    "http://www.tasteline.com/recept/smal-vinagrettdressing/",
+    "http://www.tasteline.com/recept/champinjonsallad/",
+    "http://www.tasteline.com/recept/flaskfile-med-appel-cidersas/",
+    "http://www.tasteline.com/recept/plommonsuffle/",
+    "http://www.tasteline.com/recept/fankals-och-musselsallad/",
+    "http://www.tasteline.com/recept/amerikansk-spenat-och-champinjonsallad/",
+    "http://www.tasteline.com/recept/rakfrossa/",
+    "http://www.tasteline.com/recept/citronkyckling-med-oliver-3/",
+    "http://www.tasteline.com/recept/bar-med-sabayone/",
+    "http://www.tasteline.com/recept/nasselsoppa-3/",
+    "http://www.tasteline.com/recept/ugnskokt-piggvar/",
+    "http://www.tasteline.com/recept/ansjovisstromming-2/",
+    "http://www.tasteline.com/recept/yoghurtglass-pa-momangen/",
+    "http://www.tasteline.com/recept/ortlammstek-med-balsamicosky/",
+    "http://www.tasteline.com/recept/oxbringa-med-rotfrukter/",
+    "http://www.tasteline.com/recept/enchiladas-med-kottfars-och-bonor/",
+    "http://www.tasteline.com/recept/gazpacho-6/",
+    "http://www.tasteline.com/recept/arelada/",
+    "http://www.tasteline.com/recept/stephans-zabaione/",
+    "http://www.tasteline.com/recept/applen-i-ugn/",
+    "http://www.tasteline.com/recept/ingefarsmarinerade-jordgubbar/",
+    "http://www.tasteline.com/recept/kikartsgryta-3/",
+    "http://www.tasteline.com/recept/dillkott-pa-lamm-2/",
+    "http://www.tasteline.com/recept/gronsaker-med-feta-och-olivdip/",
+    "http://www.tasteline.com/recept/morotssoppa-3/",
+    "http://www.tasteline.com/recept/pasta-med-pilgrimsmusslor/",
+    "http://www.tasteline.com/recept/ograssallad-med-flask-och-getost/",
+    "http://www.tasteline.com/recept/inkokt-lax-med-notdressing/",
+    "http://www.tasteline.com/recept/bakade-rodbetor-med-dubbelost/",
+    "http://www.tasteline.com/recept/stekt-kalv-med-spenat/",
+    "http://www.tasteline.com/recept/franska-chokladbomber/",
+    "http://www.tasteline.com/recept/kycklingwok-7-2/",
+    "http://www.tasteline.com/recept/grekpaj/",
+    "http://www.tasteline.com/recept/ljummen-bockling/",
+    "http://www.tasteline.com/recept/wok-med-kyckling-och-ananas/",
+    "http://www.tasteline.com/recept/jons-bocklingsallad/",
+    "http://www.tasteline.com/recept/oppen-rakravioli/",
+    "http://www.tasteline.com/recept/ansjovisfisk/",
+    "http://www.tasteline.com/recept/stekt-flask-med-lokragu/",
+    "http://www.tasteline.com/recept/tonfisksas-till-pasta-2/",
+    "http://www.tasteline.com/recept/biff-provencal/",
+    "http://www.tasteline.com/recept/kottfarssoppa-6-2/",
+    "http://www.tasteline.com/recept/oxbringa-med-mos/",
+    "http://www.tasteline.com/recept/pastasallad-8/",
+    "http://www.tasteline.com/recept/spenat-och-valnotssallad/",
+    "http://www.tasteline.com/recept/pasta-med-musslor-2/",
+    "http://www.tasteline.com/recept/yoghurtsoppa/",
+    "http://www.tasteline.com/recept/stekt-blackfisk-med-potatis/",
+    "http://www.tasteline.com/recept/fiskepasta/",
+    "http://www.tasteline.com/recept/havsrisotto/",
+    "http://www.tasteline.com/recept/kycklingleverspett-med-parmesansas/",
+    "http://www.tasteline.com/recept/tacopaj-13-2/",
+    "http://www.tasteline.com/recept/lammkotletter-med-ratatouille/",
+    "http://www.tasteline.com/recept/farsiga-pinnar/",
+    "http://www.tasteline.com/recept/citronkarre/",
+    "http://www.tasteline.com/recept/frikadeller-2/",
+    "http://www.tasteline.com/recept/kyckling-marengo-2/",
+    "http://www.tasteline.com/recept/saltimbocca-pa-kyckling/",
+    "http://www.tasteline.com/recept/saffranfisk/",
+    "http://www.tasteline.com/recept/blodpudding-med-bacon-2/",
+    "http://www.tasteline.com/recept/parmatimbal-med-meloncarpaccio/",
+    "http://www.tasteline.com/recept/kryddiga-kotletter/",
+    "http://www.tasteline.com/recept/stekt-kalvlever-3/",
+    "http://www.tasteline.com/recept/pasta-med-spenat-2/",
+    "http://www.tasteline.com/recept/sotare-2-2/",
+    "http://www.tasteline.com/recept/pestomusslor/",
+    "http://www.tasteline.com/recept/orange-musselsoppa/",
+    "http://www.tasteline.com/recept/biff-med-gron-vitlokssky/",
+    "http://www.tasteline.com/recept/algerisk-soppa/",
+    "http://www.tasteline.com/recept/clubsandwich-2/",
+    "http://www.tasteline.com/recept/pasta-med-getost-och-paprika/",
+    "http://www.tasteline.com/recept/fruktsallad-med-cider/",
+    "http://www.tasteline.com/recept/kyckling-med-kross/",
+    "http://www.tasteline.com/recept/helstekt-entrecote/",
+    "http://www.tasteline.com/recept/tonfiskmacka/",
+    "http://www.tasteline.com/recept/singelsoppa/",
+    "http://www.tasteline.com/recept/briepotatis/",
+    "http://www.tasteline.com/recept/klassisk-fiskgratang/",
+    "http://www.tasteline.com/recept/biff-lindstrom/",
+    "http://www.tasteline.com/recept/biff-i-snore/",
+    "http://www.tasteline.com/recept/inglagd-stromming/",
+    "http://www.tasteline.com/recept/pasta-med-broccoli-chevre-och-valnotter/",
+    "http://www.tasteline.com/recept/kassler-med-apple/",
+    "http://www.tasteline.com/recept/thailandsk-laxsoppa-2/",
+    "http://www.tasteline.com/recept/fisk-med-osttacke-2/",
+    "http://www.tasteline.com/recept/kycklingsallad-med-sparris/",
+    "http://www.tasteline.com/recept/karre-med-rabarbersalsa/",
+    "http://www.tasteline.com/recept/grillat-lamm-pa-ruccolabadd/",
+    "http://www.tasteline.com/recept/snabbnudlar-med-korv/",
+    "http://www.tasteline.com/recept/korv-stroganov/",
+    "http://www.tasteline.com/recept/japanska-kycklingspett-yakitori/",
+    "http://www.tasteline.com/recept/sparrissoppa-5/",
+    "http://www.tasteline.com/recept/fejkfisk/",
+    "http://www.tasteline.com/recept/biff-special-2/",
+    "http://www.tasteline.com/recept/flask-och-rabarberpaket/",
+    "http://www.tasteline.com/recept/rejserpizza/",
+    "http://www.tasteline.com/recept/apple-under-kokostacke/",
+    "http://www.tasteline.com/recept/limekottbullar-med-blamogelslungad-potatis/",
+    "http://www.tasteline.com/recept/kryddig-torsk/",
+    "http://www.tasteline.com/recept/kycklingknyten/",
+    "http://www.tasteline.com/recept/rokt-fisk-med-notter/",
+    "http://www.tasteline.com/recept/mintparon-och-milkshake/",
+    "http://www.tasteline.com/recept/bakad-potatis-med-tacorora/",
+    "http://www.tasteline.com/recept/citroncheesecake-2-2/",
+    "http://www.tasteline.com/recept/falukorv-med-trimmad-senap/",
+    "http://www.tasteline.com/recept/kall-pestopastasallad/",
+    "http://www.tasteline.com/recept/gravlax-med-melon/",
+    "http://www.tasteline.com/recept/kottfarssas-2-2/",
+    "http://www.tasteline.com/recept/sojakuddar-med-broccoli/",
+    "http://www.tasteline.com/recept/vietnamesisk-quornfars/",
+    "http://www.tasteline.com/recept/lax-med-dilltomater/",
+    "http://www.tasteline.com/recept/currykraftor/",
+    "http://www.tasteline.com/recept/grillad-kalkon/",
+    "http://www.tasteline.com/recept/kalkonpytt-med-majs/",
+    "http://www.tasteline.com/recept/sardiner-i-ugn/",
+    "http://www.tasteline.com/recept/korvgryta-4/",
+    "http://www.tasteline.com/recept/kalkonspett/",
+    "http://www.tasteline.com/recept/vegolasagne/",
+    "http://www.tasteline.com/recept/spagetti-carbonara-2/",
+    "http://www.tasteline.com/recept/paron-pa-mandelplatt/",
+    "http://www.tasteline.com/recept/persikohalvor/",
+    "http://www.tasteline.com/recept/ravioli-med-spenat/",
+    "http://www.tasteline.com/recept/fish-och-chips/",
+    "http://www.tasteline.com/recept/kraftsallad-med-melon/",
+    "http://www.tasteline.com/recept/grillade-quornfileer/",
+    "http://www.tasteline.com/recept/boeuf-bourgignon/",
+    "http://www.tasteline.com/recept/blandade-bonor/",
+    "http://www.tasteline.com/recept/lax-med-ingefara/",
+    "http://www.tasteline.com/recept/vego-ris-och-curry/",
+    "http://www.tasteline.com/recept/ljummen-kycklingsallad-2/",
+    "http://www.tasteline.com/recept/grillad-kyckling-med-majs/",
+    "http://www.tasteline.com/recept/gos-med-trevlig-sas/",
+    "http://www.tasteline.com/recept/en-massa-tomatsas/",
+    "http://www.tasteline.com/recept/currykyckling-3-2/",
+    "http://www.tasteline.com/recept/kantarellpasta/",
+    "http://www.tasteline.com/recept/jordnotsris/",
+    "http://www.tasteline.com/recept/wok-med-flask-och-not/",
+    "http://www.tasteline.com/recept/gronpepparbiffar/",
+    "http://www.tasteline.com/recept/wok-och-aioli/",
+    "http://www.tasteline.com/recept/hastpasta/",
+    "http://www.tasteline.com/recept/dubbelburgare/",
+    "http://www.tasteline.com/recept/lojligt-enkel-pasta/",
+    "http://www.tasteline.com/recept/torsk-med-bacon-och-artpure/",
+    "http://www.tasteline.com/recept/avokadosoppa-3/",
+    "http://www.tasteline.com/recept/tant-doris-korv/",
+    "http://www.tasteline.com/recept/mixad-laxsoppa/",
+    "http://www.tasteline.com/recept/couscous-med-kyckling/",
+    "http://www.tasteline.com/recept/laxplattar/",
+    "http://www.tasteline.com/recept/rostbiffsgryta/",
+    "http://www.tasteline.com/recept/lokpasta/",
+    "http://www.tasteline.com/recept/ugnsstekt-lamm/",
+    "http://www.tasteline.com/recept/minestrone-3/",
+    "http://www.tasteline.com/recept/dillstuvad-potatis-och-rokt-lax/",
+    "http://www.tasteline.com/recept/varm-kottbulle-och-sparrismacka/",
+    "http://www.tasteline.com/recept/blabars-och-fildrink/",
+    "http://www.tasteline.com/recept/yoghurt-och-muslifrukost/",
+    "http://www.tasteline.com/recept/havregrynsgrot-3/",
+    "http://www.tasteline.com/recept/knacke-och-bananfrukost/",
+    "http://www.tasteline.com/recept/kebabspett-med-majs-och-tomatrora/",
+    "http://www.tasteline.com/recept/apelsin-och-banandrink/",
+    "http://www.tasteline.com/recept/festlig-kycklingfile-med-brodsallad/",
+    "http://www.tasteline.com/recept/yoghurt-och-hallontallrik/",
+    "http://www.tasteline.com/recept/kaviarmacka/",
+    "http://www.tasteline.com/recept/omelett-med-chevre-och-kantareller/",
+    "http://www.tasteline.com/recept/grillade-revben-med-ortpotatis/",
+    "http://www.tasteline.com/recept/citron-och-rosmarinkyckling/",
+    "http://www.tasteline.com/recept/stuvade-makaroner-och-bacon/",
+    "http://www.tasteline.com/recept/smarrig-morotspasta/",
+    "http://www.tasteline.com/recept/jordgubbs-och-kycklingsallad/",
+    "http://www.tasteline.com/recept/macka-med-kalvsylta/",
+    "http://www.tasteline.com/recept/choklad-och-valnotstarta/",
+    "http://www.tasteline.com/recept/pavlova-tarta/",
+    "http://www.tasteline.com/recept/lackraste-choklad-och-hallontartan/",
+    "http://www.tasteline.com/recept/lax-med-pepparrotssas-och-inlagd-gurka/",
+    "http://www.tasteline.com/recept/mimosasallad-med-kassler/",
+    "http://www.tasteline.com/recept/kycklingfile-under-tomat-och-basilikatacke/",
+    "http://www.tasteline.com/recept/gnocchi-med-rakor-kokta-i-verdicchio/",
+    "http://www.tasteline.com/recept/glass-pa-bar-och-savoiardikex/",
+    "http://www.tasteline.com/recept/vinbarskaka/",
+    "http://www.tasteline.com/recept/fryst-hallontarta-2/",
+    "http://www.tasteline.com/recept/frittata-pa-thaitonfisk-och-pasta/",
+    "http://www.tasteline.com/recept/kokos-och-frukttarta/",
+    "http://www.tasteline.com/recept/lackra-pestopizzor/",
+    "http://www.tasteline.com/recept/mindre-sill-och-potatistallrik/",
+    "http://www.tasteline.com/recept/tonfiskquesadillas-med-lacker-salsa/",
+    "http://www.tasteline.com/recept/gronsaker-och-avokadokeso/",
+    "http://www.tasteline.com/recept/snabba-rak-o-kokoswoken/",
+    "http://www.tasteline.com/recept/varm-salami-och-champinjonmacka/",
+    "http://www.tasteline.com/recept/lyxig-hallonkompott/",
+    "http://www.tasteline.com/recept/chokladgratinerad-apelsin/",
+    "http://www.tasteline.com/recept/hallonfiltallrik/",
+    "http://www.tasteline.com/recept/melon-med-mynta/",
+    "http://www.tasteline.com/recept/skanska-applen/",
+    "http://www.tasteline.com/recept/chockolatte/",
+    "http://www.tasteline.com/recept/honungsapple-med-ingefarsglass/",
+    "http://www.tasteline.com/recept/pasta-med-tonfisk-och-currysas/",
+    "http://www.tasteline.com/recept/marangsviss-med-lemon-curd/",
+    "http://www.tasteline.com/recept/pasta-med-skink-och-gronsakssas/",
+    "http://www.tasteline.com/recept/kinesisk-kotlettwok/",
+    "http://www.tasteline.com/recept/sill-och-potatis/",
+    "http://www.tasteline.com/recept/snabba-tonfiskgrytan/",
+    "http://www.tasteline.com/recept/korv-med-potatis-och-currysallad/",
+    "http://www.tasteline.com/recept/orientalisk-sallad-i-tunnbrod/",
+    "http://www.tasteline.com/recept/mango-chutneymarinerad-makrill/",
+    "http://www.tasteline.com/recept/biff-och-teriyakigryta/",
+    "http://www.tasteline.com/recept/adelostgratinerad-kassler-2/",
+    "http://www.tasteline.com/recept/kottfarsgratang-3/",
+    "http://www.tasteline.com/recept/polenta-med-sotsur-kotlett/",
+    "http://www.tasteline.com/recept/rakor-med-smak-av-chili-och-lime/",
+    "http://www.tasteline.com/recept/potatis-och-korvsoppa-med-smak-av-curry/",
+    "http://www.tasteline.com/recept/supersnabba-pizzan/",
+    "http://www.tasteline.com/recept/italiensk-feta-och-olivgratang/",
+    "http://www.tasteline.com/recept/kycklinggryta-med-smak-av-fankal-och-spiskummin/",
+    "http://www.tasteline.com/recept/tagine-pa-notkott/",
+    "http://www.tasteline.com/recept/renskavs-och-svampgryta/",
+    "http://www.tasteline.com/recept/shepherds-pie-pa-mexikanskt-vis/",
+    "http://www.tasteline.com/recept/kottbullemacka-2/",
+    "http://www.tasteline.com/recept/sej-pa-italienska/",
+    "http://www.tasteline.com/recept/kottfarssoppa-3-2/",
+    "http://www.tasteline.com/recept/ugnspannkaka-pa-broccoli-och-adelost/",
+    "http://www.tasteline.com/recept/klassisk-potatissallad-med-wienerkorv/",
+    "http://www.tasteline.com/recept/ugnsomelett-med-rakstuvning/",
+    "http://www.tasteline.com/recept/ugnsstekt-torsk-med-remouladsas/",
+    "http://www.tasteline.com/recept/texmexbiffar-med-trendigt-potatismos/",
+    "http://www.tasteline.com/recept/wokat-med-thaitonfisk/",
+    "http://www.tasteline.com/recept/bakad-potatis-med-thaitonfisk/",
+    "http://www.tasteline.com/recept/busenkel-kottfars-och-pestopanna/",
+    "http://www.tasteline.com/recept/bakad-potatis-med-kaviar-och-keso/",
+    "http://www.tasteline.com/recept/spagetti-carbonara-3/",
+    "http://www.tasteline.com/recept/tomatsallad-med-mozzarella-och-agg/",
+    "http://www.tasteline.com/recept/ansjoviskryddade-kottbullar-med-stuvad-vitkal/",
+    "http://www.tasteline.com/recept/citronmarinerade-kantareller-med-ostsuffle/",
+    "http://www.tasteline.com/recept/sillsallad-4/",
+    "http://www.tasteline.com/recept/vegetarisk-moussaka/",
+    "http://www.tasteline.com/recept/kottfarssas-och-spagetti/",
+    "http://www.tasteline.com/recept/ugnspannkaka-med-lingonsylt/",
+    "http://www.tasteline.com/recept/kottbullar-och-stuvad-vitkal/",
+    "http://www.tasteline.com/recept/svamplasagne-2/",
+    "http://www.tasteline.com/recept/vegobiffar-med-klyftpotatis-och-tsatsiki/",
+    "http://www.tasteline.com/recept/gronsaks-och-kantarelltallrik-med-farskostsas/",
+    "http://www.tasteline.com/recept/kantareller-med-mandelpotatis-och-grekisk-rora/",
+    "http://www.tasteline.com/recept/bouillabaisse-med-rouille/",
+    "http://www.tasteline.com/recept/lok-och-adelostpaj/",
+    "http://www.tasteline.com/recept/matjessill-pa-kavring/",
+    "http://www.tasteline.com/recept/thailandsk-rodspatta/",
+    "http://www.tasteline.com/recept/potatis-och-fankalsgratang-med-kalkon/",
+    "http://www.tasteline.com/recept/kotlett-med-paron-och-adelosttacke/",
+    "http://www.tasteline.com/recept/pesto-och-kycklinggratang/",
+    "http://www.tasteline.com/recept/pepparrotsfylld-rodspatta/",
+    "http://www.tasteline.com/recept/vegopizza-med-notter/",
+    "http://www.tasteline.com/recept/fiskpinnar-i-tunnbrodrulle/",
+    "http://www.tasteline.com/recept/indisk-ratatouille/",
+    "http://www.tasteline.com/recept/curry-och-tonfiskgratang/",
+    "http://www.tasteline.com/recept/kycklingspett-med-ortiga-kikarter/",
+    "http://www.tasteline.com/recept/fankal-och-citronsoppa/",
+    "http://www.tasteline.com/recept/korv-stroganoff-7-2/",
+    "http://www.tasteline.com/recept/ansjovis-och-parmesanpasta/",
+    "http://www.tasteline.com/recept/torsk-i-curry-och-yoghurtsas/",
+    "http://www.tasteline.com/recept/kottfarssas-som-i-italien/",
+    "http://www.tasteline.com/recept/grekiska-fyllda-paprikor/",
+    "http://www.tasteline.com/recept/rotfrukts-och-potatismos-med-kottkorv/",
+    "http://www.tasteline.com/recept/vegogryta-med-saffran-mango-chutney-och-jordnotter/",
+    "http://www.tasteline.com/recept/thailandsk-biff-och-kokosgryta/",
+    "http://www.tasteline.com/recept/varm-potatis-och-gronsakssallad-med-bacon/",
+    "http://www.tasteline.com/recept/oliv-och-citronfylld-flaskfile/",
+    "http://www.tasteline.com/recept/pasta-och-kasslergratang/",
+    "http://www.tasteline.com/recept/druvsallad-med-kalkon/",
+    "http://www.tasteline.com/recept/wokad-bog-med-sweet-chilisas-och-cashewnotter/",
+    "http://www.tasteline.com/recept/kycklingfile-under-persiljetacke/",
+    "http://www.tasteline.com/recept/potatis-och-bonsallad/",
+    "http://www.tasteline.com/recept/lasagne-med-soltorkade-tomater-och-salami/",
+    "http://www.tasteline.com/recept/rodspatta-under-dilltacke-2/",
+    "http://www.tasteline.com/recept/kottfarspiroger-2/",
+    "http://www.tasteline.com/recept/citronkyckling-5/",
+    "http://www.tasteline.com/recept/rodbetssoppa-2-2/",
+    "http://www.tasteline.com/recept/pasta-med-spenat-och-adelostsas/",
+    "http://www.tasteline.com/recept/kotlett-i-apelsinsas/",
+    "http://www.tasteline.com/recept/wokad-crabfish/",
+    "http://www.tasteline.com/recept/rotfruktssoppa-med-smak-av-mandel/",
+    "http://www.tasteline.com/recept/japansk-nudel-och-tonfisksallad/",
+    "http://www.tasteline.com/recept/lovbiff-med-trattisar-och-worcestershiresas/",
+    "http://www.tasteline.com/recept/kyckling-och-rotfruktssoppa/",
+    "http://www.tasteline.com/recept/lax-och-wasabilasagne/",
+    "http://www.tasteline.com/recept/italiensk-pannkaksrulle/",
+    "http://www.tasteline.com/recept/vegopaj-med-rotfrukts-och-bonrora/",
+    "http://www.tasteline.com/recept/ostgratinerad-purjolok-och-skinka/",
+    "http://www.tasteline.com/recept/paj-med-skinka-och-ruccola/",
+    "http://www.tasteline.com/recept/saffranscouscous-med-het-korv-och-yoghurtsas/",
+    "http://www.tasteline.com/recept/stekt-salt-sill-och-potatismos/",
+    "http://www.tasteline.com/recept/stekt-salt-sill-och-loksas/",
+    "http://www.tasteline.com/recept/makaroni-och-raksallad/",
+    "http://www.tasteline.com/recept/korv-och-bongryta/",
+    "http://www.tasteline.com/recept/bondomelett-2/",
+    "http://www.tasteline.com/recept/kycklingcurry-2/",
+    "http://www.tasteline.com/recept/baconbonor-med-guacamole/",
+    "http://www.tasteline.com/recept/kasslergratang-3/",
+    "http://www.tasteline.com/recept/pasta-och-tonfisksas/",
+    "http://www.tasteline.com/recept/hamburgare-2/",
+    "http://www.tasteline.com/recept/agg-och-ansjovislador/",
+    "http://www.tasteline.com/recept/het-gulasch/",
+    "http://www.tasteline.com/recept/gryta-pa-flaskfile-och-honung/",
+    "http://www.tasteline.com/recept/ortkyckling-2/",
+    "http://www.tasteline.com/recept/asiatisk-renskavsgryta/",
+    "http://www.tasteline.com/recept/lammgryta-med-rosmarin-och-ansjovis/",
+    "http://www.tasteline.com/recept/timjanskottbullar-samt-rodkalssallad/",
+    "http://www.tasteline.com/recept/fransk-pate-med-potatis/",
+    "http://www.tasteline.com/recept/janssons-frestelse-3-2/",
+    "http://www.tasteline.com/recept/pasta-med-lackra-kraftstjartar/",
+    "http://www.tasteline.com/recept/het-squashsoppa/",
+    "http://www.tasteline.com/recept/wokade-rakor-i-honungssky/",
+    "http://www.tasteline.com/recept/pastasallad-med-shiitake-och-kalkon/",
+    "http://www.tasteline.com/recept/gratinerad-skinkbaguette/",
+    "http://www.tasteline.com/recept/kottbullar-i-tomat-och-paprikasas/",
+    "http://www.tasteline.com/recept/hjortronsviss/",
+    "http://www.tasteline.com/recept/lovbiff-med-katrinplommon-i-rodvinssas/",
+    "http://www.tasteline.com/recept/spansk-kottgryta/",
+    "http://www.tasteline.com/recept/pizza-med-rakor-chevre-och-honung/",
+    "http://www.tasteline.com/recept/ugnsbakad-lax-med-dillslungad-potatis/",
+    "http://www.tasteline.com/recept/biff-med-medelhavssmaker-och-turkisk-potatissallad/",
+    "http://www.tasteline.com/recept/kotlettrad-med-persiljetacke-och-gronsakssas/",
+    "http://www.tasteline.com/recept/caesarpasta/",
+    "http://www.tasteline.com/recept/filbunkefrukost/",
+    "http://www.tasteline.com/recept/lax-i-het-saffrans-och-kokossas/",
+    "http://www.tasteline.com/recept/annorlunda-coleslaw-med-korv/",
+    "http://www.tasteline.com/recept/parisersmorgas-3-2/",
+    "http://www.tasteline.com/recept/paprikor-med-bonor-och-sidflask/",
+    "http://www.tasteline.com/recept/kotletter-i-adelost-och-vinbarsgelesas/",
+    "http://www.tasteline.com/recept/potatisbullar-med-rokt-renkott/",
+    "http://www.tasteline.com/recept/vegetabilisk-artsoppa/",
+    "http://www.tasteline.com/recept/gratinerad-fankal-pa-paskbordet/",
+    "http://www.tasteline.com/recept/liten-fil-och-banantallrik/",
+    "http://www.tasteline.com/recept/pasta-med-skink-och-broccolisas/",
+    "http://www.tasteline.com/recept/rostbiff-med-timjanspotatis-och-jordartskockssas/",
+    "http://www.tasteline.com/recept/kycklingsallad-med-sweet-chili-dressing/",
+    "http://www.tasteline.com/recept/dagobertare-med-surkal-och-skinka/",
+    "http://www.tasteline.com/recept/ljummen-potatissallad-pa-medelhavsvis/",
+    "http://www.tasteline.com/recept/sallad-med-adelost-och-valnotter/",
+    "http://www.tasteline.com/recept/varm-rodbetssallad-med-ekblad/",
+    "http://www.tasteline.com/recept/ortagardssas-3/",
+    "http://www.tasteline.com/recept/serranoskinka-runt-mango-och-paprika/",
+    "http://www.tasteline.com/recept/salvia-och-citronmarinerade-kycklingben/",
+    "http://www.tasteline.com/recept/blabarssherbet/",
+    "http://www.tasteline.com/recept/choklad-och-valnotstarta-med-marinerade-apelsinklyftor/",
+    "http://www.tasteline.com/recept/baconinlindade-flaskfilespett/",
+    "http://www.tasteline.com/recept/rotmos-och-kottkorv/",
+    "http://www.tasteline.com/recept/osso-bucco-med-gremolata/",
+    "http://www.tasteline.com/recept/ugnsbakade-rodbetor-med-olivrora/",
+    "http://www.tasteline.com/recept/kyckling-sweet-chili/",
+    "http://www.tasteline.com/recept/biffwok-med-ingefarskeso/",
+    "http://www.tasteline.com/recept/grekiska-biffar-i-pitabrod/",
+    "http://www.tasteline.com/recept/minipizza-med-kyckling-och-rotfrukter/",
+    "http://www.tasteline.com/recept/drottningglass-med-marang/",
+    "http://www.tasteline.com/recept/vardagsfrukost-3/",
+    "http://www.tasteline.com/recept/stora-o-snabba-frukosten/",
+    "http://www.tasteline.com/recept/snabba-chokladfrukosten/",
+    "http://www.tasteline.com/recept/vanlig-frukost/",
+    "http://www.tasteline.com/recept/snabba-frukosten/",
+    "http://www.tasteline.com/recept/sydafrikansk-biffgryta/",
+    "http://www.tasteline.com/recept/lilla-filtallriken/",
+    "http://www.tasteline.com/recept/rakor-i-saffran-och-mango-chutneysas/",
+    "http://www.tasteline.com/recept/jordnotsmilkshake/",
+    "http://www.tasteline.com/recept/wokade-gronsaker-och-quorn-i-hoisinsas/",
+    "http://www.tasteline.com/recept/kycklingwok-3-2/",
+    "http://www.tasteline.com/recept/indisk-kottfarsgryta/",
+    "http://www.tasteline.com/recept/tandoorikyckling-med-indiskt-ris/",
+    "http://www.tasteline.com/recept/jordartskockssoppa-med-rokt-lax/",
+    "http://www.tasteline.com/recept/torsksoppa-med-currysmak/",
+    "http://www.tasteline.com/recept/makaronipudding-3-2/",
+    "http://www.tasteline.com/recept/citroncrepes-med-hallonsas/",
+    "http://www.tasteline.com/recept/thailandsk-fisksoppa/",
+    "http://www.tasteline.com/recept/auberginegratang-3/",
+    "http://www.tasteline.com/recept/citrus-och-morotsdrink/",
+    "http://www.tasteline.com/recept/latt-filtallrik/",
+    "http://www.tasteline.com/recept/karibisk-kycklinggryta-3/",
+    "http://www.tasteline.com/recept/italiensk-fisk-i-ugn-2/",
+    "http://www.tasteline.com/recept/laxsoppa-med-citrusaioli/",
+    "http://www.tasteline.com/recept/makrillbullar-med-couscous-och-saffranssas/",
+    "http://www.tasteline.com/recept/fiskpinnar-med-het-remouladsas/",
+    "http://www.tasteline.com/recept/valkryddad-lammfile-med-potatis-och-chevrerulle/",
+    "http://www.tasteline.com/recept/fruktcocktail-med-marang/",
+    "http://www.tasteline.com/recept/apelsiner-i-skivor/",
+    "http://www.tasteline.com/recept/morots-och-kalrotslada/",
+    "http://www.tasteline.com/recept/spenatsoppa-med-fetaost/",
+    "http://www.tasteline.com/recept/tonfisk-och-pepparrotspasta/",
+    "http://www.tasteline.com/recept/fiskgryta-pa-hallefile/",
+    "http://www.tasteline.com/recept/het-kottfars-och-parmasoppa/",
+    "http://www.tasteline.com/recept/kycklingsallad-4-2/",
+    "http://www.tasteline.com/recept/renskavsgryta-med-smak-av-apple/",
+    "http://www.tasteline.com/recept/lins-och-lokgryta/",
+    "http://www.tasteline.com/recept/gravad-makrill-och-delikatesspotatis/",
+    "http://www.tasteline.com/recept/potatissallad-med-ansjovis-samt-rostbiff/",
+    "http://www.tasteline.com/recept/stromming-fylld-med-olivkeso/",
+    "http://www.tasteline.com/recept/cassoulet-2/",
+    "http://www.tasteline.com/recept/makaronipudding-med-feta-och-skinka/",
+    "http://www.tasteline.com/recept/rak-och-melonsallad-2/",
+    "http://www.tasteline.com/recept/bulgur-och-myntasallad/",
+    "http://www.tasteline.com/recept/stekta-koljabiffar-med-ortagardssas/",
+    "http://www.tasteline.com/recept/lyxig-raktallrik/",
+    "http://www.tasteline.com/recept/notgryta-med-chutney-och-jordnotssmor/",
+    "http://www.tasteline.com/recept/vegogryta-med-smak-av-pesto/",
+    "http://www.tasteline.com/recept/cashewpanerad-fisk-med-avokado-och-tomatsalsa/",
+    "http://www.tasteline.com/recept/kycklingsallad-med-lemon-curddressing/",
+    "http://www.tasteline.com/recept/pasta-med-vallmo-och-morotssas/",
+    "http://www.tasteline.com/recept/ugnsbakad-lax-med-oliver-citron-och-basilika/",
+    "http://www.tasteline.com/recept/clam-chowder/",
+    "http://www.tasteline.com/recept/kottbullar-i-curry/",
+    "http://www.tasteline.com/recept/basilika-och-tomatstromming-med-dillslungad-potatis/",
+    "http://www.tasteline.com/recept/persisk-kalops/",
+    "http://www.tasteline.com/recept/bocklingrullar/",
+    "http://www.tasteline.com/recept/fisksoppa-med-smak-av-curry-och-tomat/",
+    "http://www.tasteline.com/recept/aubergine-och-squashgratang/",
+    "http://www.tasteline.com/recept/soppa-pa-sotpotatis-och-varma-snittar/",
+    "http://www.tasteline.com/recept/vilda-kottbullar-i-philadelphiaost/",
+    "http://www.tasteline.com/recept/tortilla-med-kabanoss-och-ansjovis/",
+    "http://www.tasteline.com/recept/vild-kebab/",
+    "http://www.tasteline.com/recept/vitkalsdolmar-med-linsrora/",
+    "http://www.tasteline.com/recept/parmesangratinerad-aubergine-och-squash/",
+    "http://www.tasteline.com/recept/flaskfile-pa-italienska/",
+    "http://www.tasteline.com/recept/tortellini-med-ruccola-och-cocktailtomater/",
+    "http://www.tasteline.com/recept/fruktsallad-3/",
+    "http://www.tasteline.com/recept/frittata-pa-skinka-och-majs/",
+    "http://www.tasteline.com/recept/amerikansk-potatis-och-baconsallad/",
+    "http://www.tasteline.com/recept/kyckling-och-currylasagne/",
+    "http://www.tasteline.com/recept/ugnsbakade-gronsaker-med-adelostsas/",
+    "http://www.tasteline.com/recept/pitabrod-med-cevapcici-och-kebabdressing/",
+    "http://www.tasteline.com/recept/gronsakssoppa-med-smak-av-fankal/",
+    "http://www.tasteline.com/recept/kyckling-och-adelostwraps/",
+    "http://www.tasteline.com/recept/kassler-under-knaprigt-tacke/",
+    "http://www.tasteline.com/recept/fiskgratang-under-suffletacke/",
+    "http://www.tasteline.com/recept/legymsallad-med-kalkonrullar/",
+    "http://www.tasteline.com/recept/bakad-potatis-med-laxrora/",
+    "http://www.tasteline.com/recept/liten-grotfrukost/",
+    "http://www.tasteline.com/recept/indisk-tomatsallad/",
+    "http://www.tasteline.com/recept/gronsaks-och-makaronipudding/",
+    "http://www.tasteline.com/recept/kyckling-och-kantarellgryta/",
+    "http://www.tasteline.com/recept/honungsmarinerad-skinka/",
+    "http://www.tasteline.com/recept/paprika-och-sellerisoppa/",
+    "http://www.tasteline.com/recept/fajitas-med-notkott-och-avokadosalsa/",
+    "http://www.tasteline.com/recept/rakor-med-vitloks-och-pinjenotsmor/",
+    "http://www.tasteline.com/recept/appelsallad-med-grillad-kyckling/",
+    "http://www.tasteline.com/recept/waldorf-med-kyckling/",
+    "http://www.tasteline.com/recept/skordepaj-2/",
+    "http://www.tasteline.com/recept/persikocoupe-med-chokladsas/",
+    "http://www.tasteline.com/recept/nizzasallad/",
+    "http://www.tasteline.com/recept/inkokt-makrill-med-kall-sas/",
+    "http://www.tasteline.com/recept/flaskfilegryta-med-smak-av-charmoula/",
+    "http://www.tasteline.com/recept/ananassmoothie-2/",
+    "http://www.tasteline.com/recept/isigt-melonbubbel/",
+    "http://www.tasteline.com/recept/rabarber-och-jordgubbsdrink/",
+    "http://www.tasteline.com/recept/pastasallad-med-kassler-2-2/",
+    "http://www.tasteline.com/recept/laxspett-med-honungssas/",
+    "http://www.tasteline.com/recept/basilikaomelett-och-sardiner-i-ciabatta-2/",
+    "http://www.tasteline.com/recept/foccacia-med-agg-och-kaviarrora/",
+    "http://www.tasteline.com/recept/grillade-quornbitar-med-pasta-och-adelostsallad/",
+    "http://www.tasteline.com/recept/grillade-havskraftor-med-tomat-och-mozzarellasallad/",
+    "http://www.tasteline.com/recept/spenatfyllda-tortillas/",
+    "http://www.tasteline.com/recept/panzanella-med-parma/",
+    "http://www.tasteline.com/recept/lax-i-vermouth-och-citronsas/",
+    "http://www.tasteline.com/recept/fikonsallad-med-chutneydressing/",
+    "http://www.tasteline.com/recept/chokladtarta-med-fluff/",
+    "http://www.tasteline.com/recept/bjornbarsglass/",
+    "http://www.tasteline.com/recept/kanelglass-med-kolasas/",
+    "http://www.tasteline.com/recept/sagogrynssoppa-med-roda-bar/",
+    "http://www.tasteline.com/recept/zabaione-3/",
+    "http://www.tasteline.com/recept/krabbelurer-med-hallon-och-blabar/",
+    "http://www.tasteline.com/recept/appeltortillas/",
+    "http://www.tasteline.com/recept/fruktsallad-i-ananasskal/",
+    "http://www.tasteline.com/recept/drambuieapple/",
+    "http://www.tasteline.com/recept/citronfromage-med-hallon/",
+    "http://www.tasteline.com/recept/citron-och-marangbakelser/",
+    "http://www.tasteline.com/recept/chokladtarta-i-pask/",
+    "http://www.tasteline.com/recept/choklad-och-mandeltarta/",
+    "http://www.tasteline.com/recept/choklad-och-hallonskum/",
+    "http://www.tasteline.com/recept/katrinplommonsuffle-2/",
+    "http://www.tasteline.com/recept/gratinerade-jordgubbar-och-glass/",
+    "http://www.tasteline.com/recept/amarettogratinerad-frukt-3/",
+    "http://www.tasteline.com/recept/paron-i-vanilj/",
+    "http://www.tasteline.com/recept/kotletter-med-melonsalsa/",
+    "http://www.tasteline.com/recept/pannbiffar-med-rotfruktsgratang/",
+    "http://www.tasteline.com/recept/kycklinggryta-pa-italienska/",
+    "http://www.tasteline.com/recept/marockansk-kycklinggryta/",
+    "http://www.tasteline.com/recept/kyckling-och-gronsaker-allt-i-ett/",
+    "http://www.tasteline.com/recept/saffranskyckling-med-kanariepotatis/",
+    "http://www.tasteline.com/recept/coq-au-vin-5/",
+    "http://www.tasteline.com/recept/lammstek-med-ugnsbakade-rotsaker-och-skysas/",
+    "http://www.tasteline.com/recept/portvinskyckling/",
+    "http://www.tasteline.com/recept/lax-och-pepparrotsfylld-rodspatta/",
+    "http://www.tasteline.com/recept/pasta-och-pestosallad/",
+    "http://www.tasteline.com/recept/crabsticks-och-adelostpaj/",
+    "http://www.tasteline.com/recept/fiskgratang-med-purjo-och-aggsas/",
+    "http://www.tasteline.com/recept/kycklingfile-i-clementin-och-kardemummasas/",
+    "http://www.tasteline.com/recept/falafel-i-pitabrod/",
+    "http://www.tasteline.com/recept/mexikansk-biff-med-smak-av-citron-och-kapris/",
+    "http://www.tasteline.com/recept/orientalisk-kottfarsratt/",
+    "http://www.tasteline.com/recept/muffins-med-lax-och-basilikarora/",
+    "http://www.tasteline.com/recept/rakor-vindalooh/",
+    "http://www.tasteline.com/recept/skinka-i-honungs-och-balsamsas-med-ugnsbakade-rotfrukter/",
+    "http://www.tasteline.com/recept/bocklingfrestelse/",
+    "http://www.tasteline.com/recept/pasta-och-bacongratang/",
+    "http://www.tasteline.com/recept/fisk-under-citron-och-mandeltacke/",
+    "http://www.tasteline.com/recept/het-karre-med-jordnotssas/",
+    "http://www.tasteline.com/recept/kycklingfile-med-chevre-och-limesas/",
+    "http://www.tasteline.com/recept/tacokyckling-med-het-salsa/",
+    "http://www.tasteline.com/recept/indiska-kottfarstortillas/",
+    "http://www.tasteline.com/recept/biff-med-soltorkad-tomat-samt-ratatouille-och-pasta/",
+    "http://www.tasteline.com/recept/souvlaki-med-bon-och-fetaostsallad/",
+    "http://www.tasteline.com/recept/sallad-pa-farskpotatis-och-kyckling/",
+    "http://www.tasteline.com/recept/spagettiwok/",
+    "http://www.tasteline.com/recept/lax-under-fetaosttacke/",
+    "http://www.tasteline.com/recept/torsk-serrano/",
+    "http://www.tasteline.com/recept/skaldjurspasta-med-aioli/",
+    "http://www.tasteline.com/recept/nordafrikansk-kycklinggryta/",
+    "http://www.tasteline.com/recept/stekt-halloumiost-med-tomatsallad/",
+    "http://www.tasteline.com/recept/raggmunk-med-lingonsylt/",
+    "http://www.tasteline.com/recept/honungsfrukost/",
+    "http://www.tasteline.com/recept/fil-o-flingfrukost/",
+    "http://www.tasteline.com/recept/fruktyoggifrukost/",
+    "http://www.tasteline.com/recept/pastasallad-med-soltorkade-tomater-och-kassler/",
+    "http://www.tasteline.com/recept/burgundisk-alg/",
+    "http://www.tasteline.com/recept/kycklinglever-med-appelsallad/",
+    "http://www.tasteline.com/recept/lax-och-fankalssoppa/",
+    "http://www.tasteline.com/recept/thailandsk-wokpanna/",
+    "http://www.tasteline.com/recept/rysk-laxsoppa/",
+    "http://www.tasteline.com/recept/kycklingsoppa-med-nudlar/",
+    "http://www.tasteline.com/recept/mustiga-soppan/",
+    "http://www.tasteline.com/recept/apelsinwok/",
+    "http://www.tasteline.com/recept/quorntortillas-med-chilisallad/",
+    "http://www.tasteline.com/recept/kottgryta-med-persikor-och-apple/",
+    "http://www.tasteline.com/recept/lasagne-med-mycket-gront/",
+    "http://www.tasteline.com/recept/marinerade-gronsaker-med-kalkon/",
+    "http://www.tasteline.com/recept/thailandsk-crabfishpanna/",
+    "http://www.tasteline.com/recept/svamppytt/",
+    "http://www.tasteline.com/recept/varm-pastasallad-med-rakor-och-fetaost/",
+    "http://www.tasteline.com/recept/quornwok-i-pitabrod/",
+    "http://www.tasteline.com/recept/chiliwokade-gronsaker-med-kycklingfile/",
+    "http://www.tasteline.com/recept/kramig-ruccolasoppa/",
+    "http://www.tasteline.com/recept/kottgryta-med-ansjovis-och-konjak/",
+    "http://www.tasteline.com/recept/pasta-och-kasslersas/",
+    "http://www.tasteline.com/recept/bonsallad-6-2/",
+    "http://www.tasteline.com/recept/blandad-sallad/",
+    "http://www.tasteline.com/recept/rariven-morot-med-ananassmak/",
+    "http://www.tasteline.com/recept/rarivna-morotter/",
+    "http://www.tasteline.com/recept/ugnsbakade-gronsaker-med-tzatziki/",
+    "http://www.tasteline.com/recept/frittata-med-gronsaker-och-fetaost-2/",
+    "http://www.tasteline.com/recept/vichyssoise-med-forhojande-tillbehor/",
+    "http://www.tasteline.com/recept/spenatlasagne-2/",
+    "http://www.tasteline.com/recept/ljummen-pastasallad-2/",
+    "http://www.tasteline.com/recept/fylld-squash-2-2/",
+    "http://www.tasteline.com/recept/ratatouille-3/",
+    "http://www.tasteline.com/recept/gratinerad-palsternacka-rotselleri-och-potatis/",
+    "http://www.tasteline.com/recept/soppa-med-morotter-roda-linser-och-vitlok/",
+    "http://www.tasteline.com/recept/tomat-och-pastasoppa-med-pesto/",
+    "http://www.tasteline.com/recept/rotfruktspytt-med-stekt-agg/",
+    "http://www.tasteline.com/recept/avokado-och-bonsallad/",
+    "http://www.tasteline.com/recept/alggryta-pa-ol-och-messmor/",
+    "http://www.tasteline.com/recept/kassler-med-sharonfrukt/",
+    "http://www.tasteline.com/recept/lammspett-med-mango-chutney/",
+    "http://www.tasteline.com/recept/spenatfylld-cannelloni/",
+    "http://www.tasteline.com/recept/kycklingfile-med-viltsmak/",
+    "http://www.tasteline.com/recept/cornflakesfrukost/",
+    "http://www.tasteline.com/recept/avokadofrukost-2/",
+    "http://www.tasteline.com/recept/grahamsfrukost/",
+    "http://www.tasteline.com/recept/havrefrukost/",
+    "http://www.tasteline.com/recept/kryddig-chili/",
+    "http://www.tasteline.com/recept/a-filsfrukost/",
+    "http://www.tasteline.com/recept/bananfrukost/",
+    "http://www.tasteline.com/recept/spatta-under-creme-fraichetacke/",
+    "http://www.tasteline.com/recept/indonesiska-rakor/",
+    "http://www.tasteline.com/recept/vitlok-o-morotssoppa/",
+    "http://www.tasteline.com/recept/couscoussallad-med-fetaost-och-salami/",
+    "http://www.tasteline.com/recept/tortillas-med-kolja-och-sweet-chili/",
+    "http://www.tasteline.com/recept/ugnspannkaka-med-bacon-och-svamp/",
+    "http://www.tasteline.com/recept/kiwifrukost/",
+    "http://www.tasteline.com/recept/jordgubbssmoothiefrukost/",
+    "http://www.tasteline.com/recept/ananassmoothiefrukost/",
+    "http://www.tasteline.com/recept/knackefrukost/",
+    "http://www.tasteline.com/recept/ingefarafrukost/",
+    "http://www.tasteline.com/recept/agg-o-sillfrukost/",
+    "http://www.tasteline.com/recept/pannkaksfrukost/",
+    "http://www.tasteline.com/recept/vitkal-o-russinrakost/",
+    "http://www.tasteline.com/recept/italiensk-rakost/",
+    "http://www.tasteline.com/recept/kikartrakost/",
+    "http://www.tasteline.com/recept/blandad-rakost/",
+    "http://www.tasteline.com/recept/broccolisallad-4/",
+    "http://www.tasteline.com/recept/pizzasallad-3/",
+    "http://www.tasteline.com/recept/morot-o-alfarakost/",
+    "http://www.tasteline.com/recept/grekisk-rakost/",
+    "http://www.tasteline.com/recept/vitkal-o-ananas/",
+    "http://www.tasteline.com/recept/vitkal-och-apple/",
+    "http://www.tasteline.com/recept/vitkal-o-lingonsylt/",
+    "http://www.tasteline.com/recept/rodbetsrakost/",
+    "http://www.tasteline.com/recept/tomat-o-svamprakost/",
+    "http://www.tasteline.com/recept/morot-o-applerakost/",
+    "http://www.tasteline.com/recept/keso-o-fruktfrukost/",
+    "http://www.tasteline.com/recept/apple-o-paronfrukost/",
+    "http://www.tasteline.com/recept/appelfrukost/",
+    "http://www.tasteline.com/recept/cafe-au-laitfrukost/",
+    "http://www.tasteline.com/recept/frukt-och-chilikeso/",
+    "http://www.tasteline.com/recept/frukt-och-honung/",
+    "http://www.tasteline.com/recept/hallondrink/",
+    "http://www.tasteline.com/recept/cafe-au-lait/",
+    "http://www.tasteline.com/recept/blabarsmjolk/",
+    "http://www.tasteline.com/recept/ost-och-kex/",
+    "http://www.tasteline.com/recept/blabarssoppefrukost/",
+    "http://www.tasteline.com/recept/croque-monsieurfrukost/",
+    "http://www.tasteline.com/recept/mannagrynsfrukost/",
+    "http://www.tasteline.com/recept/russinfrukost/",
+    "http://www.tasteline.com/recept/ragfrukost/",
+    "http://www.tasteline.com/recept/aggfrukost-2-2/",
+    "http://www.tasteline.com/recept/riskaka-och-frukt/",
+    "http://www.tasteline.com/recept/knacke-och-bocklingpastej/",
+    "http://www.tasteline.com/recept/fiskbullar-i-kokosmjolk/",
+    "http://www.tasteline.com/recept/biff-och-cashewwok/",
+    "http://www.tasteline.com/recept/rakor-i-ruccolapesto/",
+    "http://www.tasteline.com/recept/laxfile-under-adelosttacke-med-balsamgronsaker/",
+    "http://www.tasteline.com/recept/kycklingspett-med-asiatiska-smaker/",
+    "http://www.tasteline.com/recept/pizza-med-salami-och-fetaost/",
+    "http://www.tasteline.com/recept/marinerade-bonor-med-mycket-gront/",
+    "http://www.tasteline.com/recept/fetaostfylld-kottfars/",
+    "http://www.tasteline.com/recept/laxbiffar-med-ansjovisdressing/",
+    "http://www.tasteline.com/recept/shepherds-pie-3-2/",
+    "http://www.tasteline.com/recept/kassler-med-pesto-och-ugnsstekt-potatis/",
+    "http://www.tasteline.com/recept/gron-lasagne-2/",
+    "http://www.tasteline.com/recept/pasta-med-parma-och-soltorkade-tomater/",
+    "http://www.tasteline.com/recept/gratinerad-angamat/",
+    "http://www.tasteline.com/recept/agg-i-rod-curry/",
+    "http://www.tasteline.com/recept/appelkassler/",
+    "http://www.tasteline.com/recept/varrullar-2/",
+    "http://www.tasteline.com/recept/vitloksfrast-blackfisk-med-spenatrisotto/",
+    "http://www.tasteline.com/recept/ungersk-rotfrukts-och-bongryta/",
+    "http://www.tasteline.com/recept/ungersk-kycklingsoppa-med-pepparrotscrem/",
+    "http://www.tasteline.com/recept/ugnsstekt-lax-med-avokadorora/",
+    "http://www.tasteline.com/recept/ugnsbakade-gronsaker-med-jordnotssmor-och-stekt-paprika/",
+    "http://www.tasteline.com/recept/turkisk-lins-och-kottfarssoppa/",
+    "http://www.tasteline.com/recept/torsk-i-bacon-med-citronpotatis/",
+    "http://www.tasteline.com/recept/tonfiskwraps-2/",
+    "http://www.tasteline.com/recept/tonfisk-och-pastagratang/",
+    "http://www.tasteline.com/recept/thailandskt-rakris/",
+    "http://www.tasteline.com/recept/teriyakispett-med-wokade-gronsaker/",
+    "http://www.tasteline.com/recept/svamp-och-lokpaj-2-2/",
+    "http://www.tasteline.com/recept/stuvade-makaroner-med-korv-och-gronsaksrora/",
+    "http://www.tasteline.com/recept/strommingslada-med-agg-och-kaviar/",
+    "http://www.tasteline.com/recept/spenatsoppa-med-rokt-lax/",
+    "http://www.tasteline.com/recept/spenat-och-linssoppa/",
+    "http://www.tasteline.com/recept/sparrissoppa-3/",
+    "http://www.tasteline.com/recept/spansk-kikartssoppa-2/",
+    "http://www.tasteline.com/recept/spagetti-med-sardeller-och-oliver/",
+    "http://www.tasteline.com/recept/smakrik-kalops/",
+    "http://www.tasteline.com/recept/senapsmarinerad-stromming-med-ortkryddad-farskpotatis/",
+    "http://www.tasteline.com/recept/rotsaksgryta-med-korv-och-ol/",
+    "http://www.tasteline.com/recept/senapsfylld-stromming-2/",
+    "http://www.tasteline.com/recept/sej-kokt-pa-norskt-vis-med-agg-och-raksas/",
+    "http://www.tasteline.com/recept/sallad-pa-fisk-och-sparris/",
+    "http://www.tasteline.com/recept/rodbetsbiffar-med-bacon/",
+    "http://www.tasteline.com/recept/rastuvad-potatis-med-korv/",
+    "http://www.tasteline.com/recept/rak-och-potatissallad-med-limedressing/",
+    "http://www.tasteline.com/recept/rotfruktsfras-med-kottbullar/",
+    "http://www.tasteline.com/recept/rostade-gronsaker-med-lacker-vitlokssas/",
+    "http://www.tasteline.com/recept/risotto-med-skinka-och-kapris/",
+    "http://www.tasteline.com/recept/risoni-och-parmasallad/",
+    "http://www.tasteline.com/recept/renskav-provencale/",
+    "http://www.tasteline.com/recept/potatissoppa-med-saffran/",
+    "http://www.tasteline.com/recept/potatisplattar-med-rakor-och-graddfil/",
+    "http://www.tasteline.com/recept/portvinskyckling-i-lergryta/",
+    "http://www.tasteline.com/recept/plommon-och-kesellafylld-flaskfile/",
+    "http://www.tasteline.com/recept/pizzasnurror-3-2/",
+    "http://www.tasteline.com/recept/pizza-med-spenat-och-vitlok/",
+    "http://www.tasteline.com/recept/piroger-med-lax-och-agg/",
+    "http://www.tasteline.com/recept/persisk-kycklingsallad/",
+    "http://www.tasteline.com/recept/pepparrotstromming-med-potatis-och-sellerimos/",
+    "http://www.tasteline.com/recept/pastasallad-med-melon-och-skinka/",
+    "http://www.tasteline.com/recept/pasta-med-shiitake-chili-och-bacon/",
+    "http://www.tasteline.com/recept/parmesanpanerad-torsk-med-lattfrasta-rodbetor/",
+    "http://www.tasteline.com/recept/parmesangratinerad-kycklingfile/",
+    "http://www.tasteline.com/recept/pannkakspizza-2/",
+    "http://www.tasteline.com/recept/pannkaka-med-ajvar-relish-och-getost/",
+    "http://www.tasteline.com/recept/palsternacksgratang-med-kassler/",
+    "http://www.tasteline.com/recept/orientalisk-kottfars/",
+    "http://www.tasteline.com/recept/omelett-med-sardiner-och-gront/",
+    "http://www.tasteline.com/recept/nasi-goreng-3/",
+    "http://www.tasteline.com/recept/mussel-och-potatissallad/",
+    "http://www.tasteline.com/recept/mussel-och-basilikasoppa/",
+    "http://www.tasteline.com/recept/moussaka-3-2/",
+    "http://www.tasteline.com/recept/mexikanska-bonor-med-stekt-bacon/",
+    "http://www.tasteline.com/recept/mexikanska-burgare/",
+    "http://www.tasteline.com/recept/mexikansk-biffgryta-med-avokadorora/",
+    "http://www.tasteline.com/recept/matjessill-och-brynt-smor/",
+    "http://www.tasteline.com/recept/marockansk-kott-och-plommongryta/",
+    "http://www.tasteline.com/recept/ljummen-bon-och-potatissallad/",
+    "http://www.tasteline.com/recept/lins-och-hirsgratang/",
+    "http://www.tasteline.com/recept/lax-och-potatiswraps/",
+    "http://www.tasteline.com/recept/lax-och-potatispytt/",
+    "http://www.tasteline.com/recept/lax-och-pastasallad/",
+    "http://www.tasteline.com/recept/lax-och-currypasta/",
+    "http://www.tasteline.com/recept/lax-i-adelostsas/",
+    "http://www.tasteline.com/recept/lammtagine-2/",
+    "http://www.tasteline.com/recept/lammkotletter-med-kramig-potatisgratang/",
+    "http://www.tasteline.com/recept/lammgryta-med-persikor-och-apple/",
+    "http://www.tasteline.com/recept/lamm-och-sherrygryta/",
+    "http://www.tasteline.com/recept/kottfarsrora-med-brieost-och-mango-chutney/",
+    "http://www.tasteline.com/recept/kottfars-och-surkalspanna/",
+    "http://www.tasteline.com/recept/kottfars-och-auberginepanna/",
+    "http://www.tasteline.com/recept/kottbullegryta-med-hoisinsas-och-lingonsylt/",
+    "http://www.tasteline.com/recept/kottbullar-i-trattkantarellsas/",
+    "http://www.tasteline.com/recept/kalpudding-med-orter/",
+    "http://www.tasteline.com/recept/kycklingrisotto-med-adelostdressing/",
+    "http://www.tasteline.com/recept/kaviartorsk/",
+    "http://www.tasteline.com/recept/karibisk-kokosgryta/",
+    "http://www.tasteline.com/recept/kardemummafisk/",
+    "http://www.tasteline.com/recept/italiensk-gratang/",
+    "http://www.tasteline.com/recept/ingefarsglaserad-torsk/",
+    "http://www.tasteline.com/recept/indiska-kottbullar-i-curry-och-kokossas/",
+    "http://www.tasteline.com/recept/heta-rakcrepes/",
+    "http://www.tasteline.com/recept/het-chili/",
+    "http://www.tasteline.com/recept/gronsaks-och-saffranspaj/",
+    "http://www.tasteline.com/recept/gronsaker-under-knaprigt-tacke/",
+    "http://www.tasteline.com/recept/gron-artsoppa-med-chevreklick/",
+    "http://www.tasteline.com/recept/grekisk-potatissallad-med-agghalvor/",
+    "http://www.tasteline.com/recept/gratinerade-gronsaker-och-pasta/",
+    "http://www.tasteline.com/recept/gratinerad-makrillfile-med-lattstuvad-spenat/",
+    "http://www.tasteline.com/recept/gratinerad-loksoppa-2/",
+    "http://www.tasteline.com/recept/gratinerad-fankal/",
+    "http://www.tasteline.com/recept/fankalssoppa-med-graddfil-och-krutonger/",
+    "http://www.tasteline.com/recept/fylld-aubergine/",
+    "http://www.tasteline.com/recept/fiskfarsbiffar-med-pepparrot/",
+    "http://www.tasteline.com/recept/fetaostkyckling/",
+    "http://www.tasteline.com/recept/fetaostfyllda-bifftomater/",
+    "http://www.tasteline.com/recept/djavulskotletter-med-saffransgronsaker/",
+    "http://www.tasteline.com/recept/bakad-potatis-med-tonfiskrora-2-2/",
+    "http://www.tasteline.com/recept/bakad-potatis-med-chili-och-baconrora/",
+    "http://www.tasteline.com/recept/baguette-med-lacker-kyckling-och-rakrora/",
+    "http://www.tasteline.com/recept/avokadosandwich/",
+    "http://www.tasteline.com/recept/asiatisk-torsk/",
+    "http://www.tasteline.com/recept/varm-fruktsallad-2/",
+    "http://www.tasteline.com/recept/heta-bananer-i-apelsinsas/",
+    "http://www.tasteline.com/recept/varmande-champinjonsoppa/",
+    "http://www.tasteline.com/recept/senap-och-timjansbiffar-med-stuvade-makaroner/",
+    "http://www.tasteline.com/recept/provencalsk-fiskgryta/",
+    "http://www.tasteline.com/recept/smorrebrod/",
+    "http://www.tasteline.com/recept/mjolk-och-skorpa/",
+    "http://www.tasteline.com/recept/musli-och-kefir/",
+    "http://www.tasteline.com/recept/ostmacka-med-mjolk/",
+    "http://www.tasteline.com/recept/potatissallad-13-2/",
+    "http://www.tasteline.com/recept/agg-och-kaviarmacka/",
+    "http://www.tasteline.com/recept/ortdip/",
+    "http://www.tasteline.com/recept/lingonfrukost/",
+    "http://www.tasteline.com/recept/drottningfrukost/",
+    "http://www.tasteline.com/recept/rabarberfrukost/",
+    "http://www.tasteline.com/recept/appelkram-2/",
+    "http://www.tasteline.com/recept/plommonfrukost/",
+    "http://www.tasteline.com/recept/nypon-och-kesofrukost/",
+    "http://www.tasteline.com/recept/morotsfrukost/",
+    "http://www.tasteline.com/recept/apple-i-kanelsas/",
+    "http://www.tasteline.com/recept/blabarsbakelse-2-2/",
+    "http://www.tasteline.com/recept/potatis-och-rommacka/",
+    "http://www.tasteline.com/recept/plommon-och-vaniljyoghurt/",
+    "http://www.tasteline.com/recept/avokado-och-rakriskaka/",
+    "http://www.tasteline.com/recept/grekisk-yoghurtdessert/",
+    "http://www.tasteline.com/recept/blabar-och-banansmoothie/",
+    "http://www.tasteline.com/recept/appelsallad/",
+    "http://www.tasteline.com/recept/welsh-rarebit-3/",
+    "http://www.tasteline.com/recept/makrillomelett/",
+    "http://www.tasteline.com/recept/paron-och-ingefarafrukost/",
+    "http://www.tasteline.com/recept/k-specialfrukost/",
+    "http://www.tasteline.com/recept/vallingfrukost/",
+    "http://www.tasteline.com/recept/vaniljfrukost/",
+    "http://www.tasteline.com/recept/yoghurtfrukost/",
+    "http://www.tasteline.com/recept/nyponfrukost/",
+    "http://www.tasteline.com/recept/nypon-och-bananfrukost/",
+    "http://www.tasteline.com/recept/chokladfrukost/",
+    "http://www.tasteline.com/recept/italiensk-tomatsoppa/",
+    "http://www.tasteline.com/recept/fransk-bondsoppa/",
+    "http://www.tasteline.com/recept/bouillabaisse-2/",
+    "http://www.tasteline.com/recept/veggogryta-med-vildris/",
+    "http://www.tasteline.com/recept/pasta-med-kraftstjartar-i-hummersas/",
+    "http://www.tasteline.com/recept/jordgubbssmoothie-2/",
+    "http://www.tasteline.com/recept/vegorulle/",
+    "http://www.tasteline.com/recept/mangofrukost/",
+    "http://www.tasteline.com/recept/avokado-och-potatissallad-i-tunnbrod/",
+    "http://www.tasteline.com/recept/potatis-och-matjessill/",
+    "http://www.tasteline.com/recept/pizzamacka/",
+    "http://www.tasteline.com/recept/jordgubbsfrukost-2/",
+    "http://www.tasteline.com/recept/nyponsmoothie/",
+    "http://www.tasteline.com/recept/pestobruschetta/",
+    "http://www.tasteline.com/recept/fruktfrukost/",
+    "http://www.tasteline.com/recept/kanelfrukost/",
+    "http://www.tasteline.com/recept/fruktsallad-med-lacker-chokladsas/",
+    "http://www.tasteline.com/recept/plommonkompott/",
+    "http://www.tasteline.com/recept/skinkklamma/",
+    "http://www.tasteline.com/recept/leverpastejmacka-2-2/",
+    "http://www.tasteline.com/recept/lyxig-filtallrik/",
+    "http://www.tasteline.com/recept/hallonsmoothiefrukost/",
+    "http://www.tasteline.com/recept/melon-och-skinka/",
+    "http://www.tasteline.com/recept/energikick/",
+    "http://www.tasteline.com/recept/grotfrukost/",
+    "http://www.tasteline.com/recept/rattikamacka/",
+    "http://www.tasteline.com/recept/fruktpannkaka/",
+    "http://www.tasteline.com/recept/lingonmjolk/",
+    "http://www.tasteline.com/recept/sillfrukost/",
+    "http://www.tasteline.com/recept/fruktdip/",
+    "http://www.tasteline.com/recept/korsbarssmoothie-2/",
+    "http://www.tasteline.com/recept/gron-dip/",
+    "http://www.tasteline.com/recept/blabarsdrink/",
+    "http://www.tasteline.com/recept/mango-och-parma/",
+    "http://www.tasteline.com/recept/nyponsundae/",
+    "http://www.tasteline.com/recept/rarivet-med-adelostdressing/",
+    "http://www.tasteline.com/recept/varm-avokadomacka/",
+    "http://www.tasteline.com/recept/kesosallad/",
+    "http://www.tasteline.com/recept/keso-frutti/",
+    "http://www.tasteline.com/recept/honungsmjolkfrukost/",
+    "http://www.tasteline.com/recept/varm-tonfiskmacka/",
+    "http://www.tasteline.com/recept/gronsaksdip/",
+    "http://www.tasteline.com/recept/smoothiefrukost-2-2/",
+    "http://www.tasteline.com/recept/chokladfyllda-fikon/",
+    "http://www.tasteline.com/recept/bruschetta-3/",
+    "http://www.tasteline.com/recept/kesosallad-med-aprikoser-och-notter/",
+    "http://www.tasteline.com/recept/frasch-sallad/",
+    "http://www.tasteline.com/recept/blabarsfrukost/",
+    "http://www.tasteline.com/recept/auberginerora-3/"
+];
+let filename = "tasteline/Newtasteline-2400-2018-07-24.json";
+let errors = 0;
 nightmare
     .goto('http://www.tasteline.com/recept/')
     .evaluate(function () {
@@ -30,195 +1594,223 @@ nightmare
         console.log("uniq : " + uniqurls.length);
         return uniqurls.reduce(function (accumulator, href) {
             return accumulator.then(function (results) {
-                return nightmare.goto(href)
-                    .evaluate(function () {
-                        if (!document.querySelector('.page-content .recipe-content')) {
-                            return;
-                        }
-                        let recipe = {};
-                        //title
-                        recipe.title = document.querySelector('.page-content .recipe-description h1').innerHTML.trim();
-                        //tags
-                        let tags = {};
-                        //cannot read property length of null
-                        $('.page-content .recipe-description .category-list a').each(function () {
-                            let t = $(this).text();
-                            tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
+                let site = nightmare.goto(href);   
+                return site.evaluate(function () {
+                    if (!document.querySelector('.page-content .recipe-content')) {
+                        return;
+                    }
+                    let recipe = {};
+                    //title
+                    recipe.title = document.querySelector('.page-content .recipe-description h1').innerHTML.trim();
+                    //tags
+                    let tags = {};
+                    //cannot read property length of null
+                    $('.page-content .recipe-description .category-list a').each(function () {
+                        let t = $(this).text();
+                        tags[t.charAt(0).toUpperCase() + t.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim()] = true;
 
 
-                        })
-                        recipe.tags = tags;
-                        //source
-                        recipe.source = window.location.href;
-                        recipe.source = recipe.source.substr(recipe.source.indexOf("tasteline.com"));
-
-
-                        //votes rating
-                        if (document.querySelector('.page-content .recipe-description .recipe-rating.voting-enabled i')) {
-                            let ratingLine = document.querySelector('.page-content .recipe-description .recipe-rating.voting-enabled').getAttribute("title");
-                            let parts = ratingLine.split("Antal röster:");
-                            recipe.votes = parts[1].trim();
-                            recipe.rating = parts[0].split(":")[1].trim();
-                        }
-                        //author
-                        if (document.querySelector('.page-content .recipe-author-text-inner span')) {
-                            recipe.author = document.querySelector('.page-content .recipe-author-text-inner span').innerText.trim();
-                        } else {
-                            recipe.author = "tasteline.com";
-                        }
-
-                        //createdFor
-
-                        //portions
-                        if (document.querySelector('.page-content .recipe-content .portions')) {
-                            recipe.portions = document.querySelector('.page-content .recipe-content .portions option[selected]').innerHTML.trim();
-                            //generall portion parser
-                            if (recipe.portions.toUpperCase().startsWith("GER ")) {
-                                recipe.portions = recipe.portions.substr(4);
-                            }
-                            if (recipe.portions.toUpperCase().startsWith("CA ")) {
-                                recipe.portions = recipe.portions.substr(3);
-                            }
-                            if (recipe.portions.indexOf("1/2") > -1) {
-                                recipe.portions = recipe.portions.replace("1/2", "+.5");
-                                let parts = recipe.portions.split(" ");
-                                if (!isNaN(parts[0]) && !isNaN(parts[1])) {
-                                    let nr = eval(parts[0] + parts[1]);
-                                    recipe.portions = nr + recipe.portions.substr(parts[0].length + parts[1].length + 1);
-                                } else if (!isNaN(parts[0])) {
-                                    let nr = eval(parts[0]);
-                                    recipe.portions = nr + recipe.portions.substr(parts[0].length + 1);
-                                } else {
-                                    recipe.portions = recipe.portions.replace("+.5", "1/2");
-                                }
-
-                            }
-                            let firstString = recipe.portions.split(" ")[0];
-                            let seperateArray = firstString.split(/([0-9]+)/).filter(Boolean);
-                            if (seperateArray.length === 2) {
-                                let newFirstString = seperateArray[0] + " " + seperateArray[1];
-                                recipe.portions = newFirstString + recipe.portions.substr(firstString.length);
-                            }
-
-                            if (recipe.portions.toUpperCase().startsWith("GER ")) {
-                                recipe.portions = recipe.portions.substr(4);
-                            }
-                            if (recipe.portions.toUpperCase().startsWith("CA ")) {
-                                recipe.portions = recipe.portions.substr(3);
-                            }
-                            let parts = recipe.portions.split(" ")[0].split("-");
-                            if (parts.length === 2) {
-                                let tmp = ((parts[0] - 0) + (parts[1] - 0)) / 2;
-                                if (recipe.portions.split(" ").length > 1) {
-                                    tmp = tmp + recipe.portions.substr(recipe.portions.indexOf(recipe.portions.split(" ")[1]) - 1);
-                                }
-                                recipe.portion = tmp;
-                            }
-                        }
-                        //created
-
-                        //description
-                        if (document.querySelector('.page-content .recipe-ingress')) {
-                            recipe.description = document.querySelector('.page-content .recipe-ingress').innerHTML.replace(/(\r\n|\n|\r|<[^>]*>)/gm, "").replace(/  +/g, ' ').trim();
-                        }
-
-                        //time
-                        if (document.querySelector('.page-content .recipe-description .fa-clock-o')) {
-                            let timeString = document.querySelector('.page-content .recipe-description .fa-clock-o').nextSibling.nodeValue.trim();
-                            if (timeString.indexOf("minut") > -1) {
-                                recipe.time = timeString.split(" ")[0] - 0;
-                            } else if (timeString.indexOf("timm") > -1) {
-                                recipe.time = (timeString.split(" ")[0] - 0) * 60;
-                            } else {
-                                return;
-                            }
-                            if (recipe.time < 25) {
-                                if (!tags.hasOwnProperty('Snabbt')) {
-                                    tags["Snabbt"] = true;
-                                }
-                            }
-                        }
-                        //denna är kvar att fixa till
-                        //ingredients
-                        if (document.querySelector('.page-content .ingredient-group li')) {
-                            let ingredientgroups = document.querySelector('.page-content').getElementsByClassName('ingredient-group');
-                            let ingredients = [];
-                            let ingredientNames = [];
-                            for (let i = 0; i < ingredientgroups.length; i++) {
-                                let ingredientsDom = ingredientgroups[i].getElementsByTagName("li");
-                                for (let j = 0; j < ingredientsDom.length; ++j) {
-                                    let ingredient = {};
-                                    //testa läs om http://www.tasteline.com/recept/hummerfisk/
-                                    //när en lösning finns på plats. ta bort alla recpet från tasteline
-                                    //läs om dem från backup. måste läsa om hrefs, då recepten i backup är fel
-                                    let amountElement = ingredientsDom[j].getElementsByClassName("quantity")[0];
-                                    if (!amountElement.classList.contains('hidden')) {
-                                        ingredient.amount = amountElement.getAttribute('data-quantity');
-                                    }
-                                    let unitElement = ingredientsDom[j].getElementsByClassName("unit")[0];
-                                    if (!unitElement.classList.contains('hidden')) {
-                                        ingredient.unit = unitElement.getAttribute('data-unit-name');
-                                    }
-                                    if (!ingredientsDom[j].getElementsByClassName("ingredient")[0]) {
-                                        return;
-                                    }
-                                    let namepart = ingredientsDom[j].getElementsByClassName("ingredient")[0].getElementsByTagName("span")[0].innerHTML.trim();
-                                    ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim();
-                                    if (ingredientNames.indexOf(ingredient.name) > -1) {
-                                        continue;
-                                    }
-                                    ingredientNames.push(ingredient.name);
-                                    ingredients.push(ingredient);
-                                    //måste göra om till innerHTML och ta ut det som ligger i spanet till amount 
-                                    //och det andra får först trimmas och sen splitas på " " och ta ut [0] till unit
-
-                                }
-                            }
-                            recipe.ingredients = ingredients;
-                        }
-
-                        if (!recipe.ingredients || recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1)) {
-                            return;
-                        }
-
-                        //difficulty
-                        let instructionsList = document.querySelector('.page-content .recipe-content .steps').getElementsByTagName("li");
-                        let nrOfIngredients = recipe.ingredients.length;
-                        let instructionLength = 0;
-                        for (let i = 0; i < instructionsList.length; i++) {
-                            instructionLength = instructionLength + instructionsList[i].innerHTML.replace(/(\r\n|\n|\r|)/gm, "").trim().length;
-                        }
-                        instructionLength = instructionLength - instructionsList.length * 10;
-
-                        let levelIndex = (nrOfIngredients * 8) + (instructionLength / 14);
-                        if (recipe.tags.hasOwnProperty('Enkelt') || recipe.tags.hasOwnProperty('Lättlagat')) {
-                            levelIndex = levelIndex - 100;
-                        }
-                        if (recipe.tags.hasOwnProperty('Snabbt')) {
-                            levelIndex = levelIndex - 20;
-                        }
-
-                        if (levelIndex < 100) {
-                            recipe.level = 1;
-                        } else if (levelIndex < 200) {
-                            recipe.level = 2;
-                        } else {
-                            recipe.level = 3;
-                        }
-
-
-                        return recipe;
                     })
+                    recipe.tags = tags;
+                    //source
+                    recipe.source = window.location.href;
+                    recipe.source = recipe.source.substr(recipe.source.indexOf("tasteline.com"));
+
+
+                    //votes rating
+                    if (document.querySelector('.page-content .recipe-description .recipe-rating.voting-enabled i')) {
+                        let ratingLine = document.querySelector('.page-content .recipe-description .recipe-rating.voting-enabled').getAttribute("title");
+                        let parts = ratingLine.split("Antal röster:");
+                        recipe.votes = parts[1].trim();
+                        recipe.rating = parts[0].split(":")[1].trim();
+                    }
+                    //author
+                    if (document.querySelector('.page-content .recipe-author-text-inner span')) {
+                        recipe.author = document.querySelector('.page-content .recipe-author-text-inner span').innerText.trim();
+                    } else {
+                        recipe.author = "tasteline";
+                    }
+
+                    //createdFor
+
+                    //portions
+                    if (document.querySelector('.page-content .recipe-content .portions option[selected]')) {
+                        recipe.portions = document.querySelector('.page-content .recipe-content .portions option[selected]').innerHTML.trim();
+
+                        //generall portion parser
+                        if (recipe.portions.toUpperCase().startsWith("GER ")) {
+                            recipe.portions = recipe.portions.substr(4);
+                        }
+                        if (recipe.portions.toUpperCase().startsWith("CA ")) {
+                            recipe.portions = recipe.portions.substr(3);
+                        }
+                        let spaceArr = recipe.portions.split(" ");
+                        if (spaceArr.length === 2 && !isNaN(spaceArr[0]) && spaceArr[1].toUpperCase() === "PORTIONER") {
+                            recipe.portions = spaceArr[0];
+                        }
+                        recipe.portions = recipe.portions.replace(",", ".");
+                        if (recipe.portions.indexOf("1/2") > -1) {
+                            recipe.portions = recipe.portions.replace("1/2", "+.5");
+                            let parts = recipe.portions.split(" ");
+                            if (!isNaN(parts[0]) && !isNaN(parts[1])) {
+                                let nr = eval(parts[0] + parts[1]);
+                                recipe.portions = nr + recipe.portions.substr(parts[0].length + parts[1].length + 1);
+                            } else if (!isNaN(parts[0])) {
+                                let nr = eval(parts[0]);
+                                recipe.portions = nr + recipe.portions.substr(parts[0].length);
+                            } else {
+                                recipe.portions = recipe.portions.replace("+.5", "1/2");
+                            }
+
+                        }
+                        let firstString = recipe.portions.split(" ")[0];
+                        let seperateArray = firstString.split(/([0-9]+)/).filter(Boolean);
+                        if (seperateArray[1] === "-" && seperateArray.length === 4) {
+                            let newFirstString = seperateArray[0] + seperateArray[1] + seperateArray[2] + " " + seperateArray[3];
+                            recipe.portions = newFirstString + recipe.portions.substr(firstString.length);
+                        } else if (seperateArray.length === 2) {
+                            let newFirstString = seperateArray[0] + " " + seperateArray[1];
+                            recipe.portions = newFirstString + recipe.portions.substr(firstString.length);
+                        }
+
+                        if (recipe.portions.toUpperCase().startsWith("GER ")) {
+                            recipe.portions = recipe.portions.substr(4);
+                        }
+                        if (recipe.portions.toUpperCase().startsWith("CA ")) {
+                            recipe.portions = recipe.portions.substr(3);
+                        }
+                        let parts = recipe.portions.split(" ")[0].split("-");
+                        if (parts.length === 2) {
+                            let tmp = ((parts[0] - 0) + (parts[1] - 0)) / 2;
+                            if (recipe.portions.split(" ").length > 1) {
+                                tmp = tmp + recipe.portions.substr(recipe.portions.indexOf(recipe.portions.split(" ")[1]) - 1);
+                            }
+                            recipe.portions = tmp;
+                        }
+                    }
+                    //created
+
+                    //description
+                    if (document.querySelector('.page-content .recipe-ingress')) {
+                        recipe.description = document.querySelector('.page-content .recipe-ingress').innerHTML.replace(/(\r\n|\n|\r|<[^>]*>)/gm, "").replace(/  +/g, ' ').trim();
+                    }
+
+                    //time
+                    if (document.querySelector('.page-content .recipe-description .fa-clock-o')) {
+                        let timeString = document.querySelector('.page-content .recipe-description .fa-clock-o').nextSibling.nodeValue.trim();
+                        if (timeString.indexOf("minut") > -1) {
+                            recipe.time = timeString.split(" ")[0] - 0;
+                        } else if (timeString.indexOf("timm") > -1) {
+                            recipe.time = (timeString.split(" ")[0] - 0) * 60;
+                        } else {
+                            return;
+                        }
+                        if (recipe.time < 25) {
+                            if (!tags.hasOwnProperty('Snabbt')) {
+                                tags["Snabbt"] = true;
+                            }
+                        }
+                    }
+                    //denna är kvar att fixa till
+                    //ingredients
+                    if (document.querySelector('.page-content .ingredient-group li')) {
+                        let ingredientgroups = document.querySelector('.page-content').getElementsByClassName('ingredient-group');
+                        let ingredients = [];
+                        let ingredientNames = [];
+                        for (let i = 0; i < ingredientgroups.length; i++) {
+                            let ingredientsDom = ingredientgroups[i].getElementsByTagName("li");
+                            for (let j = 0; j < ingredientsDom.length; ++j) {
+                                let ingredient = {};
+                                //testa läs om http://www.tasteline.com/recept/hummerfisk/
+                                //när en lösning finns på plats. ta bort alla recpet från tasteline
+                                //läs om dem från backup. måste läsa om hrefs, då recepten i backup är fel
+                                let amountElement = ingredientsDom[j].getElementsByClassName("quantity")[0];
+                                if (!amountElement.classList.contains('hidden')) {
+                                    ingredient.amount = amountElement.getAttribute('data-quantity');
+                                }
+                                let unitElement = ingredientsDom[j].getElementsByClassName("unit")[0];
+                                if (!unitElement.classList.contains('hidden')) {
+                                    ingredient.unit = unitElement.getAttribute('data-unit-name');
+                                }
+                                if (!ingredientsDom[j].getElementsByClassName("ingredient")[0]) {
+                                    return;
+                                }
+                                let namepart = ingredientsDom[j].getElementsByClassName("ingredient")[0].getElementsByTagName("span")[0].innerHTML.trim();
+                                ingredient.name = namepart.charAt(0).toUpperCase() + namepart.slice(1).replace(/\s*\([^()]*\)/g, '').split(",")[0].replace(/([/.#$])/g, '').trim();
+                                if (ingredientNames.indexOf(ingredient.name) > -1) {
+                                    continue;
+                                }
+                                ingredientNames.push(ingredient.name);
+                                ingredients.push(ingredient);
+                                //måste göra om till innerHTML och ta ut det som ligger i spanet till amount 
+                                //och det andra får först trimmas och sen splitas på " " och ta ut [0] till unit
+
+                            }
+                        }
+                        recipe.ingredients = ingredients;
+                    }
+
+                    if (!recipe.ingredients || recipe.ingredients.length === 0 || (recipe.time && recipe.time < 1)) {
+                        return;
+                    }
+
+                    //difficulty
+                    let instructionsList = document.querySelector('.page-content .recipe-content .steps').getElementsByTagName("li");
+                    let nrOfIngredients = recipe.ingredients.length;
+                    let instructionLength = 0;
+                    for (let i = 0; i < instructionsList.length; i++) {
+                        instructionLength = instructionLength + instructionsList[i].innerHTML.replace(/(\r\n|\n|\r|)/gm, "").trim().length;
+                    }
+                    instructionLength = instructionLength - instructionsList.length * 10;
+
+                    let levelIndex = (nrOfIngredients * 8) + (instructionLength / 14);
+                    if (recipe.tags.hasOwnProperty('Enkelt') || recipe.tags.hasOwnProperty('Lättlagat')) {
+                        levelIndex = levelIndex - 100;
+                    }
+                    if (recipe.tags.hasOwnProperty('Snabbt')) {
+                        levelIndex = levelIndex - 20;
+                    }
+
+                    if (levelIndex < 100) {
+                        recipe.level = 1;
+                    } else if (levelIndex < 200) {
+                        recipe.level = 2;
+                    } else {
+                        recipe.level = 3;
+                    }
+
+
+                    return recipe;
+                })
                     .then(function (html) {
                         results.push(html);
+                        if (results.length % 500 == 0) {
+                            console.log("saving " + results.length);
+                            fs.writeFile("C:/react/" + filename, JSON.stringify(results), function (err) {
+
+                            });
+                        }
                         return results;
+                    }, error => {
+                        console.log("ERROR: finished " + results.length + " recipes before error");
+                        errors = errors + 1;
+                        fs.writeFile("C:/react/" + filename, JSON.stringify(results), function (err) {
+                            if (err) {
+                                return console.log(err);
+                            }
+                
+                        });
+                        if(errors<10){
+                            return results;
+                        }
+                        console.log("end. to many errors")
+
                     })
 
             });
         }, Promise.resolve([]))
     })
     .then(function (resultArr) {
-        console.log(resultArr.length);
 
         fs.writeFile("C:/react/" + filename, JSON.stringify(resultArr), function (err) {
 

@@ -9,7 +9,8 @@ import Rating from './rating';
 import Portion from './portion';
 import Ingredientlist from './ingredientlist';
 import IngredientProgress from './ingredientProgress';
-import { Card, CardText } from 'material-ui/Card';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import Fade from '@material-ui/core/Fade';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import IconButton from '@material-ui/core/IconButton';
@@ -57,25 +58,17 @@ class Recipe extends Component {
     });
   }
   updatePortions(newPortionMultiplier) {
-    //en tanke är att sätta this.props.recipe = till state igen. och sen ändra de faktiska amount/unit i denna metod på this.state.recipe så slipper jag skicka runt multipliern
     let recipe = this.state.recipe;
     for (let i = 0; i < recipe.ingredients.length; i++) {
       if (recipe.ingredients[i].amount) {
         recipe.ingredients[i].amount = Utils.closestDecimals(recipe.ingredients[i].amount * (newPortionMultiplier / this.state.portionsMultiplier));
         if (recipe.ingredients[i].unit) {
           recipe.ingredients[i] = Utils.correctIngredientUnit(recipe.ingredients[i], this.props.units);
-          //recipe.ingredients[i] = Util.checkUnit(recipe.ingredients[i], this.props.units);
-          //kollar om uniten känns igen, och om den överskrider någon min- max värde. och såfall sätts unit om och amount korreigeras där efter
-          //finns mycket att ta av från mina script.
-
-          //finns lite problm med att ingredienserna sorteras om vid ändrat portins
-          //kanske behöver något mer urskiljande styling för de portions som bara blir en sträng ohc inte en select. flytter igohp lite med ingredienserna?+ kanske inte
-          //sök upp och ersätt alla 'material-ui
-          //      5. Lägg till varning om att "du redan har lagt till detta recept i denna inköpslista"
-          // 6. Kolla om ingrediensen man försöker lägga till redan finns i listan med samma Enhet isåfall så updatera bara amount och ev unit . använd util.js för att lägga till metoder kring unit och amount konvertering. kan även användas i portions. metoden tar in this.props.units
-          //7. importera dev till prod datbas
+//8. recepten som tillhör inköslistan ska bara finnas med under en knapp. "visa recept" klickar man där visas alla recipecards som grocerylist.recipes har.
           //gå ut med detta till gruppen i helgen. vår chatgrupp först kanske :)
-        }
+          // fixa bättre felhantering på grocerylists. felmeddelandet ska skrivas intill fältet. kanske en required på amount som name och unit finns: required={name && unit}
+        }//kolla best pracite för felmeddelanden. Alert? rödfärg vid knappen? vid fältet? snackbar? toaster?
+        //felmeddelanden: männskilga, humor, placera vid relevant fält. 
       }
     }
     this.setState({
@@ -140,17 +133,11 @@ class Recipe extends Component {
         }
       }
     }
-
-    //börja med att strukturera om components. ta bort mappar och slå ihop css.
-    //en knapp "lägg till i inköslistan" som alltid visas men likt favorit så fungerar den bara när man är inloggad.
-    //den fungerar likt ica där man får upp en dialog och får välja inköpslista eller skapa en ny som sedan ingredienserna läggs till som items på
-    //snackbar säger att ingredienserna lagts till. kanske lägga till en genväg till inköslistan knapp? hur funkar det? måste lyfta currentList från state då? l'nka bara till mygrocerylists kanske?
-    //ytterligare en funkton på varje individuell ingrediens. använd samma funktion som i recipecard. skicka med den funktionen som prop ner till ingredientlist
     return (<div className="col-xs-12 list-item" style={this.styles.wrapper}>
       <Fade in={true} style={{ transitionDelay: this.props.transitionDelay * 200 }}
         timeout={500}>
         <Card className="recipecard-content" style={this.styles.recipeCard}>
-          <CardText className="recipe-card-info row">
+          <CardContent className="recipe-card-info row">
             <div className="recipecard-title col-xs-12">
               {this.props.demo ? (<h3>{this.state.recipe.title}</h3>
               ) : (<h3><a onClick={this.visitSource} target='_blank'
@@ -189,7 +176,7 @@ class Recipe extends Component {
             <div className="col-xs-12">
               <Tags matchedTags={matchedTags} recipeTags={this.state.recipe.tags} recipeKey={this.state.recipe.source} />
             </div>
-          </CardText>
+          </CardContent>
         </Card>
       </Fade>
       <AddGroceryDialog units={this.props.units} open={!!this.state.showGroceryDialog} onClose={this.closeGrocerylistDialog} grocerylists={this.props.grocerylists}

@@ -27,11 +27,21 @@
     fill: rgba(255, 255, 255, 0.9) !important;
 }
 
+.tag-chip .chip-avatar {
+    background-color: rgba(76, 175, 80, 0.7) !important;
+}
+
+.ingredient-chip .chip-avatar {
+    background-color: rgba(255, 152, 0, 0.7) !important;
+}
+
 /* searchbar */
 
 .chip-wrapper {
     flex-wrap: wrap;
     display: flex;
+    min-height: 108px;
+    align-items: flex-end;
 }
 
 .filter-clear-btn span {
@@ -62,12 +72,20 @@
     top: 10px !important;
 }
 
+.c-autocomplete hr {
+    position: inherit !important;
+}
+
+
 .c-autocomplete hr:first-child {
     display: none !important;
 }
 
-.c-autocomplete hr {
-    position: inherit !important;
+.c-autocomplete:hover hr {
+    border-color: #303f9f !important;
+}
+.c-autocomplete hr:nth-child(2){
+    border-color: #303f9f !important;
 }
 
 /* quickTags */
@@ -76,6 +94,7 @@
     margin-top: 4px !important;
     margin-right: 4px !important;
     background-color: rgba(76, 175, 80, 0.7) !important;
+    z-index: 100;
 }
 
 .quick-tag span {
@@ -86,8 +105,9 @@
     margin-top: 3rem;
 }
 
-.searchbar-wrapper {
-    margin-top: 2.6rem;
+.quickchip-wrapper {
+    flex-wrap: wrap;
+    display: flex;
 }
 
 .popular-tags {

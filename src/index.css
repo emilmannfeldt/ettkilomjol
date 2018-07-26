@@ -27,7 +27,9 @@ body {
   bottom: 0;
   right: 0;
 }
-
+button{
+  text-transform: capitalize !important;
+}
 a:focus, a:hover {
   text-decoration: none;
 }

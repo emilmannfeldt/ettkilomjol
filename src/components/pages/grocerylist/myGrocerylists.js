@@ -172,7 +172,9 @@ class MyGrocerylists extends Component {
             }
             return (<div className="container my_recipes-container">
                 <div className="row">
-                    <GrocerylistDetails return={this.resetCurrentList} grocerylist={activeGrocerylist} foods={this.props.foods} units={this.props.units} recipes={this.props.recipes} />
+                    <div className="col-xs-12">
+                        <GrocerylistDetails return={this.resetCurrentList} grocerylist={activeGrocerylist} foods={this.props.foods} units={this.props.units} recipes={this.props.recipes} />
+                    </div>
                 </div>
             </div>);
         } else {

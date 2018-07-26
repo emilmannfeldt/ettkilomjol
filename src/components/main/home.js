@@ -218,6 +218,7 @@ class Home extends Component {
                         });
                         groceryList.items = tmpItems;
                     }
+                    //loppa igenom alla .recipes och kör util.decode
                     listTmp.splice(0, 0, groceryList);
                 });
                 listTmp.sort(function (a, b) {

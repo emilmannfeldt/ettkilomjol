@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/AddShoppingCart';
 import DoneIcon from '@material-ui/icons/ShoppingCartOutlined';
-import { List } from 'material-ui/List';
+import List from '@material-ui/core/List';
 
 class Ingredientlist extends Component {
   constructor(props) {

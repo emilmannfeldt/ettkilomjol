@@ -17,21 +17,18 @@ class GroceryItem extends Component {
             editItemName: '',
             editItemAmount: '',
             editItemUnit: '',
-            errorText: ''
+            errors: {}
         };
         this.editItem = this.editItem.bind(this);
         this.saveEdits = this.saveEdits.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.validateItem = this.validateItem.bind(this);
-        this.getError = this.getError.bind(this);
         this.toggleItem = this.toggleItem.bind(this);
     }
     deleteItem() {
         this.props.deleteItem(this.props.groceryItem.key);
     }
-    getError() {
-        return this.state.errorText;
-    }
+
     editItem() {
         let editItem = this.props.groceryItem;
         this.setState({
@@ -42,24 +39,26 @@ class GroceryItem extends Component {
         });
     }
     handleChange = name => event => {
+        let errors = this.state.errors;
+        delete errors[name];
         this.setState({
             [name]: event.target.value,
+            errors: errors
         });
     };
     validateItem(item) {
+        let valid = true;
+        let errors = {};
         if (!item.name) {
-            this.setState({
-                errorText: 'Namn saknas',
-            });
-            return false;
+            errors['editItemName'] = 'Fyll i namn'
+            valid = false;
         }
         if (!item.amount && item.unit) {
-            this.setState({
-                errorText: 'Mängd måste anges om enhet angets',
-            });
-            return false;
+            errors['editItemAmount'] = 'Om enhet är anget behöver även mängd anges'
+            valid = false;
         }
-        return true;
+        this.setState({ errors: errors });
+        return valid;
     }
     toggleItem() {
         let item = {
@@ -99,35 +98,40 @@ class GroceryItem extends Component {
             editItemName: '',
             editItemAmount: '',
             editItemUnit: '',
-            errorText: '',
+            errors: {},
         });
     }
+
     render() {
 
         if (this.state.editMode) {
-            return (<ListItem>
-                <TextField className="contact-field grocertitem-edit--name"
+            return (<ListItem className="groceryitems-editmode">
+                <TextField className={this.state.errors['editItemAmount'] ? 'groceryitem-field grocertitem-edit--name row-error' : 'groceryitem-field grocertitem-edit--name'}
                     label="Namn"
                     name="name"
                     value={this.state.editItemName || ""}
                     onChange={this.handleChange('editItemName')}
                     margin="normal"
+                    error={this.state.errors['editItemName']}
+                    helperText={this.state.errors['editItemName']}
                 />
-                <TextField className="contact-field"
-                    label="Antal"
+                <TextField className="groceryitem-field"
+                    label="Mängd"
                     name="amount"
+                    error={this.state.errors['editItemAmount']}
                     value={this.state.editItemAmount || ""}
                     onChange={this.handleChange('editItemAmount')}
                     margin="normal"
+                    FormHelperTextProps={{className: 'groceryitem-helpertext'}}
+                    helperText={this.state.errors['editItemAmount']}
                 />
-                <TextField className="contact-field"
+                <TextField className="groceryitem-field"
                     label="Enhet"
                     name="unit"
                     value={this.state.editItemUnit || ""}
                     onChange={this.handleChange('editItemUnit')}
                     margin="normal"
                 />
-                {this.getError()}
                 <IconButton onClick={this.saveEdits}>
                     <DoneIcon />
                 </IconButton>

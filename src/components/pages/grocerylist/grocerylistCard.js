@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { Card } from 'material-ui/Card';
+import Card from '@material-ui/core/Card';
 import Fade from '@material-ui/core/Fade';
 import CardHeader from '@material-ui/core/CardHeader';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 import IconButton from '@material-ui/core/IconButton';
-import Avatar from '@material-ui/core/Avatar';
-
 
 class GrocerylistCard extends Component {
   constructor(props) {
@@ -16,24 +14,13 @@ class GrocerylistCard extends Component {
     this.chooseList = this.chooseList.bind(this);
     this.deleteList = this.deleteList.bind(this);
 
-
-    //jag får lägga någon form av route/link här eller i myGroceryLists så att när jag klickar på en lista kommer jag till /uid/grocerylistname
-    //mockar jag upp det bland alla andra routes? den ska routa till en cmoponent som är groceryList.js eller liknande som är en sida där bara en specifik lista vias och man kan editera allt i den
   }
-  //här ska jag fylla på med delete funktion, och snygga till utseendet. kanske lägga till datumet. ska vara tydligt att det är klikbart, hover ändrar lite på färgen, cursor.
 
   chooseList() {
     this.props.setCurrentList(this.props.grocerylist);
   }
   deleteList() {
     this.props.deleteList(this.props.grocerylist);
-
-    //ta bort this.props.grocerylist från firebase
-    //skapa en snackbar med UNDO på sig 
-    //undo fungerar så att jag sparat undan listan i stateoch klickar man på undo så lägger jag tillbaka receptet i firebase?
-    //det vore bättre om undo inte skulle kräva detle + add. utan att man döljer listan först och tar bort det när snackbaren stänger/efter samma antal sekunder.
-    //undo avbryter då denna timer.
-    //måste köra denna deleteList-metod i mygrocerList.js för denna komponent försvinner ju när jag tar bort det så state för undo fungerar inte att ha här.
   }
   render() {
 
@@ -41,7 +28,6 @@ class GrocerylistCard extends Component {
     if (this.props.grocerylist.items) {
       for (let i = 0; i < this.props.grocerylist.items.length; i++) {
         let item = this.props.grocerylist.items[i];
-        //let tmp = (item.amount || "") + " " + (item.unit || "") + " " + item.name + ",";
         if (i > 0) {
           itemString += ", ";
         }
@@ -68,8 +54,8 @@ class GrocerylistCard extends Component {
             title={<span className="grocerylist-card--title" onClick={this.chooseList}>{this.props.grocerylist.name}</span>}
             subheader={<span>{itemString}</span>}
             classes={{
-              content: 'grocerylist-cardheader-content', // class name, e.g. `classes-nesting-root-x`
-              subheader: 'grocerylist-cardheader-subheader', // class name, e.g. `classes-nesting-label-x`
+              content: 'grocerylist-cardheader-content',
+              subheader: 'grocerylist-cardheader-subheader',
             }}
           />
         </Card>

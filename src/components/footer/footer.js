@@ -77,7 +77,7 @@ class Footer extends Component {
         </footer>
         <div className="bottom-navigation-container hide-desktop">
           <BottomNavigation value={route}>
-            <BottomNavigationAction label="Sök recept" value="/" icon={<SearchIcon />} component={Link} to="/"></BottomNavigationAction>
+            <BottomNavigationAction label="Sök" value="/" icon={<SearchIcon />} component={Link} to="/"></BottomNavigationAction>
             <BottomNavigationAction label="Favoriter" value="/favorites" icon={<FavoriteIcon />} component={Link} to="/favorites"></BottomNavigationAction>
             <BottomNavigationAction label="Inköpslistor" value="/grocerylists" icon={<ShoppingCartOutlinedIcon />} component={Link} to="/grocerylists"></BottomNavigationAction>
             <BottomNavigationAction className="bottomNavigationAction-contact" label="Kontakt" icon={<MailIcon />} onClick={() => { this.props.openContact('') }}></BottomNavigationAction>

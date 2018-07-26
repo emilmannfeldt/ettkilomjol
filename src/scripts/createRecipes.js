@@ -56,7 +56,7 @@ let foodLoaded = false;
 let tagLoaded = false;
 let recipeLoaded = false;
 let log = [];
-let filename = "ica/urls9-2018-07-02";
+let filename = "mittkok/mittkok3_2018-07-25";
 
 firebase.auth().signInAnonymously().catch(function (error) {
     // Handle Errors here.
@@ -121,8 +121,10 @@ function createRecipes() {
             let recipe = result[i];
             let msg = validateRecipe(recipe);
             if (msg.cause.length > 0) {
-                log.push(msg);
-                continue;
+
+                    log.push(msg);
+                    continue;
+                
             }
             if (recipe.title.indexOf("&amp;") > -1) {
                 recipe.title = recipe.title.replace(/&amp;/g, '&');
@@ -210,13 +212,16 @@ function validateRecipe(recipe) {
         if (!validateIngredient(recipe.ingredients[i])) {
             invalidIngredients++;
         }
+        if (recipe.ingredients[i].name.indexOf("½") > -1) {
+            invalidIngredients = invalidIngredients + 2;
+        }
     }
-    if ((recipe.ingredients.length / invalidIngredients) < 5) {
+    if ((recipe.ingredients.length / invalidIngredients) < 6) {
         msg.cause = "recipe contains to many wierd ingredients";
         return msg;
     }
-    if (!recipe.votes || (recipe.votes && recipe.votes < 2)) {
-        msg.cause = "recipe has less than 2 votes";
+    if (!recipe.votes || (recipe.votes && recipe.votes < 3)) {
+        msg.cause = "recipe has less than 3 votes";
         return msg;
     }
     for (let i = 0; i < recipe.ingredients.length; i++) {
@@ -237,7 +242,7 @@ function validateIngredient(ingredient) {
     let nameWordCount = ingredient.name.split(" ").length;
     let nameSpecialChars = ingredient.name.match(/^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/);
     let containsNumbers = /\d/.test(ingredient.name);
-    if (nameLength > 40 || nameLength < 1) {
+    if (nameLength > 30 || nameLength < 1) {
         return false;
     }
     if (nameWordCount > 2) {
