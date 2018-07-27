@@ -14,7 +14,7 @@ class FilterableRecipelist extends Component {
         sort: 'Relevans'
       },
       foundRecipes: [],
-      maxHits: 100,
+      maxHits: 128,
     };
     this.handleFilterInput = this.handleFilterInput.bind(this);
     this.findRecipes = this.findRecipes.bind(this);
@@ -257,7 +257,7 @@ class FilterableRecipelist extends Component {
           <Sort onUserInput={this.handleFilterInput} render={this.state.foundRecipes.length > 0} filter={this.state.filter} />
         </div>
         <div className="row recipelist-wrapper">
-          <div className="col-md-12 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept hämtade' : ''}</div>
+          <div className="col-md-6 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept hämtade' : ''}</div>
           {this.state.foundRecipes.map((recipe, index) =>
             <Recipe key={recipe.source} filter={this.state.filter} ref="child" grocerylists={this.props.grocerylists} units={this.props.units}
               recipe={recipe} transitionDelay={index} isFav={this.props.favs.indexOf(recipe.source) > -1} setSnackbar={this.props.setSnackbar} />

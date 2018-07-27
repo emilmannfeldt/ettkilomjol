@@ -62,7 +62,6 @@ function runRecipes() {
     log.push("starting");
     for (let j = 0; j < recipes.length; j++) {
         recipe = recipes[j];
-        console.log("recipe running:" + recipe.source);
         for (let i = 0; i < recipe.ingredients.length; i++) {
             let food = recipe.ingredients[i].name;
             if (existingFoods.indexOf(food) > -1) {

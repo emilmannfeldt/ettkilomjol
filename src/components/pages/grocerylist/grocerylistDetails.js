@@ -60,9 +60,9 @@ class GrocerylistDetails extends Component {
     render() {
 
         //vill jag ha det precis som ica med att färdiga items hamnar i en egen lista? eller kan det räcka med att sortera items på done
-        return (<div>
+        return (<div className="col-xs-12 grocerylist-details--container">
             <List className="grocerylist-itemlist">
-                <ListItem className="grocerylist-header">
+                <ListItem className="grocerylist-header text-big">
                     <IconButton onClick={this.props.return}>
                         <ChevronLeftIcon />
                     </IconButton>

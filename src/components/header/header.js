@@ -134,7 +134,7 @@ class Header extends Component {
         <AppBar position="static">
           <Toolbar className="toolbar">
             <div className="appbar-container--left">
-              <Link className="appbar-title" to={'/'}>
+              <Link className="appbar-title text-big" to={'/'}>
                 {titleText}
               </Link>
               <span className="hide-mobile">

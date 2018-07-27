@@ -60,6 +60,7 @@
     border: 1px solid #44444444 !important;
     padding-right: 1rem;
     padding-left: 1rem;
+    font-size: 0.875rem !important;
 }
 
 .c-autocomplete label {

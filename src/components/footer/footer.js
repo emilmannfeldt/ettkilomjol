@@ -28,7 +28,14 @@ class Footer extends Component {
       content.style.minHeight = 0;
       content.style.minHeight = (window.document.body.scrollHeight - header.offsetHeight - footer.offsetHeight) + "px";
     }
-
+    let focus = document.activeElement;
+    if (document.activeElement.tagName === "INPUT" && window.document.body.scrollHeight < 600) {
+      let element = document.getElementById("bottomnav");
+      element.classList.add("hide-mobile");
+    }else{
+      let element = document.getElementById("bottomnav");
+      element.classList.remove("hide-mobile");
+    }
   }
 
   handleChange = (event, value) => {
@@ -75,7 +82,7 @@ class Footer extends Component {
             </div>
           </div>
         </footer>
-        <div className="bottom-navigation-container hide-desktop">
+        <div className="bottom-navigation-container hide-desktop" id="bottomnav">
           <BottomNavigation value={route}>
             <BottomNavigationAction label="Sök" value="/" icon={<SearchIcon />} component={Link} to="/"></BottomNavigationAction>
             <BottomNavigationAction label="Favoriter" value="/favorites" icon={<FavoriteIcon />} component={Link} to="/favorites"></BottomNavigationAction>

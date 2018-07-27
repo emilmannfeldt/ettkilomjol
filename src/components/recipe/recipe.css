@@ -30,6 +30,11 @@
   cursor: pointer;
 }
 
+.list-item {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
 .grocerydialog-listitem:hover {
   background-color: #f3f0eb;
 }
@@ -85,7 +90,8 @@
   text-align: center;
   opacity: 0.6;
 }
-.ingredient-list{
+
+.ingredient-list {
   padding-bottom: 1rem;
 }
 
@@ -128,6 +134,9 @@
 .recipecard-rating {
   padding-bottom: 1rem;
 }
+.rating-wrapper{
+  margin-top: 0.5rem;
+}
 
 .ingredient-list {
   float: right;
@@ -167,34 +176,6 @@
 
 /* rating */
 
-.rating-wrapper {
-  unicode-bidi: bidi-override;
-  color: #c5c5c5;
-  font-size: 1.5rem;
-  height: 1.5rem;
-  width: 6.25rem;
-  position: relative;
-  display: inline-block;
-  margin-right: 0.5rem;
-  padding: 0;
-}
-
-.rating-wrapper-top {
-  color: #e7711b;
-  padding: 0;
-  position: absolute;
-  z-index: 1;
-  display: block;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-}
-
-.rating-wrapper-bottom {
-  padding: 0;
-  display: block;
-  z-index: 0;
-}
 
 /* tags */
 
@@ -221,20 +202,18 @@
   padding: 6px 10px;
   display: inline-block;
 }
-
 /* time */
 
 .recipecard-time {
   display: inline-block;
   margin-right: 0.25rem;
 }
-
+.recipecard-time svg{
+  vertical-align: bottom;
+}
 @media (max-width: 767px) {
   .recipecard-description {
     display: none;
-  }
-  .recipecard-title a {
-    font-size: 20px;
   }
 }
 

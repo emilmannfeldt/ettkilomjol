@@ -172,16 +172,14 @@ class MyGrocerylists extends Component {
             }
             return (<div className="container my_recipes-container">
                 <div className="row">
-                    <div className="col-xs-12">
-                        <GrocerylistDetails return={this.resetCurrentList} grocerylist={activeGrocerylist} foods={this.props.foods} units={this.props.units} recipes={this.props.recipes} />
-                    </div>
+                    <GrocerylistDetails return={this.resetCurrentList} grocerylist={activeGrocerylist} foods={this.props.foods} units={this.props.units} recipes={this.props.recipes} />
                 </div>
             </div>);
         } else {
             return (<div className="container my_recipes-container">
                 <div className="row">
-                    <div className="col-xs-12">
-                        <h2>Mina inköpslistor</h2>
+                    <div className="col-xs-12 list-item">
+                        <h2 className="page-title">Mina inköpslistor</h2>
                         <Button onClick={this.openDialog} color="primary" variant="contained">Ny lista</Button>
 
                     </div>

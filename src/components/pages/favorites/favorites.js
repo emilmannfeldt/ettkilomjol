@@ -62,7 +62,7 @@ class Favorites extends Component {
             <div className="container my_recipes-container">
                 <div className="row">
                     <div className="col-xs-12">
-                        <h2 className="my_recipes-title">Mina sparade favoriter</h2>
+                        <h2 className="page-title">Mina sparade favoriter</h2>
                         <TextField className="my_recipes-search"
                             label="Sök"
                             value={this.state.filter.freeSearch}

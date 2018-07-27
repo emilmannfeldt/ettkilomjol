@@ -139,12 +139,12 @@ class Recipe extends Component {
         <Card className="recipecard-content" style={this.styles.recipeCard}>
           <CardContent className="recipe-card-info row">
             <div className="recipecard-title col-xs-12">
-              {this.props.demo ? (<h3>{this.state.recipe.title}</h3>
-              ) : (<h3><a onClick={this.visitSource} target='_blank'
+              {this.props.demo ? (<h3 className="text-big">{this.state.recipe.title}</h3>
+              ) : (<h3 className="text-big"><a onClick={this.visitSource} target='_blank'
                 href={this.state.recipe.source.indexOf('tasteline.com') > -1 ? '//www.' + this.state.recipe.source : '//' + this.state.recipe.source}>{this.state.recipe.title}</a></h3>
                 )}
             </div>
-            <div className="col-xs-12 recipecard-author">
+            <div className="col-xs-12 recipecard-author text-medium">
               <span>
                 {this.state.recipe.author}
                 {this.state.recipe.createdFor ? ', ' + this.state.recipe.createdFor : ''}
@@ -157,23 +157,23 @@ class Recipe extends Component {
                 <ShoppingCartOutlinedIcon />
               </IconButton>
             </div>
-            <div className="col-xs-12 recipecard-description">{this.state.recipe.description} </div>
-            <div className="col-xs-12 recipecard-rating">
+            <div className="col-xs-12 recipecard-description text-medium">{this.state.recipe.description} </div>
+            <div className="col-xs-12 recipecard-rating text-small">
               <Rating value={this.state.recipe.rating} votes={this.state.recipe.votes} />
             </div>
-            <div className="col-md-4 col-xs-12">
+            <div className="col-md-4 col-xs-12 text-small">
               <Time time={this.state.recipe.time} />
               <Level index={this.state.recipe.level} />
             </div>
-            <div className="col-md-8 col-xs-12 recipecard-ingredients">
+            <div className="col-md-8 col-xs-12 recipecard-ingredients text-medium">
               <IngredientProgress matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist} />
               {this.state.recipe.expanded && <Portion portionsUpdate={this.updatePortions} portions={this.state.recipe.portions} />}
             </div>
-            <div className="col-md-8 col-xs-12 ingredient-list">
+            <div className="col-md-8 col-xs-12 ingredient-list text-medium">
               {this.state.recipe.expanded && <Ingredientlist handleAddItem={this.showGroceryListDialog} portionsMultiplier={this.state.portionsMultiplier}
                 ingredients={this.state.recipe.ingredients} missing={missingIngredients} />}
             </div>
-            <div className="col-xs-12">
+            <div className="col-xs-12 text-small">
               <Tags matchedTags={matchedTags} recipeTags={this.state.recipe.tags} recipeKey={this.state.recipe.source} />
             </div>
           </CardContent>
