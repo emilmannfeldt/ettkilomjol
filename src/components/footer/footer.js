@@ -16,11 +16,26 @@ class Footer extends Component {
     };
   }
   componentDidMount() {
+    let orgSize = window.document.body.clientHeight + window.document.body.clientWidth;
     this.autoHeight();
-    window.addEventListener("resize", this.autoHeight);
-  }
+    let that = this;
+    window.addEventListener("resize", function () {
+      that.autoHeight(orgSize);
+    }, false);
 
-  autoHeight() {
+  }
+  bottomnavout() {
+    let element = document.getElementById("bottomnav");
+    element.classList.remove("hide-mobile");
+  }
+  bottomnav() {
+    let focus = document.activeElement;
+    if (document.activeElement.tagName === "INPUT" && window.document.body.clientHeight < 600) {
+      let element = document.getElementById("bottomnav");
+      element.classList.add("hide-mobile");
+    }
+  }
+  autoHeight(orgSize) {
     let header = document.querySelector('#header');
     let content = document.querySelector('#content');
     let footer = document.querySelector('#footer');
@@ -28,14 +43,17 @@ class Footer extends Component {
       content.style.minHeight = 0;
       content.style.minHeight = (window.document.body.scrollHeight - header.offsetHeight - footer.offsetHeight) + "px";
     }
-    let focus = document.activeElement;
-    if (document.activeElement.tagName === "INPUT" && window.document.body.scrollHeight < 600) {
-      let element = document.getElementById("bottomnav");
-      element.classList.add("hide-mobile");
-    }else{
-      let element = document.getElementById("bottomnav");
-      element.classList.remove("hide-mobile");
+    let newSize = window.document.body.clientHeight + window.document.body.clientWidth;
+    if (orgSize) {
+      if (orgSize > newSize && document.activeElement.tagName === "INPUT") {
+        let element = document.getElementById("bottomnav");
+        element.classList.add("hide-mobile");
+      } else {
+        let element = document.getElementById("bottomnav");
+        element.classList.remove("hide-mobile");
+      }
     }
+
   }
 
   handleChange = (event, value) => {
@@ -82,11 +100,11 @@ class Footer extends Component {
             </div>
           </div>
         </footer>
-        <div className="bottom-navigation-container hide-desktop" id="bottomnav">
-          <BottomNavigation value={route}>
-            <BottomNavigationAction label="Sök" value="/" icon={<SearchIcon />} component={Link} to="/"></BottomNavigationAction>
-            <BottomNavigationAction label="Favoriter" value="/favorites" icon={<FavoriteIcon />} component={Link} to="/favorites"></BottomNavigationAction>
-            <BottomNavigationAction label="Inköpslistor" value="/grocerylists" icon={<ShoppingCartOutlinedIcon />} component={Link} to="/grocerylists"></BottomNavigationAction>
+        <div className="hide-desktop" id="bottomnav">
+          <BottomNavigation value={route} className="bottom-navigation-container">
+            <BottomNavigationAction value="/" icon={<SearchIcon />} component={Link} to="/"></BottomNavigationAction>
+            <BottomNavigationAction value="/favorites" icon={<FavoriteIcon />} component={Link} to="/favorites"></BottomNavigationAction>
+            <BottomNavigationAction value="/grocerylists" icon={<ShoppingCartOutlinedIcon />} component={Link} to="/grocerylists"></BottomNavigationAction>
             <BottomNavigationAction className="bottomNavigationAction-contact" label="Kontakt" icon={<MailIcon />} onClick={() => { this.props.openContact('') }}></BottomNavigationAction>
           </BottomNavigation>
         </div>

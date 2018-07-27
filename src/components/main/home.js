@@ -14,8 +14,6 @@ import Faq from '../pages/faq/faq';
 import Contact from '../util/contact';
 import MyRecipes from '../pages/favorites/favorites';
 import MySnackbar from '../util/mySnackbar';
-import Button from '@material-ui/core/Button';
-import ScrollIcon from '@material-ui/icons/ExpandLess';
 import MyGrocerylists from '../pages/grocerylist/myGrocerylists';
 
 let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
@@ -45,7 +43,6 @@ class Home extends Component {
         this.favListener = this.favListener.bind(this);
         this.grocerylistListener = this.grocerylistListener.bind(this);
         this.setSnackbar = this.setSnackbar.bind(this);
-        this.scrollFunction = this.scrollFunction.bind(this);
 
     }
     handleContactOpen = (subject) => {
@@ -147,20 +144,6 @@ class Home extends Component {
                 this.grocerylistListener();
             }
         });
-        window.addEventListener("scroll", this.scrollFunction);
-    }
-
-    scrollFunction() {
-        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
-            document.getElementById("scrolltop-btn").style.display = "block";
-        } else {
-            document.getElementById("scrolltop-btn").style.display = "none";
-        }
-    }
-
-    topFunction() {
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }
 
     favListener() {
@@ -347,12 +330,6 @@ class Home extends Component {
                     <Footer openContact={this.handleContactOpen} />
                     {this.state.contactOpen && <Contact onClose={this.handleContactClose} subject={this.state.contactSubject} />}
                     {this.state.snackbarType && <MySnackbar action={this.state.snackbarAction} variant={this.state.snackbarType} setSnackbar={this.setSnackbar} />}
-                    <Button variant="fab"
-                        aria-label="Scrolla till toppen"
-                        color="primary" id="scrolltop-btn" onClick={this.topFunction} title="Tillbaka till toppen"
-                    >
-                        <ScrollIcon />
-                    </Button>
                 </div>
             </Router>
         );
