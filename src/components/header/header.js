@@ -81,7 +81,6 @@ class Header extends Component {
     function MenuItemList(props) {
       let items = [];
       let loggedIn = fire.auth().currentUser && !fire.auth().currentUser.isAnonymous;
-      let currentu = fire.auth().currentUser;
       items.push(<Link key={items.length} className="hide-mobile" to={'/'}><MenuItem onClick={props.onClose}>Sök recept</MenuItem></Link>);
       if (loggedIn) {
         items.push(<Link key={items.length} className="hide-mobile" to={'/favorites'}><MenuItem onClick={props.onClose}>Mina favoriter</MenuItem></Link>);

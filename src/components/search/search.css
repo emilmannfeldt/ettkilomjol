@@ -81,8 +81,8 @@
 .c-autocomplete div:first-child {
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 100%;
-    padding-right: 30px;
+    width: 97%;
+    padding-right: 20px;
     margin-bottom: -0.5rem;
 }
 
@@ -96,6 +96,14 @@
 
 .c-autocomplete hr:nth-child(2) {
     border-color: #303f9f !important;
+}
+
+.searchbar-switch {
+    margin-top: -4px;
+}
+
+.searchbar-switch span {
+    color: rgba(255, 255, 255, 0.9) !important;
 }
 
 /* quickTags */

@@ -5,10 +5,11 @@
     height: 490px;
     box-sizing: border-box;
     margin-bottom: -490px;
+    background-color: #444444;
 }
 
 #headerimage {
-    opacity: 0.8;
+    opacity: 0.98;
     position: relative;
     top: 0;
     left: 50%;
@@ -149,6 +150,7 @@ img {
 
 .toolbar {
     justify-content: space-between;
+    background-color: #ffffff8a;
 }
 
 @media (max-width: 599px) {

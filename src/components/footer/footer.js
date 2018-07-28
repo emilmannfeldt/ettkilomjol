@@ -29,7 +29,6 @@ class Footer extends Component {
     element.classList.remove("hide-mobile");
   }
   bottomnav() {
-    let focus = document.activeElement;
     if (document.activeElement.tagName === "INPUT" && window.document.body.clientHeight < 600) {
       let element = document.getElementById("bottomnav");
       element.classList.add("hide-mobile");
@@ -68,21 +67,18 @@ class Footer extends Component {
       <div>
         <footer id="footer" className="footer-content hide-mobile">
           <div className="container">
-            <div className="social col-lg-12">
+            <div className="social col-md-12">
               <ul className="social-links">
                 <li><a href="https://github.com/emilmannfeldt/ettkilomjol">
                   GitHub</a></li>
                 <li><a href="https://www.linkedin.com/in/mannfeldt/">
                   LinkedIn</a></li>
-                <li><a href="https://tree.taiga.io/project/ettkilomjol-ett-kilo-mjol/">
-                  Taiga</a></li>
               </ul>
             </div>
 
             <div className="info col-lg-12 no-gutter">
               <div className="col-lg-4">
                 <ul>
-                  <li><a href="/about">Om Ettkilomjol.se</a></li>
                   <li><a href="#" onClick={() => { this.props.openContact('') }}>Kontakta mig</a></li>
                 </ul>
               </div>

@@ -131,7 +131,7 @@ function isSameUnitScale(unitA, unitB, units) {
     return false;
 }
 function isIngredientsSameUnit(ingredientA, ingredientB) {
-    return ingredientA.unit == ingredientB.unit || (!ingredientA.unit && !ingredientB.unit && ingredientB.amount && ingredientA.amount);
+    return ingredientA.unit === ingredientB.unit || (!ingredientA.unit && !ingredientB.unit && ingredientB.amount && ingredientA.amount);
 }
 function isIngredientsOnlyNames(ingredientA, ingredientB) {
     return !ingredientA.unit && !ingredientB.unit && !ingredientB.amount && !ingredientA.amount;
@@ -210,7 +210,7 @@ function closestDecimals(num) {
             curr = arr[i];
             break;
         }
-        if (i == arr.length - 1) {
+        if (i === arr.length - 1) {
             curr = 1;
         }
     }

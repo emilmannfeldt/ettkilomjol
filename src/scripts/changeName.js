@@ -678,6 +678,7 @@ let foodChanges = [
     { from: "Worchestershiresås", to: "Worcestershiresås" },
     { from: "Youghurt", to: "Yoghurt" },
     { from: "Ärter", to: "Ärtor" },
+    { from: "Mild olivolja", to: "Olivolja" },
     { from: "Ätbara blommor", to: "Blommor" },
     { from: "Ananasspad", to: "Ananasjuice" },
     { from: "Apelsinklyfta", to: "Apelsinskiva" },

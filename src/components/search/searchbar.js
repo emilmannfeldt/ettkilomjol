@@ -4,6 +4,8 @@ import FilterChip from './filterChip';
 import './search.css';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
 import FlatButton from 'material-ui/FlatButton';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 class Searchbar extends Component {
   constructor(props) {
@@ -19,6 +21,7 @@ class Searchbar extends Component {
     this.deleteIngredient = this.deleteIngredient.bind(this);
     this.deleteTag = this.deleteTag.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
+    this.toggleTagsIsMandatory = this.toggleTagsIsMandatory.bind(this);
     Array.prototype.diff = function (a) {
       return this.filter(function (i) {
         return a.indexOf(i) < 0;
@@ -63,6 +66,12 @@ class Searchbar extends Component {
         break;
     }
     this.setState({ placeholder });
+
+  }
+  toggleTagsIsMandatory() {
+    let filter = this.props.filter;
+    filter.tagsIsMandatory = !filter.tagsIsMandatory;
+    this.props.onFilterChange(filter);
 
   }
   deleteIngredient(ingredientName) {
@@ -216,6 +225,17 @@ class Searchbar extends Component {
             icon={<ClearIcon />}
           />
           : ''}
+        <FormControlLabel className="searchbar-switch"
+          control={
+            <Switch
+              checked={this.props.filter.tagsIsMandatory}
+              onChange={this.toggleTagsIsMandatory}
+              value="tagsIsMandatory"
+              color="primary"
+            />
+          }
+          label="Alla preferenser måste finns med"
+        />
       </div>
     );
   }

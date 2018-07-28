@@ -11,13 +11,15 @@ class FilterableRecipelist extends Component {
       filter: {
         ingredients: [],
         tags: [],
-        sort: 'Relevans'
+        sort: 'Relevans',
+        tagsIsMandatory: false,
       },
       foundRecipes: [],
       maxHits: 128,
     };
     this.handleFilterInput = this.handleFilterInput.bind(this);
     this.findRecipes = this.findRecipes.bind(this);
+
   }
 
   filterIsEmpty(filter) {
@@ -61,7 +63,7 @@ class FilterableRecipelist extends Component {
     let ingredientHits = 0;
     if (filter.tags.length > 0) {
       tagHits = this.runTagFilter(recipe.tags, filter.tags);
-      if (tagHits === 0) {
+      if (tagHits < (filter.tagsIsMandatory ? filter.tags.length : 1)) {
         return false;
       }
     }
