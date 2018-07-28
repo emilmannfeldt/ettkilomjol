@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import StarRatings from 'react-star-ratings';
 
-
 class Rating extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.value !== this.props.value) {
@@ -13,7 +12,6 @@ class Rating extends Component {
         return false;
     }
     render() {
-        let ratingPercentage = Math.round(this.props.value * 20);
         let votes = "";
         if (this.props.votes > 1) {
             votes = this.props.votes + " röster";
@@ -21,14 +19,14 @@ class Rating extends Component {
             votes = "1 röst";
         }
         return (
-
             <div>
-                <div className="rating-wrapper" title={this.props.value}>
+                <div className="rating-wrapper">
                     <StarRatings
                         rating={Number(this.props.value)}
                         starDimension="1rem"
                         starSpacing ="2px"
                         starRatedColor="#3f51b5"
+                        starEmptyColor="rgb(201, 206, 234)"
                     />
                 </div>
                 <div className="rating-votes">{votes}</div>

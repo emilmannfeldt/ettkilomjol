@@ -37,6 +37,9 @@ header {
     text-decoration: underline !important;
     background-color: inherit !important;
 }
+.appbar-nav-button.selected-route{
+    color: #3f51b5ce;
+}
 .appbar-nav-button{
     text-transform: capitalize !important;
     font-size: 1rem !important;
@@ -58,6 +61,7 @@ img {
     color: #444444 !important;
     margin-right: 1rem;
     font-weight: 600;
+    vertical-align: middle;
 }
 
 .login-form:before {
@@ -140,6 +144,7 @@ img {
 
 .appbar-container--right {
     display: inline-flex;
+    align-items: center;
 }
 
 .toolbar {

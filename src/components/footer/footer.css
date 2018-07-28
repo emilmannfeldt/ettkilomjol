@@ -54,11 +54,7 @@
     box-shadow: 5px 2px 5px 0px rgba(0, 0, 0, 0.5);
 }
 
-.bottom-navigation-container button {
-    margin-top: -2px;
-}
-
-.bottom-navigation-container a {
+.bottom-navigation-container a, .bottom-navigation-container button {
     padding-top: 10px !important;
 }
 

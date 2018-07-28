@@ -127,6 +127,7 @@ class Header extends Component {
     if (fire.options.projectId === "ettkilomjol-dev") {
       titleText = "Ett Kilo Mjöl DEV";
     }
+    let route = window.location.href.substr(window.location.href.indexOf("/#/") + 2);
 
     return (
       <div id="header">
@@ -139,19 +140,19 @@ class Header extends Component {
               </Link>
               <span className="hide-mobile">
                 <Link to={'/'}>
-                  <Button className="appbar-nav-button">
+                  <Button className={route === "/" ? 'appbar-nav-button selected-route':'appbar-nav-button'}>
                     <SearchIcon />
                     Sök recept
               </Button>
                 </Link>
                 <Link to={'/favorites'}>
-                  <Button className="appbar-nav-button">
+                  <Button className={route === "/favorites" ? 'appbar-nav-button selected-route':'appbar-nav-button'}>
                     <FavoriteIcon />
                     Favoriter
               </Button>
                 </Link>
                 <Link to={'/grocerylists'}>
-                  <Button className="appbar-nav-button">
+                  <Button className={route === "/grocerylists" ? 'appbar-nav-button selected-route':'appbar-nav-button'}>
                     <ShoppingCartOutlinedIcon />
                     Inköpslistor
               </Button>
