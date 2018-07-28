@@ -42,7 +42,7 @@ class Favorite extends React.Component {
         }
     }
     removeFromFav() {
-        console.log("remove fav");
+        //console.log("remove fav");
         let fav = {};
         let encodedSource = encodeSource(this.props.source);
         fav[encodedSource] = null;

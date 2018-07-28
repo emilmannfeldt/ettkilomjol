@@ -31,7 +31,7 @@ class Home extends Component {
             grocerylists: [],
             MIN_USES_FOOD: 5,
             MIN_USES_TAG: 8,
-            MIN_ACCEPTED_RECIPES: 17000,
+            MIN_ACCEPTED_RECIPES: 20000,
             DAYS_TO_SAVE_LOCALSTORAGE: 30,
             contactOpen: false,
             contactSubject: '',

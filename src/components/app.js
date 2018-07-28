@@ -37,7 +37,6 @@ class App extends Component {
         verified: true,
       })
     }
-    console.log("app didmount")
     this.authListener();
   }
 
@@ -45,7 +44,6 @@ class App extends Component {
     let that = this;
     fire.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log("app login");
         if (!user.isAnonymous) {
           that.setState({
             verified: true,
@@ -57,9 +55,8 @@ class App extends Component {
 
       } else {
         fire.auth().signInAnonymously().catch(function (error) {
-          console.log("ERROR sign in anonymous" + error);
+          //console.log("ERROR sign in anonymous" + error);
         });
-        console.log("app logout");
       }
     });
   }
@@ -107,9 +104,9 @@ class App extends Component {
             verified: true,
           });
           localStorage.setItem('verifiedinvite', 'true');
-          console.log("verifed ok")
+          //console.log("verifed ok")
         } else {
-          console.log("verifed not ok")
+          //console.log("verifed not ok")
           that.setState({
             tries: that.state.tries + 1,
             errorText: 'Fel kod, försök igen'
@@ -121,7 +118,7 @@ class App extends Component {
       }
     };
     xmlHttp.onerror = function (e) {
-      console.log("verifed error");
+      //console.log("verifed error");
       console.error(xmlHttp.statusText);
     };
     xmlHttp.send(null);

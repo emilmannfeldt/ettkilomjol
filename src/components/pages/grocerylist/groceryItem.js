@@ -88,7 +88,7 @@ class GroceryItem extends Component {
         if (editItem.name === this.props.groceryItem.name
             && editItem.amount === this.props.groceryItem.amount
             && editItem.unit === this.props.groceryItem.unit) {
-            console.log("skipping update. obj is the same")
+            //console.log("skipping update. obj is the same")
         } else {
             editItem.name = editItem.name.charAt(0).toUpperCase() + editItem.name.slice(1);
             this.props.updateItem(editItem, this.props.groceryItem.key);

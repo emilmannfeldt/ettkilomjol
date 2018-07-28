@@ -82,7 +82,7 @@ class Recipe extends Component {
     recipeRef.orderByChild('source').equalTo(this.state.recipe.source).once("value", function (snapshot) {
       snapshot.forEach(function (child) {
         let recipeTmp = child.val();
-        console.log("visiting " + child.val().source);
+        //console.log("visiting " + child.val().source);
         if (recipeTmp.visits) {
           recipeTmp.visits = recipeTmp.visits + 1;
         } else {

@@ -59,11 +59,11 @@ class Favorites extends Component {
             demoRecipe.description = "Du har inga sparade favoritrecept. För att spara ett recept klickar du på hjärtat upp till höger. Detta är bara ett exempel. Gå till sök recept för att hitta dina favoriter.";
         }
         return (
-            <div className="container my_recipes-container">
+            <div className="container my_recipes-containe">
                 <div className="row">
                     <div className="col-xs-12">
                         <h2 className="page-title">Mina sparade favoriter</h2>
-                        <TextField className="my_recipes-search"
+                        <TextField className="my_recipes-search c-autocomplete"
                             label="Sök"
                             value={this.state.filter.freeSearch}
                             onChange={this.handleSearch}

@@ -55,10 +55,10 @@ class MyGrocerylists extends Component {
         let that = this;
         fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists').update(deletetion, function (error) {
             if (error) {
-                console.log('Error has occured during saving process');
+                //console.log('Error has occured during saving process');
             }
             else {
-                console.log("Data hss been dleted succesfully");
+                //console.log("Data hss been dleted succesfully");
                 that.props.setSnackbar('grocerylist_delete', that.undoDeletion);
 
             }
@@ -133,13 +133,13 @@ class MyGrocerylists extends Component {
         let that = this;
         fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + grocerylist.name).set(grocerylist, function (error) {
             if (error) {
-                console.log('Error has occured during saving process');
+                //console.log('Error has occured during saving process');
                 that.setState({
                     errorText: 'Error: ' + error,
                 });
             }
             else {
-                console.log("Data hss been saved succesfully");
+                //console.log("Data hss been saved succesfully");
                 that.setState({
                     showCreatingProgress: false,
                     showNewListDialog: false,
@@ -154,7 +154,7 @@ class MyGrocerylists extends Component {
     }
 
     undoDeletion() {
-        console.log("UNDO DELTET")
+        //console.log("UNDO DELTET")
         fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + this.state.listToDelete.name).set(this.state.listToDelete);
     }
 

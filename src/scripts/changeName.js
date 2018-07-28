@@ -85,6 +85,8 @@ let unitChanges = [
 
 let tagChanges = [
     { from: "Anka", to: "DELETE" },
+    { from: "Billiga Veckan", to: "Billigt" },
+    { from: "Billig mat", to: "Billigt" },
     { from: "Amerikansk mat", to: "Amerikansk" },
     { from: "Asiatisk mat", to: "Asiatisk" },
     { from: "Bakelser", to: "Bakelse" },

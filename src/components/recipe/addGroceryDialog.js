@@ -96,7 +96,7 @@ class AddGroceryDialog extends Component {
     let that = this;
     ref.update(updates, function (error) {
       if (error) {
-        console.log('Error has occured during saving process');
+        //console.log('Error has occured during saving process');
       }
       else {
         that.props.setSnackbar('recipe_added_grocerylist');
@@ -156,7 +156,7 @@ class AddGroceryDialog extends Component {
     let that = this;
     ref.set(grocerylist, function (error) {
       if (error) {
-        console.log('Error has occured during saving process');
+        //console.log('Error has occured during saving process');
         that.setState({
           errorText: 'Error: ' + error,
         });

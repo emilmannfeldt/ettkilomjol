@@ -56,7 +56,6 @@ class Header extends Component {
     this.setState({
       showLoginPage: false
     });
-    console.log("signout");
     fire.auth().signOut();
   }
 
@@ -65,7 +64,6 @@ class Header extends Component {
     this.setState({
       showLoginPage: !this.state.showLoginPage
     });
-    console.log("signin");
   }
   openMenu = event => {
     this.setState({

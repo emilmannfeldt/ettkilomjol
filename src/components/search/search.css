@@ -53,14 +53,15 @@
 }
 
 .c-autocomplete {
-    height: 2.5rem !important;
+    height: 2.2rem !important;
     margin-top: 1rem !important;
-    border-radius: 25px !important;
+    border-radius: 1rem !important;
     background-color: white !important;
     border: 1px solid #44444444 !important;
-    padding-right: 1rem;
-    padding-left: 1rem;
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
     font-size: 0.875rem !important;
+    white-space: nowrap;
 }
 
 .c-autocomplete label {
@@ -69,14 +70,21 @@
 }
 
 .c-autocomplete input {
-    margin-top: -8px !important;
-    top: 10px !important;
+    margin-top: -6px !important;
+    top: 6px !important;
 }
 
 .c-autocomplete hr {
     position: inherit !important;
 }
 
+.c-autocomplete div:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    padding-right: 30px;
+    margin-bottom: -0.5rem;
+}
 
 .c-autocomplete hr:first-child {
     display: none !important;
@@ -85,7 +93,8 @@
 .c-autocomplete:hover hr {
     border-color: #303f9f !important;
 }
-.c-autocomplete hr:nth-child(2){
+
+.c-autocomplete hr:nth-child(2) {
     border-color: #303f9f !important;
 }
 

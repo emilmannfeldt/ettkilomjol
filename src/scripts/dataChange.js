@@ -77,11 +77,11 @@ function runRecipes() {
   let namel = 0;
   let numberRec = 0;
   let invalids = [",", "+", "$", "#", "[", "]", "."];
-
   recipesRef.once('value', function (snapshot) {
     console.log("receipes hämtade");
     snapshot.forEach(function (child) {
-
+      numberRec++;
+      console.log(numberRec)
       let busted = false;
       let recipe = child.val();
       let changesmade = false;
@@ -96,24 +96,9 @@ function runRecipes() {
       //tasteline påväg
       //mittkok behöver samla in hrefs, hitta script som funkar bra likt icas
       //koket.se samma som ovan
-      if (recipe.portions) {
-        if (!isNaN(recipe.portions) && recipe.source.indexOf("ica.se") == -1) {
-          log.push(recipe.source);
-        }
 
-      }
       if (false) {
         numberRec++;
-
-        recipesRef.child(child.key).set(recipe, function (error) {
-          if (error) {
-            console.log('Error has occured during saving process');
-          }
-          else {
-            console.log("Data hss been dleted succesfully");
-
-          }
-        })
 
       }
 

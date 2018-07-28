@@ -13,6 +13,7 @@ class Searchbar extends Component {
       tags: this.props.filter.tags,
       sort: this.props.filter.sort,
       searchText: '',
+      placeholder: '',
     };
     this.handleUpdateInputText = this.handleUpdateInputText.bind(this);
     this.deleteIngredient = this.deleteIngredient.bind(this);
@@ -24,7 +25,46 @@ class Searchbar extends Component {
       });
     };
   }
+  componentDidMount() {
+    let rnd = Math.floor(Math.random() * 10);
+    let placeholder = "";
+    switch (rnd) {
+      case 0:
+        placeholder = "Banan, Mjölk, Ägg, Glutenfri, Snabb"
+        break;
+      case 1:
+        placeholder = "Nyttig, Avokado, Smoothie"
+        break;
+      case 2:
+        placeholder = "Vad har du i kylen?"
+        break;
+      case 3:
+        placeholder = "Baka, Mjöl, Smör, Vitchoklad, Ägg, Snabb"
+        break;
+      case 4:
+        placeholder = "Sök bland ingredienser & preferenser"
+        break;
+      case 5:
+        placeholder = "Billigt, Nyttig, Vegetariskt, Sötpotatis"
+        break;
+      case 6:
+        placeholder = "Grill, Fläskfilé, Färskpotatis, Sås"
+        break;
+      case 7:
+        placeholder = "Glutenfri, Efterrätt, Choklad, Maräng, Glass, Jordgubbar"
+        break;
+      case 8:
+        placeholder = "LCHF, Frukost, Ägg, Bacon"
+        break;
+      case 9:
+        placeholder = "Asiatisk, Äggnudlar, Nötkött, Enkel"
+        break;
+      default:
+        break;
+    }
+    this.setState({ placeholder });
 
+  }
   deleteIngredient(ingredientName) {
     let index = this.state.ingredients.indexOf(ingredientName);
     if (index !== -1) {
@@ -165,7 +205,7 @@ class Searchbar extends Component {
         <div className="chip-wrapper">
           {chips}
         </div>
-        <AutoComplete floatingLabelFocusStyle={{ color: '#303f9f' }} className="c-autocomplete" ref="filterSearchbar" searchText={this.state.searchText} floatingLabelText="Sök ingredienser & preferenser" filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.handleUpdateInputText} dataSource={searchables}
+        <AutoComplete id="searchrecipes" floatingLabelFocusStyle={{ color: '#303f9f' }} className="c-autocomplete" ref="filterSearchbar" searchText={this.state.searchText} hintText={this.state.placeholder} filter={AutoComplete.caseInsensitiveFilter} onUpdateInput={this.handleUpdateInputText} dataSource={searchables}
           onNewRequest={this.handleNewRequest} maxSearchResults={6} fullWidth={true} />
         {chips.length > 0 ?
           <FlatButton label="Rensa sökning"

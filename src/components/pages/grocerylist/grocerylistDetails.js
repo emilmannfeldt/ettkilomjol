@@ -27,20 +27,20 @@ class GrocerylistDetails extends Component {
     createItem(item) {
         fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + this.props.grocerylist.name + '/items').push(item, function (error) {
             if (error) {
-                console.log('Error has occured during saving process');
+                //console.log('Error has occured during saving process');
             }
             else {
-                console.log("Data hss been dleted succesfully");
+                //console.log("Data hss been dleted succesfully");
             }
         });
     }
     updateItem(item, key) {
         fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + this.props.grocerylist.name + '/items/' + key).update(item, function (error) {
             if (error) {
-                console.log('Error has occured during saving process');
+                //console.log('Error has occured during saving process');
             }
             else {
-                console.log("Data hss been dleted succesfully");
+                //console.log("Data hss been dleted succesfully");
             }
         });
     }
@@ -49,10 +49,10 @@ class GrocerylistDetails extends Component {
         items[key] = null;
         fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + this.props.grocerylist.name + '/items').update(items, function (error) {
             if (error) {
-                console.log('Error has occured during saving process');
+                //console.log('Error has occured during saving process');
             }
             else {
-                console.log("Data hss been dleted succesfully");
+                //console.log("Data hss been dleted succesfully");
             }
         });
     }

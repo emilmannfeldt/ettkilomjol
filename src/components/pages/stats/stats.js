@@ -63,7 +63,7 @@ class Stats extends Component {
                             lengthHits++;
                             totalScales.length.amount += (+ingredient.amount || 1) * unit.ref;
                         } else {
-                            console.log("ERROR" + unit.name);
+                            //console.log("ERROR" + unit.name);
                         }
                     } else {
                         pieceUnitsHits++;
@@ -180,7 +180,7 @@ class Stats extends Component {
             } else if (recipe.source.indexOf("mittkok") > -1) {
                 mittkok++;
             } else {
-                console.log("ERROR" + recipe.source)
+                //console.log("ERROR" + recipe.source)
             }
         }
         chartData.datasets[0].data = [ica, tasteline, koket, mittkok];
