@@ -34,9 +34,19 @@
         display: block;
         margin-top: 3rem;
     }
+
+    #bg {
+        height: 100vh;
+        position: absolute;
+        width: 100%;
+        opacity: 0.12;
+        background-image: url("bg.jpg");
+        background-color: #cccccc;
+    }
 </style>
 
 <body>
+    <div id="bg"></div>
     <div class="content">
 
         <div class="container">
@@ -106,6 +116,11 @@
                 <div>
                     <a id="buybtn" class="btn btn-default" href="#">Köp nu!</a>
                 </div>
+
+            </div>
+            <div class="col-xs-12 reviews">
+                <h4>Omdömen</h4>
+                <p>"Jag har redan hittat en fantastisk matchning som jag bara måste ha!" - Emma</p>
 
             </div>
         </div>
