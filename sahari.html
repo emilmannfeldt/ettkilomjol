@@ -29,6 +29,11 @@
     .result-container {
         margin-bottom: 10rem;
     }
+
+    #uploadlabel {
+        display: block;
+        margin-top: 3rem;
+    }
 </style>
 
 <body>
@@ -40,18 +45,33 @@
             </div>
             <div class="form-container">
                 <div class="col-xs-12 form-group">
+                    <h4>Fyll i vad det är du söker</h4>
+                    <label for="clothes">klädesplagg</label>
+                    <select id="clothes" class="form-control">
+                        <option>Blus</option>
+                        <option>Byxor</option>
+                        <option>Jacka</option>
+                        <option>Kjol</option>
+                        <option>Klänning</option>
+                        <option>Linne</option>
+                        <option>Shorts</option>
+                        <option>Skjorta</option>
+                        <option>Skor</option>
+                        <option>Topp</option>
+                        <option>Tröja</option>
+                    </select>
                     <label for="Stil">Stil</label>
                     <input id="stil" class="form-control" type="text" placeholder="T.ex. Fest, Affärsmöte">
                     <label for="color">Färg</label>
                     <input id="color" type="color" class="form-control" type="text">
 
-                    <label for="upload"> Ladda upp bild på klädesplagg du vill matcha
+                    <label for="upload" id="uploadlabel"> Ladda upp bild på klädesplagg du vill matcha
                     </label>
 
                     <label id="upload" class="btn btn-default">Bläddra
                         <input type="file" hidden accept="image/*" onchange="upload(this)">
                     </label>
-                    <p id="uploadimg" ></p>
+                    <p id="uploadimg"></p>
 
                 </div>
                 <div class="col-xs-12 form-group">
@@ -116,15 +136,15 @@
         document.getElementById("buybtn").href = matches[index].source;
         document.getElementById("readmore").href = matches[index].source;
 
-        
+
 
         console.log("matcha");
     }
     function upload(load) {
         if (load.value) {
             let textv = load.value;
-            if(textv.indexOf("fakepath")>-1){
-                textv = textv.substr(textv.indexOf("fakepath")+8);
+            if (textv.indexOf("fakepath") > -1) {
+                textv = textv.substr(textv.indexOf("fakepath") + 8);
             }
             document.getElementById("uploadimg").innerHTML = textv;
 
