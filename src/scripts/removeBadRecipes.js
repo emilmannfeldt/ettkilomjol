@@ -100,7 +100,7 @@ function runRecipes() {
         deleteRecipe = true;
         cause = cause + "-----låg rating-----"
       }
-      if (recipe.votes < 3) {
+      if (recipe.votes < 2) {
         deleteRecipe = true;
         cause = cause + "-----låg votes-----"
       }
@@ -111,7 +111,7 @@ function runRecipes() {
           missingFoods++;
         }
       }
-      if ((missingFoods / recipe.ingredients.length) > 0.2) {
+      if ((missingFoods / recipe.ingredients.length) > 0.3) {
         deleteRecipe = true;
         cause = cause + "-----saknade ingredienser i foods: " + (missingFoods / recipe.ingredients.length) + "-----";
       }
@@ -127,7 +127,7 @@ function runRecipes() {
         deleteRecipe = true;
         cause = cause + "-----saknar tags -----";
       }
-      if (recipe.description && recipe.description.length > 300 && recipe.rating < 4) {
+      if (recipe.description && recipe.description.length > 320 && recipe.rating < 3) {
         deleteRecipe = true;
         cause = cause + "-----lång desc -----";
       }
@@ -137,7 +137,7 @@ function runRecipes() {
         console.log(numberRec);
       }
       if (deleteRecipe) {
-        recipesRef.child(child.key).remove();
+        // recipesRef.child(child.key).remove();
         log.push("Deleteing:" + recipe.source);
         log.push("cause:" + cause)
 

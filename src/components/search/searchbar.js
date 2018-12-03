@@ -234,7 +234,7 @@ class Searchbar extends Component {
               color="primary"
             />
           }
-          label="Alla preferenser måste finns med"
+          label="Alla valda preferenser måste finns med i recepten"
         />
       </div>
     );

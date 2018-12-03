@@ -15,6 +15,7 @@
   <meta name="description" content="De bästa recepten från Sveriges största receptdatabaser samlade på ett ställe">
   <meta name="author" content="Emil Mannfeldt">
   <meta name="keywords" content="receptdatabas, recept, sök recept på ingredienser, skapa inköslistor av recept">
+  <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="/favicon.ico">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css"
   />
@@ -24,8 +25,23 @@
 
 <body>
   <div id="root"></div>
-  <script type="text/javascript" src="//downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script>
-  <script type="text/javascript">require(["mojo/signup-forms/Loader"], function (L) { L.start({ "baseUrl": "mc.us17.list-manage.com", "uuid": "a31b7f1306e7fff01534fb1a9", "lid": "3395530282" }) })</script>
+ <!-- <script type="text/javascript" src="//downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script> -->
+ <!-- <script type="text/javascript">require(["mojo/signup-forms/Loader"], function (L) { L.start({ "baseUrl": "mc.us17.list-manage.com", "uuid": "a31b7f1306e7fff01534fb1a9", "lid": "3395530282" }) })</script>-->
 </body>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js');
+        });
+        let deferredPrompt;
+  
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            deferredPrompt.prompt();
+            console.log("beforeinstallprompt triggered");
 
+        });
+    }
+  </script>
 </html>

@@ -166,21 +166,7 @@ class Home extends Component {
         });
     }
     grocerylistListener() {
-        //validate list name does not contain firebase invalid chars. and does not exist
-        //kolla på icas lösning
-        //varje lista ska ha en egen vy som ica.se. en enkel översyn på alla listor med namn och skap ny/radera lista
-        //sen måste man klicka på varje lista för att se innehåll och ändra ingredienser.
-        //lägg till en sida där listorna visas upp
-        //lägg till funktion för att lägga till items
-        //lägg till funktion för att skapa ny lista
-        //lägg till funktion för att ta bort item
-        //lägg till funktion för att ta bort lista
-        //lägg till funktion på recepcard att lägga till alla ingredienser på receptet. receptet source ska kopplas till listan
-        //lägg till funktion i recipecard/ingredientlist att lägga till en ignrediens som item
 
-        //hur kan man snabbt lägga till alla saknade ingredienser från receptet. ha en till knapp i ingredientlistcomponent? 
-        //ett val vid recipecard lägg till recept där man får välja alla/saknade eller 
-        //så får man upp en lista med förkryssade ingredienser och sen optout på dom man inte vill ha med? med synligt vilka som är missing
         var groceryRef = fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists');
         let that = this;
         groceryRef.on('value', function (snapshot) {

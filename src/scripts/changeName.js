@@ -92,7 +92,7 @@ let tagChanges = [
     { from: "Bakelser", to: "Bakelse" },
     { from: "Bröllopsmat", to: "Bröllop" },
     { from: "Enchiladas", to: "Enchilada" },
-    { from: "Enkelt", to: "Enkel" },
+    { from: "Enkelt", to: "Lättlagat" },
     { from: "Fransk mat", to: "Fransk" },
     { from: "Förrätter", to: "Förrätt" },
     { from: "Glutenfritt", to: "Glutenfri" },
@@ -129,6 +129,7 @@ let tagChanges = [
     { from: "Nyttigt", to: "Nyttig" },
     { from: "Vardagsmiddag", to: "Vardag" },
     { from: "Varmrätt", to: "Huvudrätt" },
+    { from: "Enkla recept", to: "Lättlagat" },
     { from: "Nyttigt", to: "Nyttig" },
     { from: "Östeuropeisk mat", to: "Östeuropeisk" }];
 
@@ -136,12 +137,19 @@ let tagChanges = [
 
 let foodChanges = [
     { from: "Ajvar relish", to: "Ajvar Relish" },
+    { from: "Mild olivilja", to: "Olivolja" },
     { from: "Ansjovisfiléer", to: "Ansjovisfilé" },
     { from: "Ask färsk dill", to: "Förp dill" },
     { from: "Ask färsk gräslök", to: "Förp gräslök" },
     { from: "Ask färsk persilja", to: "Förp persilja" },
     { from: "Avocado", to: "Avokado" },
     { from: "Avokador", to: "Avokado" },
+
+    { from: "Nyriven pepparrot", to: "Pepparrot" },
+    { from: "Nyriven parmesanost", to: "Parmesanost" },
+    { from: "Nystött kardemumma", to: "Stött kardemumma" },
+    { from: "Grovriven parmesanost", to: "Parmesanost" },
+
     { from: "Barbecuesås", to: "Barbequesås" },
     { from: "Bbq-sås", to: "Barbequesås" },
     { from: "Bitar lax", to: "Port lax" },

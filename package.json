@@ -37,5 +37,5 @@
     "eject": "react-scripts eject",
     "deploy": "npm run build&&gh-pages -d build"
   },
-  "homepage": "https://emilmannfeldt.github.io"
+  "homepage": "https://emilmannfeldt.github.io/ettkilomjol"
 }

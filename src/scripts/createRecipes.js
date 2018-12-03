@@ -216,7 +216,7 @@ function validateRecipe(recipe) {
         msg.cause = "recipe contains to many wierd ingredients";
         return msg;
     }
-    if (!recipe.votes || (recipe.votes && recipe.votes < 3)) {
+    if (!recipe.votes || (recipe.votes && recipe.votes < 1)) {
         msg.cause = "recipe has less than 3 votes";
         return msg;
     }
