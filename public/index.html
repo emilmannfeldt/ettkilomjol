@@ -24,6 +24,7 @@
 </head>
 
 <body>
+    <button style="display:none" id="install">Install app</button>
   <div id="root"></div>
  <!-- <script type="text/javascript" src="//downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script> -->
  <!-- <script type="text/javascript">require(["mojo/signup-forms/Loader"], function (L) { L.start({ "baseUrl": "mc.us17.list-manage.com", "uuid": "a31b7f1306e7fff01534fb1a9", "lid": "3395530282" }) })</script>-->
@@ -38,9 +39,22 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            deferredPrompt.prompt();
             console.log("beforeinstallprompt triggered");
-
+            let btnAdd = document.getElementById("install");
+            btnAdd.style.display = 'block';
+            btnAdd.addEventListener('click', (e) => {
+                btnAdd.style.display = 'none';
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice
+                    .then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the A2HS prompt');
+                        } else {
+                            console.log('User dismissed the A2HS prompt');
+                        }
+                        deferredPrompt = null;
+                    });
+            });
         });
     }
   </script>
