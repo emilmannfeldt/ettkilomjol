@@ -42,7 +42,7 @@
             deferredPrompt = e;
             console.log("beforeinstallprompt triggered");
             let btnAdd = document.getElementById("install");
-            btnAdd.style.display = 'block';
+            //btnAdd.style.display = 'block';
             btnAdd.addEventListener('click', (e) => {
                 btnAdd.style.display = 'none';
                 deferredPrompt.prompt();
