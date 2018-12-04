@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="sv-se"><head><script async src="https://www.googletagmanager.com/gtag/js?id=UA-121342705-1"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-121342705-1")</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="De bästa recepten från Sveriges största receptdatabaser samlade på ett ställe"><meta name="author" content="Emil Mannfeldt"><meta name="keywords" content="receptdatabas, recept, sök recept på ingredienser, skapa inköslistor av recept"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="images/favicon.png"><link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/><title>Ett kilo mjöl</title><link href="/ettkilomjol/static/css/main.ab3e7f92.css" rel="stylesheet"></head><body><div id="root"></div><script type="text/javascript" src="/ettkilomjol/static/js/main.b9fecf54.js"></script></body><script>if ('serviceWorker' in navigator) {
+<!DOCTYPE html><html lang="sv-se"><head><script async src="https://www.googletagmanager.com/gtag/js?id=UA-121342705-1"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-121342705-1")</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="De bästa recepten från Sveriges största receptdatabaser samlade på ett ställe"><meta name="author" content="Emil Mannfeldt"><meta name="keywords" content="receptdatabas, recept, sök recept på ingredienser, skapa inköslistor av recept"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="images/favicon.png"><link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/><title>Ett kilo mjöl</title><link href="/ettkilomjol/static/css/main.ab3e7f92.css" rel="stylesheet"></head><body><button style="display:none" id="install">Install app</button><div id="root"></div><script type="text/javascript" src="/ettkilomjol/static/js/main.b9fecf54.js"></script></body><script>if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js');
         });
@@ -7,8 +7,21 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            deferredPrompt.prompt();
             console.log("beforeinstallprompt triggered");
-
+            let btnAdd = document.getElementById("install");
+            btnAdd.style.display = 'block';
+            btnAdd.addEventListener('click', (e) => {
+                btnAdd.style.display = 'none';
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice
+                    .then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the A2HS prompt');
+                        } else {
+                            console.log('User dismissed the A2HS prompt');
+                        }
+                        deferredPrompt = null;
+                    });
+            });
         });
     }</script></html>
