@@ -129,7 +129,7 @@ class Header extends Component {
     return (
       <div id="header">
         {backgroundImage}
-        <AppBar position="static">
+        <AppBar position="sticky">
           <Toolbar className="toolbar">
             <div className="appbar-container--left">
               <Link className="appbar-title text-big" to={'/'}>
