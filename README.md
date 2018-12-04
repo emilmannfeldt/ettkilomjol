@@ -2,12 +2,12 @@
 A recipe matchmaking app for you and your fridge.
 
 features:
-- ingredient to recipe matchmaking
-- hundredes of preferences avalible to search (dietry, allergies, origins etc)
-- the best recipes gathered from Swedens top recipe databases.
-- easy to create grocerylists
-- save favorite recipes
-- safe login with facebook, email or google.
+- Ingredient to recipe matchmaking
+- Hundreds of preferences avalible to search (dietry, allergies, origins etc)
+- The best recipes gathered from Swedens top recipe databases.
+- Easy to create grocerylists
+- Save your favorite recipes
+- Easy login with facebook, email or google.
 
 Made possible with
 
@@ -17,5 +17,5 @@ https://github.com/facebookincubator/create-react-app
 
 http://www.material-ui.com
 
-Live website: ettkilomjol.com
-send me a request for invitation code.
+This is a Progressive Web App (PWA). For best experience make sure to install it on your device.
+<h1>Live website: https://mannfeldt.github.io/ettkilomjol </h1>
