@@ -9,8 +9,6 @@ import LoginIcon from '@material-ui/icons/LockOutlined';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import headerImg from './header.jpg';
-import { fire } from '../../base';
 import firebase from 'firebase/app';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -20,20 +18,22 @@ import FavoriteIcon from '@material-ui/icons/FavoriteBorder';
 
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import SearchIcon from '@material-ui/icons/Search';
+import { fire } from '../../base';
+import headerImg from './header.jpg';
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showLoginPage: false,
-      anchorEl: null
+      anchorEl: null,
     };
     this.logout = this.logout.bind(this);
     this.login = this.login.bind(this);
     this.openMenu = this.openMenu.bind(this);
     this.handleClose = this.handleClose.bind(this);
-
   }
+
   uiConfig = {
     signInFlow: 'popup',
     signInOptions: [
@@ -47,14 +47,14 @@ class Header extends Component {
           showLoginPage: false,
         });
         return false;
-      }
-    }
+      },
+    },
   }
 
   logout(e) {
     e.preventDefault();
     this.setState({
-      showLoginPage: false
+      showLoginPage: false,
     });
     fire.auth().signOut();
   }
@@ -62,10 +62,11 @@ class Header extends Component {
   login(e) {
     e.preventDefault();
     this.setState({
-      showLoginPage: !this.state.showLoginPage
+      showLoginPage: !this.state.showLoginPage,
     });
   }
-  openMenu = event => {
+
+  openMenu = (event) => {
     this.setState({
       anchorEl: event.currentTarget,
     });
@@ -73,58 +74,69 @@ class Header extends Component {
 
   handleClose() {
     this.setState({
-      anchorEl: null
+      anchorEl: null,
     });
   }
 
   render() {
     function MenuItemList(props) {
-      let items = [];
-      let loggedIn = fire.auth().currentUser && !fire.auth().currentUser.isAnonymous;
-      items.push(<Link key={items.length} className="hide-mobile" to={'/'}><MenuItem onClick={props.onClose}>Sök recept</MenuItem></Link>);
+      const items = [];
+      const loggedIn = fire.auth().currentUser && !fire.auth().currentUser.isAnonymous;
+      items.push(<Link key={items.length} className="hide-mobile" to="/"><MenuItem onClick={props.onClose}>Sök recept</MenuItem></Link>);
       if (loggedIn) {
-        items.push(<Link key={items.length} className="hide-mobile" to={'/favorites'}><MenuItem onClick={props.onClose}>Mina favoriter</MenuItem></Link>);
-        items.push(<Link key={items.length} className="hide-mobile" to={'/grocerylists'}><MenuItem onClick={props.onClose}>Mina inköpslistor</MenuItem></Link>);
+        items.push(<Link key={items.length} className="hide-mobile" to="/favorites"><MenuItem onClick={props.onClose}>Mina favoriter</MenuItem></Link>);
+        items.push(<Link key={items.length} className="hide-mobile" to="/grocerylists"><MenuItem onClick={props.onClose}>Mina inköpslistor</MenuItem></Link>);
       }
-      items.push(<Link key={items.length} to={'/stats'}><MenuItem onClick={props.onClose}>Siffror</MenuItem></Link>);
-      items.push(<Link key={items.length} className="hide-desktop" to={'/faq'}><MenuItem onClick={props.onClose} >FAQ</MenuItem></Link>);
-      items.push(<MenuItem key={items.length} className="hide-desktop" onClick={() => { window.location.href = 'https://github.com/emilmannfeldt/ettkilomjol' }} >Github</MenuItem>);
-      items.push(<MenuItem key={items.length} className="hide-desktop" onClick={() => { window.location.href = 'https://www.linkedin.com/in/mannfeldt/' }}  >LinkedIn</MenuItem>);
+      items.push(<Link key={items.length} to="/stats"><MenuItem onClick={props.onClose}>Siffror</MenuItem></Link>);
+      items.push(<Link key={items.length} className="hide-desktop" to="/faq"><MenuItem onClick={props.onClose}>FAQ</MenuItem></Link>);
+      items.push(<MenuItem key={items.length} className="hide-desktop" onClick={() => { window.location.href = 'https://github.com/emilmannfeldt/ettkilomjol'; }}>Github</MenuItem>);
+      items.push(<MenuItem key={items.length} className="hide-desktop" onClick={() => { window.location.href = 'https://www.linkedin.com/in/mannfeldt/'; }}>LinkedIn</MenuItem>);
       if (loggedIn) {
-        items.push(<MenuItem key={items.length} onClick={props.logoutAction} >Logga ut</MenuItem>);
+        items.push(<MenuItem key={items.length} onClick={props.logoutAction}>Logga ut</MenuItem>);
       } else {
-        items.push(<MenuItem key={items.length} onClick={props.loginAction} >Logga in</MenuItem>);
+        items.push(<MenuItem key={items.length} onClick={props.loginAction}>Logga in</MenuItem>);
       }
-      return (<div className="header-menulist">
-        {items}
-      </div>);
+      return (
+        <div className="header-menulist">
+          {items}
+        </div>
+      );
     }
     function MyLoginComponent(props) {
       if (fire.auth().currentUser.isAnonymous) {
-        return (<Button onClick={props.logincall} size="small" className="login-btn" >
-          <LoginIcon />
-          {props.showLoginPage ? 'Avbryt' : 'Logga in'}
-        </Button>);
-      } else {
-        if (fire.auth().currentUser.photoURL) {
-          return (<Avatar className="appbar-login-avatar" src={fire.auth().currentUser.photoURL} alt="user avatar" tile="test" />);
-        } else {
-          return (<div><LoggedInIcon className="toolbar-more-icon" /> <span className="username-label"> {fire.auth().currentUser.displayName}</span></div >
-          );
-        }
+        return (
+          <Button onClick={props.logincall} size="small" className="login-btn">
+            <LoginIcon />
+            {props.showLoginPage ? 'Avbryt' : 'Logga in'}
+          </Button>
+        );
       }
+      if (fire.auth().currentUser.photoURL) {
+        return (<Avatar className="appbar-login-avatar" src={fire.auth().currentUser.photoURL} alt="user avatar" tile="test" />);
+      }
+      return (<div>
+        <LoggedInIcon className="toolbar-more-icon" />
+        {' '}
+        <span className="username-label">
+          {' '}
+          {fire.auth().currentUser.displayName}
+        </span>
+              </div>
+      );
     }
-    let backgroundImage = <div className="headerImageContainer">
-      <img src={headerImg} id="headerimage" alt="bakgrundsbild" />
-    </div>;
-    if (window.location.href.endsWith("/stats")) {
+    let backgroundImage = (
+      <div className="headerImageContainer">
+        <img src={headerImg} id="headerimage" alt="bakgrundsbild" />
+      </div>
+    );
+    if (window.location.href.endsWith('/stats')) {
       backgroundImage = null;
     }
-    let titleText = "Ett Kilo Mjöl";
-    if (fire.options.projectId === "ettkilomjol-dev") {
-      titleText = "Ett Kilo Mjöl DEV";
+    let titleText = 'Ett Kilo Mjöl';
+    if (fire.options.projectId === 'ettkilomjol-dev') {
+      titleText = 'Ett Kilo Mjöl DEV';
     }
-    let route = window.location.href.substr(window.location.href.indexOf("/#/") + 2);
+    const route = window.location.href.substr(window.location.href.indexOf('/#/') + 2);
 
     return (
       <div id="header">
@@ -132,27 +144,27 @@ class Header extends Component {
         <AppBar position="fixed">
           <Toolbar className="toolbar">
             <div className="appbar-container--left">
-              <Link className="appbar-title text-big" to={'/'}>
+              <Link className="appbar-title text-big" to="/">
                 {titleText}
               </Link>
               <span className="hide-mobile">
-                <Link to={'/'}>
-                  <Button className={route === "/" ? 'appbar-nav-button selected-route':'appbar-nav-button'}>
+                <Link to="/">
+                  <Button className={route === '/' ? 'appbar-nav-button selected-route' : 'appbar-nav-button'}>
                     <SearchIcon />
                     Sök recept
-              </Button>
+                  </Button>
                 </Link>
-                <Link to={'/favorites'}>
-                  <Button className={route === "/favorites" ? 'appbar-nav-button selected-route':'appbar-nav-button'}>
+                <Link to="/favorites">
+                  <Button className={route === '/favorites' ? 'appbar-nav-button selected-route' : 'appbar-nav-button'}>
                     <FavoriteIcon />
                     Favoriter
-              </Button>
+                  </Button>
                 </Link>
-                <Link to={'/grocerylists'}>
-                  <Button className={route === "/grocerylists" ? 'appbar-nav-button selected-route':'appbar-nav-button'}>
+                <Link to="/grocerylists">
+                  <Button className={route === '/grocerylists' ? 'appbar-nav-button selected-route' : 'appbar-nav-button'}>
                     <ShoppingCartOutlinedIcon />
                     Inköpslistor
-              </Button>
+                  </Button>
                 </Link>
               </span>
             </div>
@@ -174,7 +186,7 @@ class Header extends Component {
             </div>
           ) : (null)
         }
-      </div >
+      </div>
     );
   }
 }
