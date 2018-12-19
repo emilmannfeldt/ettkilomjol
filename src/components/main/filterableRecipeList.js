@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import Recipe from '../recipe/recipe';
 import Searchbar from '../search/searchbar';
 import QuickTags from '../search/quickTags';
@@ -19,7 +21,6 @@ class FilterableRecipelist extends Component {
     };
     this.handleFilterInput = this.handleFilterInput.bind(this);
     this.findRecipes = this.findRecipes.bind(this);
-
   }
 
   filterIsEmpty(filter) {
@@ -35,16 +36,17 @@ class FilterableRecipelist extends Component {
   runIngredientFilter(recipeIngredients, filterIngredients) {
     let ingredientHits = 0;
     for (let i = 0; i < recipeIngredients.length; i++) {
-      let ing = recipeIngredients[i].name;
+      const ing = recipeIngredients[i].name;
       if (filterIngredients.indexOf(ing) > -1) {
         ingredientHits++;
       }
     }
     return ingredientHits;
   }
+
   runTagFilter(recipeTags, filterTags) {
     let tagHits = 0;
-    for (let tag in recipeTags) {
+    for (const tag in recipeTags) {
       if (recipeTags.hasOwnProperty(tag)) {
         if (filterTags.indexOf(tag) > -1) {
           tagHits++;
@@ -80,8 +82,8 @@ class FilterableRecipelist extends Component {
       return this.simpleFilter(filter.ingredients.length, recipe.ingredients.length, ingredientHits);
     }
     return this.simpleFilter(filter.ingredients.length + filter.tags.length, recipe.ingredients.length + Object.keys(recipe.tags).length, ingredientHits + tagHits);
-
   }
+
   simpleFilter(filterLength, recipeLength, hits) {
     let keeper = false;
     if (filterLength > 10) {
@@ -104,20 +106,21 @@ class FilterableRecipelist extends Component {
     }
     return keeper;
   }
+
   sortOnRelevans(a, b) {
-    let filterTags = this.state.filter.tags;
-    let filterIngredients = this.state.filter.ingredients;
+    const filterTags = this.state.filter.tags;
+    const filterIngredients = this.state.filter.ingredients;
 
     let tagsHitsA = 0;
     let tagsHitsB = 0;
-    for (let tag in a.tags) {
+    for (const tag in a.tags) {
       if (a.tags.hasOwnProperty(tag)) {
         if (filterTags.indexOf(tag) > -1) {
           tagsHitsA++;
         }
       }
     }
-    for (let tag in b.tags) {
+    for (const tag in b.tags) {
       if (b.tags.hasOwnProperty(tag)) {
         if (filterTags.indexOf(tag) > -1) {
           tagsHitsB++;
@@ -127,12 +130,12 @@ class FilterableRecipelist extends Component {
     if (filterIngredients.length === 0) {
       return tagsHitsB - tagsHitsA;
     }
-    //return -1 om a är bättre
-    //return 1 om b är bättre
-    //return 0 om de är lika
+    // return -1 om a är bättre
+    // return 1 om b är bättre
+    // return 0 om de är lika
     let ingredientHitsA = 0;
     let ingredientHitsB = 0;
-    //här måste vi ändra så att dubbletter av ingredient namn inte räjnas dubbel träff
+    // här måste vi ändra så att dubbletter av ingredient namn inte räjnas dubbel träff
     for (let i = 0; i < a.ingredients.length; i++) {
       if (filterIngredients.indexOf(a.ingredients[i].name) > -1) {
         ingredientHitsA++;
@@ -144,22 +147,24 @@ class FilterableRecipelist extends Component {
       }
     }
 
-    let aIngredients = a.ingredients.length;
-    let bIngredients = b.ingredients.length;
-    let hitsA = ingredientHitsA + (tagsHitsA * 0.6);
-    let hitsB = ingredientHitsB + (tagsHitsB * 0.6);
-    //om båda är full match: Välj den som har flest antal ingredienser
+    const aIngredients = a.ingredients.length;
+    const bIngredients = b.ingredients.length;
+    const hitsA = ingredientHitsA + (tagsHitsA * 0.6);
+    const hitsB = ingredientHitsB + (tagsHitsB * 0.6);
+    // om båda är full match: Välj den som har flest antal ingredienser
     if (hitsA === hitsB) {
       return aIngredients - bIngredients;
     }
     return hitsB - hitsA;
   }
+
   sortOnBetyg(a, b) {
     if (a.rating === b.rating) {
       return b.votes - a.votes;
     }
     return b.rating - a.rating;
   }
+
   sortOnPopularitet(a, b) {
     if (!a.visits && !b.visits) {
       this.sortOnVotes(a, b);
@@ -175,6 +180,7 @@ class FilterableRecipelist extends Component {
     }
     return b.visits - a.visits;
   }
+
   sortOnVotes(a, b) {
     if (b.votes === a.votes) {
       return b.rating - a.rating;
@@ -206,19 +212,19 @@ class FilterableRecipelist extends Component {
   }
 
   sortRecipes(a, b) {
-
     if (this.state.filter.sort === 'Relevans') {
       return this.sortOnRelevans(a, b);
-    } else if (this.state.filter.sort === 'Betyg') {
+    } if (this.state.filter.sort === 'Betyg') {
       return this.sortOnBetyg(a, b);
-    } else if (this.state.filter.sort === 'Popularitet') {
+    } if (this.state.filter.sort === 'Popularitet') {
       return this.sortOnPopularitet(a, b);
-    } else if (this.state.filter.sort === 'Snabbast') {
+    } if (this.state.filter.sort === 'Snabbast') {
       return this.sortOnTid(a, b);
-    } else if (this.state.filter.sort === 'Ingredienser') {
+    } if (this.state.filter.sort === 'Ingredienser') {
       return this.sortOnAntalIngredienserAsc(a, b);
     }
   }
+
   handleFilterInput(changedFilter) {
     this.setState({
       filter: changedFilter,
@@ -227,45 +233,55 @@ class FilterableRecipelist extends Component {
   }
 
   findRecipes() {
-    let recipes = [];
+    const recipes = [];
     for (let i = 0; i < this.props.recipes.length; i++) {
       if (this.runFilter(this.props.recipes[i], this.state.filter)) {
         recipes.push(this.props.recipes[i]);
       }
     }
-    let that = this;
-    //sortera recept
-    recipes.sort(function (a, b) {
-      return that.sortRecipes(a, b);
-    });
+    const that = this;
+    // sortera recept
+    recipes.sort((a, b) => that.sortRecipes(a, b));
     if (recipes.length > this.state.maxHits) {
       recipes.length = this.state.maxHits;
     }
     this.setState({
-      foundRecipes: recipes
+      foundRecipes: recipes,
     });
   }
 
   render() {
     return (
-      <div className="container">
-        <div className="row searchbar-wrapper">
+      <Grid container>
+        <Grid item xs={12} className="searchbar-wrapper">
           <Searchbar onFilterChange={this.handleFilterInput} tags={this.props.tags} foods={this.props.foods} filter={this.state.filter} />
-        </div>
-        <div className="popular-tags">
+        </Grid>
+        <Grid item xs={12} className="popular-tags">
           <QuickTags onUserInput={this.handleFilterInput} tags={this.props.tags} filter={this.state.filter} recipeListRendered={this.state.foundRecipes.length > 0} />
-        </div>
-        <div>
+        </Grid>
+        <Grid item xs={12}>
           <Sort onUserInput={this.handleFilterInput} render={this.state.foundRecipes.length > 0} filter={this.state.filter} />
-        </div>
-        <div className="row recipelist-wrapper">
-          <div className="col-md-6 app-stats">{this.props.recipes.length > 0 ? this.props.recipes.length + ' recept hämtade' : ''}</div>
-          {this.state.foundRecipes.map((recipe, index) =>
-            <Recipe key={recipe.source} filter={this.state.filter} ref="child" grocerylists={this.props.grocerylists} units={this.props.units}
-              recipe={recipe} transitionDelay={index} isFav={this.props.favs.indexOf(recipe.source) > -1} setSnackbar={this.props.setSnackbar} />
-          )}
-        </div>
-      </div>
+        </Grid>
+        <Grid item xs={12} className="app-stats">
+          <Typography variant="body1">{this.props.recipes.length > 0 ? `${this.props.recipes.length} recept hämtade` : ''}</Typography>
+        </Grid>
+        <Grid item xs={12} container className="recipelist-wrapper">
+          {this.state.foundRecipes.map((recipe, index) => (
+            <Grid item key={recipe.source}>
+              <Recipe
+                filter={this.state.filter}
+                ref="child"
+                grocerylists={this.props.grocerylists}
+                units={this.props.units}
+                recipe={recipe}
+                transitionDelay={index}
+                isFav={this.props.favs.indexOf(recipe.source) > -1}
+                setSnackbar={this.props.setSnackbar}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Grid>
     );
   }
 }

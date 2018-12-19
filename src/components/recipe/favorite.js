@@ -62,7 +62,7 @@ class Favorite extends React.Component {
                 <IconButton
                     key="favorite"
                     aria-label="Favorite"
-                    color="secondary"
+                    color="inherit"
                     className="recipecard-save-btn"
                     onClick={this.handleClick}
                 >

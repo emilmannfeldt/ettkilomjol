@@ -1,6 +1,9 @@
+/* eslint no-prototype-builtins: 0 */
+
 const firebase = require('firebase');
 const fs = require('fs');
 
+const minUsesFoods = 1;
 function changeName(options) {
   const recipesRef = firebase.database().ref('recipes');
   const foodRef = firebase.database().ref('foods');
@@ -814,7 +817,7 @@ function changeName(options) {
     // nya konstiga saker som upptäckts:
     // auberginer
 
-  const filename = options[4] || 'import_changename';
+  const filename = options[3] || 'import_changename';
   const log = [];
   let foodLoaded = false;
   let tagLoaded = false;
@@ -990,7 +993,7 @@ function fixFaultyIngredients(options) {
   const existingFoods = [];
   const existingTags = [];
   let units = {};
-  const filename = options[4] || 'import_fixIngredients';
+  const filename = options[3] || 'import_fixIngredients';
   const log = [];
   let foodLoaded = false;
   let tagLoaded = false;
@@ -1149,7 +1152,9 @@ function fixFaultyIngredients(options) {
           const recipeRef = recipesRef.child(child.key);
           recipeRef.update(recipe);
         }
-        function mergeUnits(ingredientA, ingredientB) {
+        function mergeUnits(_ingredientA, _ingredientB) {
+          const ingredientA = _ingredientA;
+          const ingredientB = _ingredientB;
           log.push(`merging units ingredient A ${JSON.stringify(ingredientA)}----------- INgredient B ${JSON.stringify(ingredientB)}`);
           const ingredientResult = {};
           ingredientResult.name = ingredientA.name;
@@ -1219,7 +1224,8 @@ function fixFaultyIngredients(options) {
           return false;
         }
 
-        function checkUnit(ingredient) {
+        function checkUnit(_ingredient) {
+          let ingredient = _ingredient;
           let foundUnit = {};
           for (const type in units) {
             if (units.hasOwnProperty(type)) {
@@ -1286,7 +1292,8 @@ function fixFaultyIngredients(options) {
           }
           return finalIngredient;
         }
-        function closestDecimals(num) {
+        function closestDecimals(_num) {
+          let num = _num;
           const arr = [0, 0.1, 0.2, 0.25, 0.33, 0.4, 0.5, 0.6, 0.66, 0.75, 0.8, 0.9];
           num = num.toFixed(3);
           const decimal = num - (Math.floor(num));
@@ -1350,7 +1357,7 @@ function recountUsage(options) {
       for (let j = 0; j < recipe.ingredients.length; j++) {
         const food = recipe.ingredients[j].name;
         if (existingFoods.indexOf(food) > -1) {
-          foods[food].uses = foods[food].uses + 1;
+          foods[food].uses += 1;
         } else if (food.indexOf('/') < 0 && food.trim().length > 0) {
           foods[food] = {
             name: food,
@@ -1364,12 +1371,12 @@ function recountUsage(options) {
         if (recipe.tags.hasOwnProperty(property)) {
           const tag = property;
           if (existingFoods.indexOf(tag) > -1) {
-            if (removedTags.indexOf(tag) == -1) {
+            if (removedTags.indexOf(tag) === -1) {
               removedTags.push(tag);
             }
             continue;
           } else if (existingTags.indexOf(tag) > -1) {
-            tags[tag].uses = tags[tag].uses + 1;
+            tags[tag].uses += 1;
           } else {
             tags[tag] = {
               name: tag,
@@ -1381,15 +1388,17 @@ function recountUsage(options) {
       }
     }
 
-    /*
-    //filter low usage
+
+    // filter low usage
     for (const prop in foods) {
-      const food = foods[prop];
-      if (food.uses < 8) {
-        delete foods[prop];
+      if (foods.hasOwnProperty(prop)) {
+        const food = foods[prop];
+        if (food.uses < minUsesFoods) {
+          delete foods[prop];
+        }
       }
     }
-    */
+
 
     foodsRef.set(foods);
     tagsRef.set(tags);
