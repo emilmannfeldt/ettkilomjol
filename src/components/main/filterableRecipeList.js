@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
 import Recipe from '../recipe/recipe';
 import Searchbar from '../search/searchbar';
 import QuickTags from '../search/quickTags';
 import Sort from '../search/sort';
+import RFUtil from '../../recipeFilterUtil';
 
 class FilterableRecipelist extends Component {
   constructor(props) {
@@ -23,205 +25,22 @@ class FilterableRecipelist extends Component {
     this.findRecipes = this.findRecipes.bind(this);
   }
 
-  filterIsEmpty(filter) {
-    if (filter.ingredients.length > 0) {
-      return false;
-    }
-    if (filter.tags.length > 0) {
-      return false;
-    }
-    return true;
-  }
 
-  runIngredientFilter(recipeIngredients, filterIngredients) {
-    let ingredientHits = 0;
-    for (let i = 0; i < recipeIngredients.length; i++) {
-      const ing = recipeIngredients[i].name;
-      if (filterIngredients.indexOf(ing) > -1) {
-        ingredientHits++;
-      }
-    }
-    return ingredientHits;
-  }
-
-  runTagFilter(recipeTags, filterTags) {
-    let tagHits = 0;
-    for (const tag in recipeTags) {
-      if (recipeTags.hasOwnProperty(tag)) {
-        if (filterTags.indexOf(tag) > -1) {
-          tagHits++;
-        }
-      }
-    }
-    return tagHits;
-  }
-
-  runFilter(recipe, filter) {
-    if (this.filterIsEmpty(filter)) {
-      return false;
-    }
-
-    let tagHits = 0;
-    let ingredientHits = 0;
-    if (filter.tags.length > 0) {
-      tagHits = this.runTagFilter(recipe.tags, filter.tags);
-      if (tagHits < (filter.tagsIsMandatory ? filter.tags.length : 1)) {
-        return false;
-      }
-    }
-    if (filter.ingredients.length > 0) {
-      ingredientHits = this.runIngredientFilter(recipe.ingredients, filter.ingredients);
-      if (ingredientHits === 0) {
-        return false;
-      }
-    }
-    if (ingredientHits === 0) {
-      return this.simpleFilter(filter.tags.length, recipe.tags.length, tagHits);
-    }
-    if (tagHits === 0) {
-      return this.simpleFilter(filter.ingredients.length, recipe.ingredients.length, ingredientHits);
-    }
-    return this.simpleFilter(filter.ingredients.length + filter.tags.length, recipe.ingredients.length + Object.keys(recipe.tags).length, ingredientHits + tagHits);
-  }
-
-  simpleFilter(filterLength, recipeLength, hits) {
-    let keeper = false;
-    if (filterLength > 10) {
-      keeper = hits / filterLength > 0.24;
-    } else if (filterLength > 6) {
-      keeper = hits / filterLength > 0.3;
-    } else if (filterLength > 3) {
-      keeper = hits / filterLength > 0.38;
-    } else {
-      keeper = hits > 0;
-    }
-    if (!keeper) {
-      if (recipeLength > 20) {
-        keeper = hits / recipeLength > 0.8;
-      } else if (recipeLength > 10) {
-        keeper = hits / recipeLength > 0.7;
-      } else {
-        keeper = hits / recipeLength > 0.6;
-      }
-    }
-    return keeper;
-  }
-
-  sortOnRelevans(a, b) {
-    const filterTags = this.state.filter.tags;
-    const filterIngredients = this.state.filter.ingredients;
-
-    let tagsHitsA = 0;
-    let tagsHitsB = 0;
-    for (const tag in a.tags) {
-      if (a.tags.hasOwnProperty(tag)) {
-        if (filterTags.indexOf(tag) > -1) {
-          tagsHitsA++;
-        }
-      }
-    }
-    for (const tag in b.tags) {
-      if (b.tags.hasOwnProperty(tag)) {
-        if (filterTags.indexOf(tag) > -1) {
-          tagsHitsB++;
-        }
-      }
-    }
-    if (filterIngredients.length === 0) {
-      return tagsHitsB - tagsHitsA;
-    }
-    // return -1 om a är bättre
-    // return 1 om b är bättre
-    // return 0 om de är lika
-    let ingredientHitsA = 0;
-    let ingredientHitsB = 0;
-    // här måste vi ändra så att dubbletter av ingredient namn inte räjnas dubbel träff
-    for (let i = 0; i < a.ingredients.length; i++) {
-      if (filterIngredients.indexOf(a.ingredients[i].name) > -1) {
-        ingredientHitsA++;
-      }
-    }
-    for (let i = 0; i < b.ingredients.length; i++) {
-      if (filterIngredients.indexOf(b.ingredients[i].name) > -1) {
-        ingredientHitsB++;
-      }
-    }
-
-    const aIngredients = a.ingredients.length;
-    const bIngredients = b.ingredients.length;
-    const hitsA = ingredientHitsA + (tagsHitsA * 0.6);
-    const hitsB = ingredientHitsB + (tagsHitsB * 0.6);
-    // om båda är full match: Välj den som har flest antal ingredienser
-    if (hitsA === hitsB) {
-      return aIngredients - bIngredients;
-    }
-    return hitsB - hitsA;
-  }
-
-  sortOnBetyg(a, b) {
-    if (a.rating === b.rating) {
-      return b.votes - a.votes;
-    }
-    return b.rating - a.rating;
-  }
-
-  sortOnPopularitet(a, b) {
-    if (!a.visits && !b.visits) {
-      this.sortOnVotes(a, b);
-    }
-    if (!a.visits) {
-      return 1;
-    }
-    if (!b.visits) {
-      return -1;
-    }
-    if (a.visits === b.visits) {
-      this.sortOnVotes(a, b);
-    }
-    return b.visits - a.visits;
-  }
-
-  sortOnVotes(a, b) {
-    if (b.votes === a.votes) {
-      return b.rating - a.rating;
-    }
-    return b.votes - a.votes;
-  }
-
-  sortOnTid(a, b) {
-    if (!b.time && !a.time) {
-      return 0;
-    }
-    if (!b.time) {
-      return -1;
-    }
-    if (!a.time) {
-      return 1;
-    }
-    if (a.time === b.time) {
-      return a.level - b.level;
-    }
-    return a.time - b.time;
-  }
-
-  sortOnAntalIngredienserAsc(a, b) {
-    if (a.ingredients.length === b.ingredients.length) {
-      return this.sortOnBetyg(a, b);
-    }
-    return a.ingredients.length - b.ingredients.length;
-  }
-
-  sortRecipes(a, b) {
-    if (this.state.filter.sort === 'Relevans') {
-      return this.sortOnRelevans(a, b);
-    } if (this.state.filter.sort === 'Betyg') {
-      return this.sortOnBetyg(a, b);
-    } if (this.state.filter.sort === 'Popularitet') {
-      return this.sortOnPopularitet(a, b);
-    } if (this.state.filter.sort === 'Snabbast') {
-      return this.sortOnTid(a, b);
-    } if (this.state.filter.sort === 'Ingredienser') {
-      return this.sortOnAntalIngredienserAsc(a, b);
+  sortRecipes(recipes) {
+    const { filter } = this.state;
+    switch (filter.sort) {
+      case 'Relevans':
+        return recipes.sort((a, b) => RFUtil.sortOnRelevans(a, b, filter.tags, filter.ingredients));
+      case 'Betyg':
+        return recipes.sort((a, b) => RFUtil.sortOnBetyg(a, b));
+      case 'Popularitet':
+        return recipes.sort((a, b) => RFUtil.sortOnPopularitet(a, b));
+      case 'Snabbast':
+        return recipes.sort((a, b) => RFUtil.sortOnTid(a, b));
+      case 'Ingredienser':
+        return recipes.sort((a, b) => RFUtil.sortOnAntalIngredienserAsc(a, b));
+      default:
+        return recipes.sort((a, b) => RFUtil.sortOnRelevans(a, b, filter.tags, filter.ingredients));
     }
   }
 
@@ -233,50 +52,64 @@ class FilterableRecipelist extends Component {
   }
 
   findRecipes() {
-    const recipes = [];
-    for (let i = 0; i < this.props.recipes.length; i++) {
-      if (this.runFilter(this.props.recipes[i], this.state.filter)) {
-        recipes.push(this.props.recipes[i]);
+    const { filter, maxHits } = this.state;
+    const { recipes } = this.props;
+    const filteredRecipes = [];
+    if (RFUtil.filterIsEmpty(filter)) {
+      this.setState({
+        foundRecipes: [],
+      });
+    }
+    for (let i = 0; i < recipes.length; i++) {
+      if (RFUtil.runFilter(recipes[i], filter)) {
+        filteredRecipes.push(recipes[i]);
       }
     }
-    const that = this;
     // sortera recept
-    recipes.sort((a, b) => that.sortRecipes(a, b));
-    if (recipes.length > this.state.maxHits) {
-      recipes.length = this.state.maxHits;
+    const t0 = performance.now();
+
+    const sortedRecipes = this.sortRecipes(filteredRecipes);
+    const t1 = performance.now();
+    console.log(`Call to sortrelevans took ${t1 - t0} milliseconds.`);
+
+    if (sortedRecipes.length > maxHits) {
+      sortedRecipes.length = maxHits;
     }
     this.setState({
-      foundRecipes: recipes,
+      foundRecipes: sortedRecipes,
     });
   }
 
   render() {
+    const { filter, foundRecipes } = this.state;
+    const {
+      foods, tags, recipes, grocerylists, units, favs, setSnackbar,
+    } = this.props;
     return (
       <Grid container>
         <Grid item xs={12} className="searchbar-wrapper">
-          <Searchbar onFilterChange={this.handleFilterInput} tags={this.props.tags} foods={this.props.foods} filter={this.state.filter} />
+          <Searchbar onFilterChange={this.handleFilterInput} tags={tags} foods={foods} filter={filter} />
         </Grid>
         <Grid item xs={12} className="popular-tags">
-          <QuickTags onUserInput={this.handleFilterInput} tags={this.props.tags} filter={this.state.filter} recipeListRendered={this.state.foundRecipes.length > 0} />
+          <QuickTags onUserInput={this.handleFilterInput} tags={tags} filter={filter} recipeListRendered={foundRecipes.length > 0} />
         </Grid>
         <Grid item xs={12}>
-          <Sort onUserInput={this.handleFilterInput} render={this.state.foundRecipes.length > 0} filter={this.state.filter} />
+          <Sort onUserInput={this.handleFilterInput} render={foundRecipes.length > 0} filter={filter} />
         </Grid>
         <Grid item xs={12} className="app-stats">
-          <Typography variant="body1">{this.props.recipes.length > 0 ? `${this.props.recipes.length} recept hämtade` : ''}</Typography>
+          <Typography variant="body1">{recipes.length > 0 ? `${recipes.length} recept hämtade` : ''}</Typography>
         </Grid>
         <Grid item xs={12} container className="recipelist-wrapper">
-          {this.state.foundRecipes.map((recipe, index) => (
-            <Grid item key={recipe.source}>
+          {foundRecipes.map((r, index) => (
+            <Grid item key={r.source}>
               <Recipe
-                filter={this.state.filter}
-                ref="child"
-                grocerylists={this.props.grocerylists}
-                units={this.props.units}
-                recipe={recipe}
+                filter={filter}
+                grocerylists={grocerylists}
+                units={units}
+                recipe={r}
                 transitionDelay={index}
-                isFav={this.props.favs.indexOf(recipe.source) > -1}
-                setSnackbar={this.props.setSnackbar}
+                isFav={favs.indexOf(r.source) > -1}
+                setSnackbar={setSnackbar}
               />
             </Grid>
           ))}
@@ -285,4 +118,13 @@ class FilterableRecipelist extends Component {
     );
   }
 }
+FilterableRecipelist.propTypes = {
+  recipes: PropTypes.array.isRequired,
+  foods: PropTypes.array.isRequired,
+  tags: PropTypes.array.isRequired,
+  units: PropTypes.object.isRequired,
+  favs: PropTypes.array,
+  setSnackbar: PropTypes.func.isRequired,
+  grocerylists: PropTypes.array,
+};
 export default FilterableRecipelist;

@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Home from './main/home';
-import { fire } from '../base';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,6 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
+import { fire } from '../base';
+import Home from './main/home';
 import './app.css';
 
 class App extends Component {
@@ -19,7 +19,6 @@ class App extends Component {
       user: null,
       verified: false,
       inputCode: '',
-      invitationCode: '',
       tries: 0,
       tomanytries: false,
       errorText: '',
@@ -31,17 +30,28 @@ class App extends Component {
   }
 
   componentDidMount() {
-    let verifiedStore = localStorage.getItem('verifiedinvite');
-    if (verifiedStore && verifiedStore === "true") {
+    const verifiedStore = localStorage.getItem('verifiedinvite');
+    if (verifiedStore && verifiedStore === 'true') {
       this.setState({
         verified: true,
-      })
+      });
     }
     this.authListener();
   }
 
+  getError() {
+    const { errorText } = this.state;
+    return errorText;
+  }
+
+  handelChange = (event) => {
+    this.setState({
+      inputCode: event.target.value,
+    });
+  };
+
   authListener() {
-    let that = this;
+    const that = this;
     fire.auth().onAuthStateChanged((user) => {
       if (user) {
         if (!user.isAnonymous) {
@@ -50,109 +60,104 @@ class App extends Component {
           });
         }
         this.setState({
-          user: user,
-        })
-
+          user,
+        });
       } else {
-        fire.auth().signInAnonymously().catch(function (error) {
-          //console.log("ERROR sign in anonymous" + error);
+        fire.auth().signInAnonymously().catch((error) => {
+          // console.log("ERROR sign in anonymous" + error);
         });
       }
     });
   }
+
   verifyInvitation() {
-    if (this.state.tomanytries) {
+    const {
+      tomanytries, waitTime, inputCode, tries,
+    } = this.state;
+    if (tomanytries) {
       return;
     }
-    let tomanytries = JSON.parse(localStorage.getItem('tomanytries'));
-    let now = new Date();
-    let that = this;
-    if (tomanytries && now - tomanytries < this.state.waitTime) {
+    const storedTomanytries = JSON.parse(localStorage.getItem('tomanytries'));
+    const now = new Date();
+    const that = this;
+    if (storedTomanytries && now - storedTomanytries < waitTime) {
       this.setState({
         tomanytries: true,
       });
-      var waitTimer = setInterval(function () {
-        let now = new Date();
-        let tryagain = Math.floor(((that.state.waitTime - (now - tomanytries)) / 1000));
+      const waitTimer = setInterval(() => {
+        const tryagain = Math.floor(((waitTime - (new Date() - storedTomanytries)) / 1000));
         that.setState({
-          errorText: 'För många försök. Försök igen om ' + tryagain + " sekunder",
-        })
+          errorText: `För många försök. Försök igen om ${tryagain} sekunder`,
+        });
         if (tryagain <= 0) {
           that.setState({
             errorText: '',
             tomanytries: false,
-          })
+          });
           clearInterval(waitTimer);
         }
       }, 1000);
       this.setState({
         tries: 0,
-      })
-
+      });
     }
-    var xmlHttp = new XMLHttpRequest();
-    if (fire.options.projectId === "ettkilomjol-dev") {
-      xmlHttp.open("GET", ' https://us-central1-ettkilomjol-dev.cloudfunctions.net/verifyInvitation?code=' + this.state.inputCode, true);
+    const xmlHttp = new XMLHttpRequest();
+    if (fire.options.projectId === 'ettkilomjol-dev') {
+      xmlHttp.open('GET', ` https://us-central1-ettkilomjol-dev.cloudfunctions.net/verifyInvitation?code=${inputCode}`, true);
     } else {
-      xmlHttp.open("GET", ' https://us-central1-ettkilomjol-10ed1.cloudfunctions.net/verifyInvitation?code=' + this.state.inputCode, true);
+      xmlHttp.open('GET', ` https://us-central1-ettkilomjol-10ed1.cloudfunctions.net/verifyInvitation?code=${inputCode}`, true);
     }
 
-    xmlHttp.onload = function (e) {
+    xmlHttp.onload = function verifyOnServer(e) {
       if (xmlHttp.readyState === 4) {
         if (xmlHttp.status === 200) {
           that.setState({
             verified: true,
           });
           localStorage.setItem('verifiedinvite', 'true');
-          //console.log("verifed ok")
+          // console.log("verifed ok")
         } else {
-          //console.log("verifed not ok")
+          // console.log("verifed not ok")
           that.setState({
-            tries: that.state.tries + 1,
-            errorText: 'Fel kod, försök igen'
-          })
-          if (that.state.tries > 2) {
+            tries: tries + 1,
+            errorText: 'Fel kod, försök igen',
+          });
+          if (tries > 2) {
             localStorage.setItem('tomanytries', JSON.parse(Date.now()));
           }
         }
       }
     };
-    xmlHttp.onerror = function (e) {
-      //console.log("verifed error");
+    xmlHttp.onerror = function errorResponse(e) {
+      // console.log("verifed error");
       console.error(xmlHttp.statusText);
     };
     xmlHttp.send(null);
   }
 
-  handelChange = event => {
-    this.setState({
-      inputCode: event.target.value,
-    })
-  };
-  getError() {
-    return this.state.errorText;
-  }
-
   render() {
+    const { user, verified, inputCode } = this.state;
     return (
       <MuiThemeProvider>
         <div>
-          <div className='spinner'>
-            <LinearProgress classes={{root:'progress-root', bar:'progress-bar'}}/>
+          <div className="spinner">
+            <LinearProgress classes={{ root: 'progress-root', bar: 'progress-bar' }} />
           </div>
-          {this.state.user && this.state.verified ? (
+          {user && verified ? (
             <Home />
           ) : (
-              this.state.user &&
-              <Dialog className="invitation-dialog" open={true} aria-labelledby="form-dialog-title">
+            user
+              && (
+              <Dialog className="invitation-dialog" open aria-labelledby="form-dialog-title">
                 <DialogTitle id="simple-dialog-title">Välkommen till Ett kilo mjöl</DialogTitle>
                 <DialogContent className="invitation-content dialog-content">
                   <DialogContentText>
                     Ange den kod du fått i din inbjudan.
-                </DialogContentText>
-                  <TextField className="verify-field"
+                  </DialogContentText>
+                  <TextField
+                    className="verify-field"
                     name="inbjudan"
-                    value={this.state.inputCode}
+                    value={inputCode}
                     onChange={this.handelChange}
                     margin="normal"
                   />
@@ -164,7 +169,8 @@ class App extends Component {
                   <Button onClick={this.verifyInvitation} color="primary" variant="contained">Verifiera</Button>
                 </DialogActions>
               </Dialog>
-            )}
+              )
+          )}
         </div>
       </MuiThemeProvider>
     );

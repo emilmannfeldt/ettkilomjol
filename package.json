@@ -21,6 +21,7 @@
     "gh-pages": "^1.2.0",
     "material-ui": "^0.19.4",
     "nightmare": "^3.0.1",
+    "prop-types": "^15.6.2",
     "puppeteer": "^1.11.0",
     "react": "^16.4.0",
     "react-chartjs-2": "^2.7.2",
@@ -33,7 +34,8 @@
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-promise": "^0.6.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "underscore": "^1.9.1"
   },
   "scripts": {
     "start": "react-scripts start",

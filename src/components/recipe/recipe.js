@@ -8,6 +8,7 @@ import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import { fire } from '../../base';
 import Time from './time';
 import Tags from './tags';
@@ -35,9 +36,15 @@ const styles = theme => ({
   image: {
     width: '100%',
     height: 210,
+    borderRadius: 3,
+    marginTop: -10,
   },
   actions: {
     color: '#ffb3b7',
+    position: 'absolute',
+    top: 15,
+    right: 15,
+    width: 110,
   },
   [theme.breakpoints.up('sm')]: {
     image: {
@@ -45,14 +52,23 @@ const styles = theme => ({
       height: 300,
       marginTop: 15,
       marginBottom: 15,
-      marginLeft: 5,
+      marginLeft: -15,
+      borderRadius: '0px 3px 3px 0px',
+    },
+    recipeCard: {
+      paddingTop: 0,
+      paddingBottom: 0,
+    },
+  },
+  [theme.breakpoints.up('md')]: {
+    image: {
+      marginRight: 15,
+      marginLeft: 0,
+      borderRadius: 3,
     },
   },
   [theme.breakpoints.down('xs')]: {
     actions: {
-      position: 'absolute',
-      top: 15,
-      right: 15,
       width: '100%',
     },
   },
@@ -64,10 +80,9 @@ class Recipe extends Component {
     super(props);
     this.state = {
       portionsMultiplier: 1,
-      recipe: this.props.recipe,
+      recipe: props.recipe,
     };
     this.toggleIngredientlist = this.toggleIngredientlist.bind(this);
-    this.closeIngredientlist = this.closeIngredientlist.bind(this);
     this.visitSource = this.visitSource.bind(this);
     this.showGroceryListDialog = this.showGroceryListDialog.bind(this);
     this.showGroceryListDialogInternal = this.showGroceryListDialogInternal.bind(this);
@@ -76,33 +91,17 @@ class Recipe extends Component {
   }
 
   toggleIngredientlist() {
-    const recipe = this.state.recipe;
+    const { recipe } = this.state;
     recipe.expanded = !recipe.expanded;
     this.setState({
       recipe,
     });
   }
 
-  closeIngredientlist() {
-    this.setState({
-      expanded: false,
-    });
-  }
-
   updatePortions(newPortionMultiplier) {
-    const recipe = this.state.recipe;
-    for (let i = 0; i < recipe.ingredients.length; i++) {
-      if (recipe.ingredients[i].amount) {
-        recipe.ingredients[i].amount = Utils.closestDecimals(recipe.ingredients[i].amount * (newPortionMultiplier / this.state.portionsMultiplier));
-        if (recipe.ingredients[i].unit) {
-          recipe.ingredients[i] = Utils.correctIngredientUnit(recipe.ingredients[i], this.props.units);
-          // 8. recepten som tillhör inköslistan ska bara finnas med under en knapp. "visa recept" klickar man där visas alla recipecards som grocerylist.recipes har.
-          // gå ut med detta till gruppen i helgen. vår chatgrupp först kanske :)
-          // fixa bättre felhantering på grocerylists. felmeddelandet ska skrivas intill fältet. kanske en required på amount som name och unit finns: required={name && unit}
-        }// kolla best pracite för felmeddelanden. Alert? rödfärg vid knappen? vid fältet? snackbar? toaster?
-        // felmeddelanden: männskilga, humor, placera vid relevant fält.
-      }
-    }
+    const { recipe, portionsMultiplier } = this.state;
+    const { units } = this.props;
+    recipe.ingredients = Utils.convertIngredientPortions(recipe.ingredients, newPortionMultiplier, portionsMultiplier, units);
     this.setState({
       portionsMultiplier: newPortionMultiplier,
       recipe,
@@ -110,8 +109,9 @@ class Recipe extends Component {
   }
 
   visitSource() {
+    const { recipe: { source } } = this.state;
     const recipeRef = fire.database().ref('recipes');
-    recipeRef.orderByChild('source').equalTo(this.state.recipe.source).once('value', (snapshot) => {
+    recipeRef.orderByChild('source').equalTo(source).once('value', (snapshot) => {
       snapshot.forEach((child) => {
         const recipeTmp = child.val();
         // console.log("visiting " + child.val().source);
@@ -126,12 +126,14 @@ class Recipe extends Component {
   }
 
   showGroceryListDialogInternal() {
-    this.showGroceryListDialog(this.state.recipe, this.state.recipe.ingredients);
+    const { recipe } = this.state;
+    this.showGroceryListDialog(recipe, recipe.ingredients);
   }
 
   showGroceryListDialog(recipe, items) {
+    const { setSnackbar } = this.props;
     if (fire.auth().currentUser.isAnonymous) {
-      this.props.setSnackbar('login_required');
+      setSnackbar('login_required');
     } else {
       this.setState({
         showGroceryDialog: true,
@@ -150,25 +152,24 @@ class Recipe extends Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const matchedIngredients = [];
-    const missingIngredients = [];
-    const matchedTags = [];
-    for (let i = 0; i < this.state.recipe.ingredients.length; i++) {
-      const name = this.state.recipe.ingredients[i].name;
-      if (this.props.filter.ingredients.indexOf(name) > -1) {
-        matchedIngredients.push(this.state.recipe.ingredients[i]);
+    const {
+      recipe, portionsMultiplier, showGroceryDialog, itemsToAdd, recipeToAdd,
+    } = this.state;
+    const {
+      classes, filter, transitionDelay, isFav, demo, grocerylists, units, setSnackbar,
+    } = this.props;
+
+    const { missingIngredients, matchedIngredients } = recipe.ingredients.reduce((result, ingredient) => {
+      if (filter.ingredients.includes(ingredient.name)) {
+        result.matchedIngredients.push(ingredient.name);
       } else {
-        missingIngredients.push(name);
+        result.missingIngredients.push(ingredient.name);
       }
-    }
-    for (const tag in this.state.recipe.tags) {
-      if (this.state.recipe.tags.hasOwnProperty(tag)) {
-        if (this.props.filter.tags.indexOf(tag) > -1) {
-          matchedTags.push(tag);
-        }
-      }
-    }
+      return result;
+    },
+    { missingIngredients: [], matchedIngredients: [] });
+
+    const matchedTags = filter.tags.filter(tag => recipe.tags[tag]);
 
     // få card content mer kompakt, använd cardheader och footer?
     // BUGG: när jag angett food och tags så det går över en rad så försvinner den raden??
@@ -176,11 +177,14 @@ class Recipe extends Component {
     // ta bort bootstrap helt? ersätt med grid på alla ställen.
     // testa igenom allt
     // fixa eslintar
+    // refactorer med destructing i inparametrarna. använd så mycket dependency injection det går. för att underlätta testning. Pure function etc.
+    // ersätt loopar med find, reject, map, reduce, ta in underscore.js om det behövs?
+    // kolla fun fun functions avsnitt om dependency injection för att se hur man testar och mochar. använd mocha eller jets++
     return (
       <Grid item xs={12} className="list-item">
         <Fade
           in
-          style={{ transitionDelay: this.props.transitionDelay * 200 }}
+          style={{ transitionDelay: transitionDelay * 200 }}
           timeout={500}
         >
           <Card className={classes.recipeCard}>
@@ -188,7 +192,7 @@ class Recipe extends Component {
               <Grid item xs={12} sm style={{ display: 'contents' }}>
                 <CardMedia
                   className={classes.image}
-                  image={this.state.recipe.image}
+                  image={recipe.image}
                 />
               </Grid>
               <Grid item xs={12} sm>
@@ -196,18 +200,19 @@ class Recipe extends Component {
                   <Grid item container>
                     <Grid item xs={12}>
                       <div className="recipecard-title">
-                        {this.props.demo ? (<h3 className="text-big">{this.state.recipe.title}</h3>
-                        ) : (<h3 className="text-big">
-                          <a
-                            onClick={this.visitSource}
-                            target="_blank"
-                            href={this.state.recipe.source.indexOf('tasteline.com') > -1 ? `//www.${this.state.recipe.source}` : `//${this.state.recipe.source}`}
-                          >
-                            {this.state.recipe.title}
+                        {demo ? (<h3 className="text-big">{recipe.title}</h3>
+                        ) : (
+                          <h3 className="text-big">
+                            <a
+                              onClick={this.visitSource}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={recipe.source.indexOf('tasteline.com') > -1 ? `//www.${recipe.source}` : `//${recipe.source}`}
+                            >
+                              {recipe.title}
 
-                          </a>
-
-                             </h3>
+                            </a>
+                          </h3>
                         )}
                       </div>
                     </Grid>
@@ -215,16 +220,16 @@ class Recipe extends Component {
 
                       <div className="recipecard-author text-medium">
                         <span>
-                          {this.state.recipe.author}
-                          {this.state.recipe.createdFor ? `, ${this.state.recipe.createdFor}` : ''}
-                          {this.state.recipe.created ? ` - ${this.state.recipe.created}` : ''}
+                          {recipe.author}
+                          {recipe.createdFor ? `, ${recipe.createdFor}` : ''}
+                          {recipe.created ? ` - ${recipe.created}` : ''}
                         </span>
                       </div>
                     </Grid>
                     <Grid item xs={12}>
 
                       <div className={classes.actions}>
-                        <Favorite source={this.state.recipe.source} isFav={this.props.isFav} setSnackbar={this.props.setSnackbar} />
+                        <Favorite source={recipe.source} isFav={isFav} setSnackbar={setSnackbar} />
                         <IconButton onClick={this.showGroceryListDialogInternal} color="inherit" className="recipe-grocerylist--btn">
                           <ShoppingCartOutlinedIcon />
                         </IconButton>
@@ -233,42 +238,42 @@ class Recipe extends Component {
                     <Grid item xs={12}>
 
                       <div className="recipecard-description text-medium">
-                        {this.state.recipe.description}
+                        {recipe.description}
                         {' '}
                       </div>
                     </Grid>
                     <Grid item xs={12}>
 
                       <div className="recipecard-rating text-small">
-                        <Rating value={this.state.recipe.rating} votes={this.state.recipe.votes} />
+                        <Rating value={recipe.rating} votes={recipe.votes} />
                       </div>
                     </Grid>
                     <Grid item xs={12}>
 
                       <div className="text-small">
-                        <Time time={this.state.recipe.time} />
-                        <Level index={this.state.recipe.level} />
+                        <Time time={recipe.time} />
+                        <Level index={recipe.level} />
                       </div>
                     </Grid>
                     <Grid item xs={12}>
                       <div className="recipecard-tags text-small">
-                        <Tags matchedTags={matchedTags} recipeTags={this.state.recipe.tags} recipeKey={this.state.recipe.source} />
+                        <Tags matchedTags={matchedTags} recipeTags={recipe.tags} recipeKey={recipe.source} />
                       </div>
                     </Grid>
                     <Grid item xs={12}>
                       <div className="recipecard-ingredients text-medium">
                         <IngredientProgress matchedIngredients={matchedIngredients} missingIngredients={missingIngredients} toggleIngredientlist={this.toggleIngredientlist} />
-                        {this.state.recipe.expanded && <Portion portionsUpdate={this.updatePortions} portions={this.state.recipe.portions} />}
+                        {recipe.expanded && <Portion portionsUpdate={this.updatePortions} portions={recipe.portions} />}
                       </div>
                     </Grid>
                     <Grid item xs={12}>
 
                       <div className="ingredient-list text-medium">
-                        {this.state.recipe.expanded && (
+                        {recipe.expanded && (
                         <Ingredientlist
                           handleAddItem={this.showGroceryListDialog}
-                          portionsMultiplier={this.state.portionsMultiplier}
-                          ingredients={this.state.recipe.ingredients}
+                          portionsMultiplier={portionsMultiplier}
+                          ingredients={recipe.ingredients}
                           missing={missingIngredients}
                         />
                         )}
@@ -281,16 +286,27 @@ class Recipe extends Component {
           </Card>
         </Fade>
         <AddGroceryDialog
-          units={this.props.units}
-          open={!!this.state.showGroceryDialog}
+          units={units}
+          open={!!showGroceryDialog}
           onClose={this.closeGrocerylistDialog}
-          grocerylists={this.props.grocerylists}
-          itemsToAdd={this.state.itemsToAdd}
-          recipeToAdd={this.state.recipeToAdd}
-          setSnackbar={this.props.setSnackbar}
+          grocerylists={grocerylists}
+          itemsToAdd={itemsToAdd}
+          recipeToAdd={recipeToAdd}
+          setSnackbar={setSnackbar}
         />
       </Grid>
     );
   }
 }
+Recipe.propTypes = {
+  classes: PropTypes.object.isRequired,
+  recipe: PropTypes.object.isRequired,
+  filter: PropTypes.object.isRequired,
+  units: PropTypes.object.isRequired,
+  transitionDelay: PropTypes.number.isRequired,
+  isFav: PropTypes.bool,
+  demo: PropTypes.bool,
+  setSnackbar: PropTypes.func.isRequired,
+  grocerylists: PropTypes.array,
+};
 export default withStyles(styles)(Recipe);
