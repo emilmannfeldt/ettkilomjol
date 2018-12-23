@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import LoggedInIcon from '@material-ui/icons/PersonOutline';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-
+import PropTypes from 'prop-types';
 import LoginIcon from '@material-ui/icons/LockOutlined';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -15,12 +15,84 @@ import MenuItem from '@material-ui/core/MenuItem';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import Avatar from '@material-ui/core/Avatar';
 import FavoriteIcon from '@material-ui/icons/FavoriteBorder';
-
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import SearchIcon from '@material-ui/icons/Search';
 import { fire } from '../../base';
 import headerImg from './header.jpg';
 
+MyLoginComponent.propTypes = {
+  logincall: PropTypes.func.isRequired,
+  showLoginPage: PropTypes.bool.isRequired,
+};
+function MyLoginComponent({ logincall, showLoginPage }) {
+  if (fire.auth().currentUser.isAnonymous) {
+    return (
+      <Button onClick={logincall} size="small" className="login-btn">
+        <LoginIcon />
+        {showLoginPage ? 'Avbryt' : 'Logga in'}
+      </Button>
+    );
+  }
+  if (fire.auth().currentUser.photoURL) {
+    return (<Avatar className="appbar-login-avatar" src={fire.auth().currentUser.photoURL} alt="user avatar" tile="test" />);
+  }
+  return (
+    <div>
+      <LoggedInIcon className="toolbar-more-icon" />
+      {' '}
+      <span className="username-label">
+        {' '}
+        {fire.auth().currentUser.displayName}
+      </span>
+    </div>
+  );
+}
+
+MenuItemList.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  loginAction: PropTypes.func.isRequired,
+  logoutAction: PropTypes.func.isRequired,
+};
+function MenuItemList({ onClose, loginAction, logoutAction }) {
+  const items = [];
+  const loggedIn = fire.auth().currentUser && !fire.auth().currentUser.isAnonymous;
+  items.push(<Link key={items.length} className="hide-mobile" to="/"><MenuItem onClick={onClose}>Sök recept</MenuItem></Link>);
+  if (loggedIn) {
+    items.push(<Link key={items.length} className="hide-mobile" to="/favorites"><MenuItem onClick={onClose}>Mina favoriter</MenuItem></Link>);
+    items.push(<Link key={items.length} className="hide-mobile" to="/grocerylists"><MenuItem onClick={onClose}>Mina inköpslistor</MenuItem></Link>);
+  }
+  items.push(<Link key={items.length} to="/stats"><MenuItem onClick={onClose}>Siffror</MenuItem></Link>);
+  items.push(<Link key={items.length} className="hide-desktop" to="/faq"><MenuItem onClick={onClose}>FAQ</MenuItem></Link>);
+  items.push(<MenuItem key={items.length} className="hide-desktop" onClick={() => { window.location.href = 'https://github.com/emilmannfeldt/ettkilomjol'; }}>Github</MenuItem>);
+  items.push(<MenuItem key={items.length} className="hide-desktop" onClick={() => { window.location.href = 'https://www.linkedin.com/in/mannfeldt/'; }}>LinkedIn</MenuItem>);
+  if (loggedIn) {
+    items.push(<MenuItem key={items.length} onClick={logoutAction}>Logga ut</MenuItem>);
+  } else {
+    items.push(<MenuItem key={items.length} onClick={loginAction}>Logga in</MenuItem>);
+  }
+  return (
+    <div className="header-menulist">
+      {items}
+    </div>
+  );
+}
+
+const uiConfig = {
+  signInFlow: 'popup',
+  signInOptions: [
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+  ],
+  callbacks: {
+    signInSuccessWithAuthResult: () => {
+      this.setState({
+        showLoginPage: false,
+      });
+      return false;
+    },
+  },
+};
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -34,22 +106,11 @@ class Header extends Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  uiConfig = {
-    signInFlow: 'popup',
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-    ],
-    callbacks: {
-      signInSuccessWithAuthResult: () => {
-        this.setState({
-          showLoginPage: false,
-        });
-        return false;
-      },
-    },
-  }
+  openMenu = (event) => {
+    this.setState({
+      anchorEl: event.currentTarget,
+    });
+  };
 
   logout(e) {
     e.preventDefault();
@@ -60,17 +121,13 @@ class Header extends Component {
   }
 
   login(e) {
+    const { showLoginPage } = this.state;
     e.preventDefault();
     this.setState({
-      showLoginPage: !this.state.showLoginPage,
+      showLoginPage: !showLoginPage,
     });
   }
 
-  openMenu = (event) => {
-    this.setState({
-      anchorEl: event.currentTarget,
-    });
-  };
 
   handleClose() {
     this.setState({
@@ -78,52 +135,9 @@ class Header extends Component {
     });
   }
 
+
   render() {
-    function MenuItemList(props) {
-      const items = [];
-      const loggedIn = fire.auth().currentUser && !fire.auth().currentUser.isAnonymous;
-      items.push(<Link key={items.length} className="hide-mobile" to="/"><MenuItem onClick={props.onClose}>Sök recept</MenuItem></Link>);
-      if (loggedIn) {
-        items.push(<Link key={items.length} className="hide-mobile" to="/favorites"><MenuItem onClick={props.onClose}>Mina favoriter</MenuItem></Link>);
-        items.push(<Link key={items.length} className="hide-mobile" to="/grocerylists"><MenuItem onClick={props.onClose}>Mina inköpslistor</MenuItem></Link>);
-      }
-      items.push(<Link key={items.length} to="/stats"><MenuItem onClick={props.onClose}>Siffror</MenuItem></Link>);
-      items.push(<Link key={items.length} className="hide-desktop" to="/faq"><MenuItem onClick={props.onClose}>FAQ</MenuItem></Link>);
-      items.push(<MenuItem key={items.length} className="hide-desktop" onClick={() => { window.location.href = 'https://github.com/emilmannfeldt/ettkilomjol'; }}>Github</MenuItem>);
-      items.push(<MenuItem key={items.length} className="hide-desktop" onClick={() => { window.location.href = 'https://www.linkedin.com/in/mannfeldt/'; }}>LinkedIn</MenuItem>);
-      if (loggedIn) {
-        items.push(<MenuItem key={items.length} onClick={props.logoutAction}>Logga ut</MenuItem>);
-      } else {
-        items.push(<MenuItem key={items.length} onClick={props.loginAction}>Logga in</MenuItem>);
-      }
-      return (
-        <div className="header-menulist">
-          {items}
-        </div>
-      );
-    }
-    function MyLoginComponent(props) {
-      if (fire.auth().currentUser.isAnonymous) {
-        return (
-          <Button onClick={props.logincall} size="small" className="login-btn">
-            <LoginIcon />
-            {props.showLoginPage ? 'Avbryt' : 'Logga in'}
-          </Button>
-        );
-      }
-      if (fire.auth().currentUser.photoURL) {
-        return (<Avatar className="appbar-login-avatar" src={fire.auth().currentUser.photoURL} alt="user avatar" tile="test" />);
-      }
-      return (<div>
-        <LoggedInIcon className="toolbar-more-icon" />
-        {' '}
-        <span className="username-label">
-          {' '}
-          {fire.auth().currentUser.displayName}
-        </span>
-              </div>
-      );
-    }
+    const { showLoginPage, anchorEl } = this.state;
     let backgroundImage = (
       <div className="headerImageContainer">
         <img src={headerImg} id="headerimage" alt="bakgrundsbild" />
@@ -169,20 +183,20 @@ class Header extends Component {
               </span>
             </div>
             <div className="appbar-container--right">
-              <MyLoginComponent logincall={this.login} showLoginPage={this.state.showLoginPage} />
+              <MyLoginComponent logincall={this.login} showLoginPage={showLoginPage} />
               <IconButton onClick={this.openMenu}>
                 <MoreVertIcon />
               </IconButton>
-              <Menu open={!!this.state.anchorEl} onClose={this.handleClose} anchorEl={this.state.anchorEl}>
+              <Menu open={!!anchorEl} onClose={this.handleClose} anchorEl={anchorEl}>
                 <MenuItemList logoutAction={this.logout} loginAction={this.login} onClose={this.handleClose} />
               </Menu>
             </div>
           </Toolbar>
         </AppBar>
         {
-          this.state.showLoginPage ? (
+          showLoginPage ? (
             <div className="login-form">
-              <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={fire.auth()} />
+              <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={fire.auth()} />
             </div>
           ) : (null)
         }
