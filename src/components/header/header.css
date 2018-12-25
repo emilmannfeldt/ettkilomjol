@@ -6,6 +6,7 @@
     box-sizing: border-box;
     margin-bottom: -490px;
     background-color: #444444;
+    z-index: -1;
 }
 
 #headerimage {

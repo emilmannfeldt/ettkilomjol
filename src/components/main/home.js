@@ -172,7 +172,11 @@ class Home extends Component {
         recipeRef.once('value', (snapshot) => {
           const recipesTmp = [];
           snapshot.forEach((child) => {
-            recipesTmp.push(child.val());
+            const recipe = child.val();
+            if (!recipe.tags) {
+              recipe.tags = [];
+            }
+            recipesTmp.push(recipe);
           });
           that.setState({
             recipes: recipesTmp,
@@ -200,7 +204,11 @@ class Home extends Component {
             recipeRef.once('value', (snapshot) => {
               const recipesTmp = [];
               snapshot.forEach((child) => {
-                recipesTmp.push(child.val());
+                const recipe = child.val();
+                if (!recipe.tags) {
+                  recipe.tags = [];
+                }
+                recipesTmp.push(recipe);
               });
               that.setState({
                 recipes: recipesTmp,
@@ -218,7 +226,11 @@ class Home extends Component {
             console.log('Hämtar recept från indexDB');
             const recipesTmp = [];
             for (let i = 0; i < recipedb.result.length; i++) {
-              recipesTmp.push(recipedb.result[i]);
+              const recipe = recipedb.result[i];
+              if (!recipe.tags) {
+                recipe.tags = [];
+              }
+              recipesTmp.push(recipe);
             }
             that.setState({
               recipes: recipesTmp,

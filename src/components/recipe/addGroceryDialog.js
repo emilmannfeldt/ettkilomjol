@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { fire } from '../../base';
 import './recipe.css';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -13,6 +12,8 @@ import AssignmentIcon from '@material-ui/icons/AssignmentOutlined';
 import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
 import Avatar from '@material-ui/core/Avatar';
+import PropTypes from 'prop-types';
+import { fire } from '../../base';
 import Utils from '../../util';
 
 class AddGroceryDialog extends Component {
@@ -22,7 +23,6 @@ class AddGroceryDialog extends Component {
       newGroceryList: false,
       newName: '',
       errorText: '',
-
     };
 
     this.addItemsToGroceryList = this.addItemsToGroceryList.bind(this);
@@ -32,88 +32,102 @@ class AddGroceryDialog extends Component {
     this.saveToNewGrocerylist = this.saveToNewGrocerylist.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
   }
+
   componentDidMount() {
-    let newName = 'Att handla ' + Utils.getDayAndMonthString(new Date());
-    if (this.props.grocerylists) {
-      for (let i = 0; i < this.props.grocerylists.length; i++) {
-        if (newName === this.props.grocerylists[i].name) {
-          newName = "";
-        }
-      }
+    const { grocerylists } = this.props;
+    let newName = `Att handla ${Utils.getDayAndMonthString(new Date())}`;
+    const nameIsTaken = grocerylists && grocerylists.some(x => x.name === newName);
+    if (nameIsTaken) {
+      newName = '';
     }
     this.setState({
-      newName: newName,
-    })
+      newName,
+    });
   }
+
   shouldComponentUpdate(nextProps, nextState) {
-    if (!nextProps.open && !this.props.open) {
+    const { open } = this.props;
+    if (!nextProps.open && !open) {
       return false;
     }
     return true;
   }
+
+  getError() {
+    const { errorText } = this.state;
+    return errorText;
+  }
+
+  handleChange = name => (event) => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
+
   showNewGrocerylistInput() {
     this.setState({
       newGroceryList: true,
     });
   }
-  getError() {
-    return this.state.errorText;
-  }
-  handleChange = name => event => {
-    this.setState({
-      [name]: event.target.value,
-    });
-  };
+
+
   addItemsToGroceryList(grocerylist) {
-    let ref = fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + grocerylist.name);
-    let updates = {};
-    let mergedIngredient;
-    for (let i = 0; i < this.props.itemsToAdd.length; i++) {
-      let mergeKey= "";
-      let itemToAdd = this.props.itemsToAdd[i];
-      for(let j = 0; j < grocerylist.items.length; j++){
-        if(grocerylist.items[j].name === itemToAdd.name && Utils.ingredientsCanMerge(grocerylist.items[j], itemToAdd, this.props.units)){
-          let tmp = Utils.mergeIngredients(grocerylist.items[j], itemToAdd, this.props.units);
+    const {
+      itemsToAdd, units, recipeToAdd, setSnackbar,
+    } = this.props;
+    const ref = fire.database().ref(`users/${fire.auth().currentUser.uid}/grocerylists/${grocerylist.name}`);
+
+
+    const updates = itemsToAdd.reduce((result, item) => {
+      let mergeKey = '';
+      let mergedIngredient = {};
+      const next = result;
+      if (grocerylist.items) {
+        const mergeableItems = grocerylist.items.filter(x => x.name === item.name && Utils.ingredientsCanMerge(x, item, units));
+        if (mergeableItems.length > 0) {
+          const mergingItem = mergeableItems[mergeableItems.length - 1];
+          const tmp = Utils.mergeIngredients(mergingItem, item, units);
           mergedIngredient = {
             name: tmp.name,
             unit: tmp.unit || null,
-            amount: tmp.amount || null
-          }
-          mergeKey = grocerylist.items[j].key;
+            amount: tmp.amount || null,
+          };
+          mergeKey = mergingItem.key;
         }
       }
-      if(mergedIngredient){
-        updates['/items/' +mergeKey ] = mergedIngredient;
-
-      }else{
-        updates['/items/' + ref.push().key] = this.props.itemsToAdd[i];
+      if (mergeKey) {
+        next[`/items/${mergeKey}`] = mergedIngredient;
+      } else {
+        next[`/items/${ref.push().key}`] = item;
       }
-
+      return next;
+    },
+    {});
+    if (recipeToAdd) {
+      updates[`/recipes/${Utils.encodeSource(recipeToAdd.source)}`] = true;
     }
-    if (this.props.recipeToAdd) {
-      updates['/recipes/' + Utils.encodeSource(this.props.recipeToAdd.source)] = true;
-    }
-    let that = this;
-    ref.update(updates, function (error) {
+    ref.update(updates, (error) => {
       if (error) {
-        //console.log('Error has occured during saving process');
-      }
-      else {
-        that.props.setSnackbar('recipe_added_grocerylist');
+        // console.log('Error has occured during saving process');
+      } else {
+        setSnackbar('recipe_added_grocerylist');
       }
     });
-    that.closeDialog();
+    this.closeDialog();
   }
+
   closeDialog() {
+    const { onClose } = this.props;
     this.setState({
       newName: '',
       newGroceryList: false,
       errorText: '',
     });
-    this.props.onClose();
+    onClose();
   }
 
   validateName(name) {
+    const { grocerylists } = this.props;
     if (name.trim().length < 1) {
       this.setState({
         errorText: 'Namnet måste vara minst 1 tecken',
@@ -126,121 +140,139 @@ class AddGroceryDialog extends Component {
       });
       return false;
     }
-    for (let i = 0; i < this.props.grocerylists.length; i++) {
-      if (name === this.props.grocerylists[i].name) {
-        this.setState({
-          errorText: 'Du har redan en inköpslista med det namnet',
-        });
-        return false;
-      }
+    const exists = grocerylists.some(x => x.name === name);
+    if (exists) {
+      this.setState({
+        errorText: 'Du har redan en inköpslista med det namnet',
+      });
+      return false;
     }
     return true;
   }
+
   saveToNewGrocerylist() {
-    let grocerylist = {
-      name: this.state.newName,
+    const { newName } = this.state;
+    const {
+      itemsToAdd, recipeToAdd, setSnackbar,
+    } = this.props;
+    const grocerylist = {
+      name: newName,
       created: Date.now(),
       items: {},
-      recipes: {}
+      recipes: {},
     };
     if (!this.validateName(grocerylist.name)) {
       return;
     }
-    let ref = fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + grocerylist.name);
-    for (let i = 0; i < this.props.itemsToAdd.length; i++) {
-      grocerylist.items[ref.push().key] = this.props.itemsToAdd[i];
+    const ref = fire.database().ref(`users/${fire.auth().currentUser.uid}/grocerylists/${grocerylist.name}`);
+
+    grocerylist.items = itemsToAdd.reduce((obj_, item) => {
+      const obj = obj_;
+      obj[ref.push().key] = item;
+      return obj;
+    }, {});
+
+    if (recipeToAdd) {
+      grocerylist.recipes[Utils.encodeSource(recipeToAdd.source)] = true;
     }
-    if (this.props.recipeToAdd) {
-      grocerylist.recipes[Utils.encodeSource(this.props.recipeToAdd.source)] = true;
-    }
-    let that = this;
-    ref.set(grocerylist, function (error) {
+    const that = this;
+    ref.set(grocerylist, (error) => {
       if (error) {
-        //console.log('Error has occured during saving process');
         that.setState({
-          errorText: 'Error: ' + error,
+          errorText: `Error: ${error}`,
         });
+      } else {
+        setSnackbar('recipe_added_grocerylist');
       }
-      else {
-        that.props.setSnackbar('recipe_added_grocerylist');
-      }
-    })
-    that.closeDialog();
-    //kolla det här med render som körs för ofta på visa componenter i recipe när snackbaren visas/göms och när jag öppnar dialogen för grocerylists.
-    //använd shouödcomponentRerender() för de ska ju inte renderas om props inte ändrats t.ex. kanske till och med inte behöver renderas om bara några propsändrats?
+    });
+    this.closeDialog();
   }
 
   render() {
+    const { newName, newGroceryList } = this.state;
+    const {
+      grocerylists, open,
+    } = this.props;
     function GrocerylistComponent(props) {
-      return (<List>
-        {props.grocerylists.map((grocerylist, index) =>
-          <ListItem className="grocerydialog-listitem" key={grocerylist.name} onClick={() => { props.handleClick(grocerylist) }} disableGutters={true}>
-            <Avatar className="grocerylist-icon--primarycolor">
-              <AssignmentIcon />
-            </Avatar>
-            <ListItemText primary={grocerylist.name} secondary={Utils.millisecToDateString(grocerylist.created)} />
-          </ListItem>
-        )}
-      </List>);
-
-    }
-    if (this.props.grocerylists && this.props.grocerylists.length > 0) {
-
       return (
-        <Dialog className="grocerylist-dialog" open={this.props.open} aria-labelledby="form-dialog-title" onClose={this.closeDialog}>
+        <List>
+          {props.grocerylists.map((grocerylist, index) => (
+            <ListItem className="grocerydialog-listitem" key={grocerylist.name} onClick={() => { props.handleClick(grocerylist); }} disableGutters>
+              <Avatar className="grocerylist-icon--primarycolor">
+                <AssignmentIcon />
+              </Avatar>
+              <ListItemText primary={grocerylist.name} secondary={Utils.millisecToDateString(grocerylist.created)} />
+            </ListItem>
+          ))}
+        </List>
+      );
+    }
+    if (grocerylists && grocerylists.length > 0) {
+      return (
+        <Dialog className="grocerylist-dialog" open={open} aria-labelledby="form-dialog-title" onClose={this.closeDialog}>
           <DialogTitle id="simple-dialog-title">Välj inköpslista</DialogTitle>
           <DialogContent className="recipecard-grocerylist-content dialog-content">
-            <DialogContentText>
-            </DialogContentText>
-            <GrocerylistComponent grocerylists={this.props.grocerylists} handleClick={this.addItemsToGroceryList} />
-            {this.state.newGroceryList &&
-              <TextField className="contact-field grocerylist-dialog--padding"
+            <DialogContentText />
+            <GrocerylistComponent grocerylists={grocerylists} handleClick={this.addItemsToGroceryList} />
+            {newGroceryList
+              && (
+              <TextField
+                className="contact-field grocerylist-dialog--padding"
                 label="Namn"
                 name="name"
-                value={this.state.newName}
+                value={newName}
                 onChange={this.handleChange('newName')}
                 margin="normal"
               />
+              )
             }
             <DialogContentText>
               {this.getError()}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            {this.state.newGroceryList ?
-              (<Button onClick={this.saveToNewGrocerylist} color="primary" variant="contained">Skapa</Button>
+            {newGroceryList
+              ? (<Button onClick={this.saveToNewGrocerylist} color="primary" variant="contained">Skapa</Button>
               )
               : (<Button onClick={this.showNewGrocerylistInput} color="primary" variant="contained">Ny lista</Button>
               )
             }
           </DialogActions>
-        </Dialog >
-      );
-    } else {
-      return (
-        <Dialog className="grocerylist-dialog" open={this.props.open} aria-labelledby="form-dialog-title" onClose={this.closeDialog}>
-          <DialogTitle id="simple-dialog-title">Ny inköpslista</DialogTitle>
-          <DialogContent className="recipecard-grocerylist-content dialog-content">
-            <DialogContentText>
-            </DialogContentText>
-            <TextField className="contact-field grocerylist-dialog--padding"
-              label="Namn"
-              name="name"
-              value={this.state.newName}
-              onChange={this.handleChange('newName')}
-              margin="normal"
-            />
-            <DialogContentText>
-              {this.getError()}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.closeDialog} color="secondary" variant="contained">stäng</Button>
-            <Button onClick={this.saveToNewGrocerylist} color="primary" variant="contained">Spara</Button>
-          </DialogActions>
-        </Dialog >
+        </Dialog>
       );
     }
+    return (
+      <Dialog className="grocerylist-dialog" open={open} aria-labelledby="form-dialog-title" onClose={this.closeDialog}>
+        <DialogTitle id="simple-dialog-title">Ny inköpslista</DialogTitle>
+        <DialogContent className="recipecard-grocerylist-content dialog-content">
+          <DialogContentText />
+          <TextField
+            className="contact-field grocerylist-dialog--padding"
+            label="Namn"
+            name="name"
+            value={newName}
+            onChange={this.handleChange('newName')}
+            margin="normal"
+          />
+          <DialogContentText>
+            {this.getError()}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.closeDialog} color="secondary" variant="contained">stäng</Button>
+          <Button onClick={this.saveToNewGrocerylist} color="primary" variant="contained">Spara</Button>
+        </DialogActions>
+      </Dialog>
+    );
   }
 }
+AddGroceryDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  grocerylists: PropTypes.array,
+  itemsToAdd: PropTypes.array,
+  units: PropTypes.any.isRequired,
+  setSnackbar: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  recipeToAdd: PropTypes.object,
+};
 export default AddGroceryDialog;

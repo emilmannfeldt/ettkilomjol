@@ -77,23 +77,24 @@ function MenuItemList({ onClose, loginAction, logoutAction }) {
   );
 }
 
-const uiConfig = {
-  signInFlow: 'popup',
-  signInOptions: [
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-  ],
-  callbacks: {
-    signInSuccessWithAuthResult: () => {
-      this.setState({
-        showLoginPage: false,
-      });
-      return false;
-    },
-  },
-};
 class Header extends Component {
+  uiConfig = {
+    signInFlow: 'popup',
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    ],
+    callbacks: {
+      signInSuccessWithAuthResult: () => {
+        this.setState({
+          showLoginPage: false,
+        });
+        return false;
+      },
+    },
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -196,7 +197,7 @@ class Header extends Component {
         {
           showLoginPage ? (
             <div className="login-form">
-              <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={fire.auth()} />
+              <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={fire.auth()} />
             </div>
           ) : (null)
         }

@@ -1,12 +1,5 @@
 /* recipeList */
 
-.app-stats {
-  color: rgba(255, 255, 255, 0.9);
-  text-align: left;
-  display: inline-block;
-  margin-top: 2.4rem;
-}
-
 @media (max-width: 470px) {
   .app-stats {
     display: none;
@@ -137,7 +130,7 @@
 }
 
 .ingredient-text {
-  margin-top: 1rem;
+  margin-top: 0.8rem !important;
 }
 
 /* ingredientProgress */
@@ -176,7 +169,7 @@
   background: #4e9a5d;
   border: none;
   border-radius: 3px;
-  color: #fff;
+  color: #fdfdfd;
   font-weight: 500;
   height: auto;
   margin: 0 3px 6px 0;
@@ -188,7 +181,7 @@
   background: #4e9a5d7a;
   border: none;
   border-radius: 3px;
-  color: #fff;
+  color: #fdfdfd;
   font-weight: 500;
   height: auto;
   margin: 0 3px 6px 0;

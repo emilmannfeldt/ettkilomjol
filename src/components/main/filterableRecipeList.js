@@ -96,8 +96,8 @@ class FilterableRecipelist extends Component {
         <Grid item xs={12}>
           <Sort onUserInput={this.handleFilterInput} render={foundRecipes.length > 0} filter={filter} />
         </Grid>
-        <Grid item xs={12} className="app-stats">
-          <Typography variant="body1">{recipes.length > 0 ? `${recipes.length} recept hämtade` : ''}</Typography>
+        <Grid item xs={12} style={{ color: '#fdfdfd' }}>
+          <Typography color="inherit" variant="body1">{recipes.length > 0 ? `${recipes.length} recept hämtade` : ''}</Typography>
         </Grid>
         <Grid item xs={12} container className="recipelist-wrapper">
           {foundRecipes.map((r, index) => (
@@ -122,7 +122,7 @@ FilterableRecipelist.propTypes = {
   recipes: PropTypes.array.isRequired,
   foods: PropTypes.array.isRequired,
   tags: PropTypes.array.isRequired,
-  units: PropTypes.object.isRequired,
+  units: PropTypes.any.isRequired,
   favs: PropTypes.array,
   setSnackbar: PropTypes.func.isRequired,
   grocerylists: PropTypes.array,

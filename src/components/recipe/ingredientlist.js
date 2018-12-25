@@ -1,55 +1,57 @@
+/* eslint react/no-array-index-key: 0 */
 import React, { Component } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/AddShoppingCart';
 import DoneIcon from '@material-ui/icons/ShoppingCartOutlined';
 import List from '@material-ui/core/List';
+import Grid from '@material-ui/core/Grid';
+import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
+
 
 class Ingredientlist extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      open: false,
-    };
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(ingredient) {
-    this.props.handleAddItem(null, [ingredient]);
+    const { handleAddItem } = this.props;
+    handleAddItem(null, [ingredient]);
   }
 
   render() {
-    let ingredients = this.props.ingredients;
-    let missing = this.props.missing;
-    for (let i = 0; i < ingredients.length; i++) {
-      ingredients[i].missing = missing.indexOf(ingredients[i].name) > -1;
-    }
-    function compare(a, b) {
-      if (a.missing && !b.missing) {
-        return 1;
-      }
-      if (!a.missing && b.missing) {
-        return -1;
-      }
-      return 0;
-    }
+    const { ingredients, missing } = this.props;
+    const mappedIngredients = ingredients.map(x => ({ ...x, missing: missing.includes(x.name) }));
+    // for (let i = 0; i < ingredients.length; i++) {
+    //   ingredients[i].missing = missing.indexOf(ingredients[i].name) > -1;
+    // }
+    mappedIngredients.sort((a, b) => a.missing - b.missing);
 
-    ingredients.sort(compare);
-
-    let listItems;
-    listItems = ingredients.map((ingredient, index) =>
-      <div key={ingredient.name + index}>
-        <div className="col-xs-10 no-gutter ingredient-text">{(ingredient.amount ? ingredient.amount + " " : "") + (ingredient.unit ? ingredient.unit + " " : "") + ingredient.name}</div>
-        <div className="col-xs-2 no-gutter add-shopingcart-btn">
-          <IconButton onClick={() => { this.handleClick(ingredient) }}>
+    const listItems = mappedIngredients.map((ingredient, index) => (
+      <Grid item container key={`${ingredient.name}${index}`}>
+        <Grid item xs={10} className="ingredient-text">
+          <Typography variant="body2">
+            {(ingredient.amount ? `${ingredient.amount} ` : '') + (ingredient.unit ? `${ingredient.unit} ` : '') + ingredient.name}
+          </Typography>
+        </Grid>
+        <Grid item xs={2} className="add-shopingcart-btn">
+          <IconButton onClick={() => { this.handleClick(ingredient); }}>
             {ingredient.missing ? <AddIcon /> : <DoneIcon />}
-          </IconButton></div>
-      </div>
-    );
+          </IconButton>
+        </Grid>
+      </Grid>
+    ));
 
     return (
       <List>{listItems}</List>
     );
-
   }
 }
+Ingredientlist.propTypes = {
+  ingredients: PropTypes.array.isRequired,
+  missing: PropTypes.array.isRequired,
+  handleAddItem: PropTypes.func.isRequired,
+
+};
 export default Ingredientlist;

@@ -9,7 +9,7 @@
 }
 
 .grocerylist-itemlist {
-    background-color: #ffff;
+    background-color: #fdfdfd;
     margin-top: 4em !important;
 }
 
@@ -89,12 +89,12 @@
 
 .grocerylist-icon--primarycolor {
     background-color: #3f51b5 !important;
-    color: white !important;
+    color: #fdfdfd !important;
 }
 
 .grocerylist-icon--primarycolor:hover {
     background-color: #3f51b5 !important;
-    color: white !important;
+    color: #fdfdfd !important;
 }
 
 .grocerylist-card--title {

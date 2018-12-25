@@ -38,6 +38,7 @@
 /* searchbar */
 
 .chip-wrapper {
+    margin-top:60px !important;
     flex-wrap: wrap;
     display: flex;
     min-height: 108px;
@@ -56,7 +57,7 @@
     height: 2.2rem !important;
     margin-top: 1rem !important;
     border-radius: 1rem !important;
-    background-color: white !important;
+    background-color: #fdfdfd !important;
     border: 1px solid #44444444 !important;
     padding-right: 1rem !important;
     padding-left: 1rem !important;

@@ -1,7 +1,10 @@
-#footer.footer-content {
+.footer-content {
     background: #efe9e6;
     color: #5a5555;
     padding-bottom: 40px;
+    max-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;;
 }
 
 #footer a {

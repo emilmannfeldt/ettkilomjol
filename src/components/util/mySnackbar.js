@@ -2,70 +2,79 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import './util.css';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-class MySnackbar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleClose = this.handleClose.bind(this);
-
-    }
-    loginCall() {
-        document.querySelector('.login-btn').click();
-    }
-
-    handleClose() {
-        this.props.setSnackbar('');
-    }
-
-    render() {
-        let message = "";
-        let duration = 6000;
-        let actions = [];
-        switch (this.props.variant) {
-            case 'login_required':
-                message = "Du behöver vara inloggad för att använda denna funktion";
-                actions = [<Button key="login" className="my_snackbar-login-btn" variant="outlined" size="small" onClick={this.loginCall}>
-                    Logga in
-                </Button>
-                ];
-                break;
-            case 'fav_added':
-                message = "Recept sparat!";
-                duration = 3000;
-                break;
-            case 'grocerylist_delete':
-                message = "Inköpslistan borttagen";
-                duration = 3000;
-                actions = [<Button key="undo" className="my_snackbar-login-btn" color="secondary" variant="outlined" size="small" onClick={this.props.action}>
-                    ångra
-                </Button>
-                ];
-                break;
-            case 'recipe_added_grocerylist':
-                message = "Ingredienser tillagda i inköpslista!";
-                actions = [<Link key="grocerylists" to={'/grocerylists'}>Mina inköpslistor</Link>];
-                duration = 6000;
-                break;
-            default:
-                break;
-        }
-        return (
-            <div>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    className="my_snackbar"
-                    open={true}
-                    autoHideDuration={duration}
-                    onClose={this.handleClose}
-                    message={message}
-                    action={actions}
-                />
-            </div>
-        );
-    }
+function loginCall() {
+  document.querySelector('.login-btn').click();
 }
+
+class MySnackbar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleClose() {
+    const { setSnackbar } = this.props;
+    setSnackbar('');
+  }
+
+  render() {
+    const { variant, action } = this.props;
+
+    const snackbar = {
+      login_required: {
+        message: 'Du behöver vara inloggad för att använda denna funktion',
+        actions: [
+          <Button key="login" className="my_snackbar-login-btn" variant="outlined" size="small" onClick={loginCall}>
+                        Logga in
+          </Button>,
+        ],
+        duration: 6000,
+      },
+      fav_added: {
+        message: 'Recept sparat',
+        duration: 3000,
+      },
+      grocerylist_delete: {
+        message: 'Inköpslistan borttagen',
+        duration: 3000,
+        actions: [
+          <Button key="undo" className="my_snackbar-login-btn" color="secondary" variant="outlined" size="small" onClick={action}>
+                    ångra
+          </Button>,
+        ],
+      },
+      recipe_added_grocerylist: {
+        message: 'Ingredienser tillagda i inköpslista!',
+        actions: [<Link key="grocerylists" to="/grocerylists">Mina inköpslistor</Link>],
+        duration: 6000,
+      },
+    };
+    const snackbarVaritant = snackbar[variant];
+
+    return (
+      <div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          className="my_snackbar"
+          open
+          autoHideDuration={snackbarVaritant.duration}
+          onClose={this.handleClose}
+          message={snackbarVaritant.message}
+          action={snackbarVaritant.actions}
+        />
+      </div>
+    );
+  }
+}
+MySnackbar.propTypes = {
+  setSnackbar: PropTypes.func.isRequired,
+  action: PropTypes.string,
+  variant: PropTypes.string.isRequired,
+};
 export default MySnackbar;
