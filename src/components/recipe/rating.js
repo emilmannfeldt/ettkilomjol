@@ -1,37 +1,45 @@
 import React, { Component } from 'react';
 import StarRatings from 'react-star-ratings';
+import PropTypes from 'prop-types';
 
 class Rating extends Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.value !== this.props.value) {
-            return true;
-        }
-        if (nextProps.votes !== this.props.votes) {
-            return true;
-        }
-        return false;
+  shouldComponentUpdate(nextProps, nextState) {
+    const { value, votes } = this.props;
+    if (nextProps.value !== value) {
+      return true;
     }
-    render() {
-        let votes = "";
-        if (this.props.votes > 1) {
-            votes = this.props.votes + " röster";
-        } else if (this.props.votes > 0) {
-            votes = "1 röst";
-        }
-        return (
-            <div>
-                <div className="rating-wrapper">
-                    <StarRatings
-                        rating={Number(this.props.value)}
-                        starDimension="1rem"
-                        starSpacing ="2px"
-                        starRatedColor="#3f51b5"
-                        starEmptyColor="rgb(201, 206, 234)"
-                    />
-                </div>
-                <div className="rating-votes">{votes}</div>
-            </div>
-        );
+    if (nextProps.votes !== votes) {
+      return true;
     }
+    return false;
+  }
+
+  render() {
+    const { value, votes } = this.props;
+    let voteString = '';
+    if (votes > 1) {
+      voteString = `${votes} röster`;
+    } else if (votes > 0) {
+      voteString = '1 röst';
+    }
+    return (
+      <div>
+        <div className="rating-wrapper">
+          <StarRatings
+            rating={Number(value)}
+            starDimension="1rem"
+            starSpacing="2px"
+            starRatedColor="#3f51b5"
+            starEmptyColor="rgb(201, 206, 234)"
+          />
+        </div>
+        <div className="rating-votes">{voteString}</div>
+      </div>
+    );
+  }
 }
+Rating.propTypes = {
+  votes: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 export default Rating;

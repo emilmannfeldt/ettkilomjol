@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Level extends Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.index !== this.props.index) {
-            return true;
-        }
-        return false;
+  shouldComponentUpdate(nextProps, nextState) {
+    const { index } = this.props;
+    if (nextProps.index !== index) {
+      return true;
     }
-    render() {
-        let level = "";
-        if (this.props.index === 1) {
-            level = "Lätt";
-        } else if (this.props.index === 2) {
-            level = "Medel";
-        } else if (this.props.index === 3) {
-            level = "Svår";
-        }
+    return false;
+  }
 
-        return (
-            <div className="recipecard-level"> {level}</div>
-        );
-    }
+  render() {
+    const { index } = this.props;
+    const levels = ['', 'Lätt', 'Medel', 'Svårt'];
+    return (
+      <div className="recipecard-level">
+        {' '}
+        {levels[index]}
+      </div>
+    );
+  }
 }
+Level.propTypes = {
+  index: PropTypes.number.isRequired,
+};
 export default Level;

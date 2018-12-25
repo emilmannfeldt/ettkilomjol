@@ -251,7 +251,7 @@ class Recipe extends Component {
                     <Grid item xs={12}>
 
                       <div className="text-small">
-                        <Time time={recipe.time} />
+                        {recipe.time && <Time time={recipe.time} />}
                         <Level index={recipe.level} />
                       </div>
                     </Grid>

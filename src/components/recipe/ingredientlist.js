@@ -23,28 +23,25 @@ class Ingredientlist extends Component {
   render() {
     const { ingredients, missing } = this.props;
     const mappedIngredients = ingredients.map(x => ({ ...x, missing: missing.includes(x.name) }));
-    // for (let i = 0; i < ingredients.length; i++) {
-    //   ingredients[i].missing = missing.indexOf(ingredients[i].name) > -1;
-    // }
     mappedIngredients.sort((a, b) => a.missing - b.missing);
 
     const listItems = mappedIngredients.map((ingredient, index) => (
-      <Grid item container key={`${ingredient.name}${index}`}>
-        <Grid item xs={10} className="ingredient-text">
-          <Typography variant="body2">
-            {(ingredient.amount ? `${ingredient.amount} ` : '') + (ingredient.unit ? `${ingredient.unit} ` : '') + ingredient.name}
-          </Typography>
-        </Grid>
-        <Grid item xs={2} className="add-shopingcart-btn">
+      <Grid item container xs={12} md={6} xl={4} key={`${ingredient.name}${index}`}>
+        <Grid item className="add-shopingcart-btn">
           <IconButton onClick={() => { this.handleClick(ingredient); }}>
             {ingredient.missing ? <AddIcon /> : <DoneIcon />}
           </IconButton>
+        </Grid>
+        <Grid item className="ingredient-text">
+          <Typography variant="body2">
+            {(ingredient.amount ? `${ingredient.amount} ` : '') + (ingredient.unit ? `${ingredient.unit} ` : '') + ingredient.name}
+          </Typography>
         </Grid>
       </Grid>
     ));
 
     return (
-      <List>{listItems}</List>
+      <List><Grid container xs={12}>{listItems}</Grid></List>
     );
   }
 }

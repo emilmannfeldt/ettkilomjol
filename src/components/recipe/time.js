@@ -1,33 +1,42 @@
 import React, { Component } from 'react';
 import TimerIcon from '@material-ui/icons/Timer';
+import PropTypes from 'prop-types';
 
 class Time extends Component {
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.time !== this.props.time) {
-            return true;
-        }
-        return false;
+  shouldComponentUpdate(nextProps, nextState) {
+    const { time } = this.props;
+    if (nextProps.time !== time) {
+      return true;
     }
-    timeString() {
-        let hours = Math.floor(this.props.time / 60)
-        let minutes = this.props.time % 60;
-        if (hours > 0) {
-            if (minutes > 0) {
-                return hours + " h " + minutes + " m";
-            }
-            return hours + " h";
-        }
-        else {
-            return minutes + " m";
-        }
-    }
+    return false;
+  }
 
-    render() {
-        if (this.props.time) {
-            return (<div className='recipecard-time'> <TimerIcon /> {this.timeString() + " | "} </div>);
-        } else {
-            return (null);
-        }
+  timeString() {
+    const { time } = this.props;
+    const hours = Math.floor(time / 60);
+    const minutes = time % 60;
+    if (hours > 0) {
+      if (minutes > 0) {
+        return `${hours} h ${minutes} m`;
+      }
+      return `${hours} h`;
     }
+    return `${minutes} m`;
+  }
+
+  render() {
+    return (
+      <div className="recipecard-time">
+        {' '}
+        <TimerIcon />
+        {' '}
+        {`${this.timeString()} | `}
+        {' '}
+      </div>
+    );
+  }
 }
+Time.propTypes = {
+  time: PropTypes.number.isRequired,
+};
 export default Time;
