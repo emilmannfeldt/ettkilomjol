@@ -8,30 +8,7 @@ const importUtil = require('./importUtil.js');
 
 const params = process.argv;
 
-const hardcopySources = ['http://www.tasteline.com/recept/marinad-till-kott-och-fagel/',
-  'https://www.ica.se/recept/somrig-mazarintarta-med-farska-bar-724036/',
-  'https://www.ica.se/recept/stekt-torskrygg-med-medelhavssalsa-724071/',
-  'https://www.ica.se/recept/vitlokssill-med-citron-724123/',
-  'https://www.ica.se/recept/brantevikssill-724122/',
-  'https://www.ica.se/recept/frasch-basilikasill-724121/',
-  'https://www.ica.se/recept/tre-goda-silltapas-724119/',
-  'https://www.ica.se/recept/matjessill-pa-fat-724120/',
-  'https://www.ica.se/recept/stekta-thaifiskbollar-i-salladsknyten-724069/',
-  'https://www.ica.se/recept/parmesanpopcorn-724047/',
-  'https://www.ica.se/recept/popcorn-med-chili-och-lime-724046/',
-  'https://www.ica.se/recept/kycklingvingar-med-koriandermajonnas-724045/',
-  'https://www.ica.se/recept/kottfarspaj-med-mozzarella-724000/',
-  'https://www.ica.se/recept/shrimp-rolls-724048/',
-  'http://www.tasteline.com/recept/rodkal-3-2/',
-  'http://www.tasteline.com/recept/svampknyten/',
-  'http://www.tasteline.com/recept/tomat-och-parmesanflarn/',
-  'http://www.tasteline.com/recept/fankals-och-apelsinsallad-2/',
-  'http://www.tasteline.com/recept/vita-bonor-med-rodlok/',
-  'http://www.tasteline.com/recept/het-laxtartar-med-chili-och-koriander/',
-  'http://www.tasteline.com/recept/gravlax-med-enbarssmak/',
-  'http://www.tasteline.com/recept/ugnsbakad-lax-2/',
-];
-
+const hardcopySources = [];
 
 // Prod
 const prodConfig = {
@@ -50,9 +27,30 @@ const devConfig = {
   storageBucket: 'ettkilomjol-dev.appspot.com',
   messagingSenderId: '425944588036',
 };
+const isHelp = process.argv.includes('--help');
+if(isHelp){
+    console.log("----------------------------------------------------------------------------------------------------------------");
+  console.log("| This script is used for scraping recipes from known websites.");
+  console.log("| First argument points to which environment to import the recipes. 'dev' or 'prod'");
+  console.log("| Second argument is a name for the execution wich will be used to name logfiles etc");
+  console.log("| Per default the script will run an array of predefined urls");
+  console.log("| You can choose to scrape the latest recipes from each source by using the --latest flag followed by a number or expected recipes per source");
+  console.log("| Example 1: 'node recipeScraper.js dev initial_load'");
+  console.log("| Example 2: 'node recipeScraper.js prod latest_2019-1 --latest 100'");
+    console.log("----------------------------------------------------------------------------------------------------------------");
+
+  process.exit();
+}
+
 const enviromentArg = process.argv[2];
 let nameArg = process.argv[3];
 const isLatest = process.argv.includes('--latest');
+const recipesPerSource = process.argv[process.argv.indexOf('--latest')+1];
+if(isLatest && (!recipesPerSource || isNaN(recipesPerSource))){
+  console.log("missing argument for number of recipes per source for latest flag");
+  process.exit();
+}
+
 if (enviromentArg === 'dev') {
   firebase.initializeApp(devConfig);
 } else if (enviromentArg === 'prod') {
@@ -83,7 +81,7 @@ if (mm < 10) {
   mm = `0${mm}`;
 }
 today = `${yyyy}-${mm}-${dd}`;
-if (!nameArg) {
+if (!nameArg || nameArg==='--latest') {
   nameArg = 'import';
 }
 const filename = `${nameArg}_${today}`;
@@ -96,9 +94,9 @@ firebase.auth().signInAnonymously().catch((error) => {
 });
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
-    firebase.database().ref('recipes').remove();
-    firebase.database().ref('foods').remove();
-    firebase.database().ref('tags').remove();
+    // firebase.database().ref('recipes').remove();
+    // firebase.database().ref('foods').remove();
+    // firebase.database().ref('tags').remove();
 
     recipesRef.once('value', (snapshot) => {
       snapshot.forEach((child) => {
@@ -121,7 +119,7 @@ firebase.auth().onAuthStateChanged((user) => {
 function checkDataLoadComplete() {
   if (foodLoaded && recipeLoaded) {
     if (isLatest) {
-      createLatesRecipes();
+      createLatesRecipes(recipesPerSource);
     } else {
       createRecipes();
     }
@@ -131,23 +129,34 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function createLatesRecipes() {
-  const maxSources = 20;
+async function createLatesRecipes(maxSources) {
   let latestSources = [];
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   // koket
   console.log('fetching koket sources');
   let koketSources = [];
+  const koketPageLimit = Math.floor(maxSources/40);
+
   await page.goto('https://www.koket.se/recept');
-  for (let i = 0; i < maxSources; i++) {
-    koketSources = await page.evaluate(() => {
+  for (let i = 0; i < koketPageLimit; i++) {
+    const tmpList = await page.evaluate(() => {
       const xpath = "//h2[text()='Senaste recepten']";
       const matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
       const recipeList = matchingElement.parentElement;
-      recipeList.querySelector('.pagination button').click();
+      if(recipeList.querySelector('.pagination button')){
+        recipeList.querySelector('.pagination button').click();
+      }
       return Array.from(recipeList.querySelectorAll('article.recipe h2 a')).map(a => a.href);
     });
+    if(koketSources.length === tmpList.length){
+      console.log("koket.se latest: no more recipes");
+
+      break;
+    }
+
+    koketSources = tmpList;
+    lastBatch = {...koketSources};
     if (koketSources.length > maxSources) {
       koketSources.length = maxSources;
       break;
@@ -177,7 +186,9 @@ async function createLatesRecipes() {
     await page.goto(foodType.url);
     for (let j = 1; j < foodType.maxPages; j++) {
       await page.evaluate(() => {
-        document.querySelector('.button--get-more').click();
+        if(document.querySelector('.button--get-more')){
+          document.querySelector('.button--get-more').click();
+        }
       });
       await sleep(2000);
     }
@@ -196,10 +207,14 @@ async function createLatesRecipes() {
   let icaSources = [];
   await page.goto('https://www.ica.se/recept/');
   for (let i = 1; i < maxSources; i++) {
-    icaSources = await page.evaluate(() => {
-      $('a.loadmore').click();
+    let tmplist = await page.evaluate(() => {
+      if($('a.loadmore')){
+        $('a.loadmore').click();
+      }
       return Array.from(document.querySelectorAll('article.recipe header h2.title a')).map(a => a.href);
     });
+
+    icaSources = tmplist;
     if (icaSources.length > maxSources) {
       icaSources.length = maxSources;
       break;
@@ -212,7 +227,8 @@ async function createLatesRecipes() {
   // tasteline
   console.log('fetching tasteline sources');
   let tastelineSources = [];
-  for (let i = 1; i < maxSources; i++) {
+  const tastelinePagelimit = Math.floor(maxSources/12);
+  for (let i = 1; i < tastelinePagelimit; i++) {
     await page.goto(`https://www.tasteline.com/recept/?sort=senaste&sida=${i}#sok`);
     const tmpSrcs = await page.evaluate(() => Array.from(document.querySelectorAll('.recipe-description a')).map(a => a.href));
     tastelineSources = tastelineSources.concat(tmpSrcs);
@@ -223,18 +239,23 @@ async function createLatesRecipes() {
   }
   latestSources = latestSources.concat(tastelineSources);
   console.log(`sources gathered ${latestSources.length}`);
-
+  latestSources = latestSources.map(x=> x.replace('https:',''));
   createRecipes(latestSources);
 }
 
-async function createRecipes(sources = hardcopySources) {
+async function createRecipes(sources_ = hardcopySources) {
+  const sources = [...new Set(sources_)]; 
   console.log('starting createRecipes');
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   const len = sources.length;
+  try {
+    
+
   for (let index = 0; index < len; index++) {
     const source = sources[index];
-    await page.goto(source);
+    console.log(`goto:${source}`);
+    await page.goto(`https:${source}`);
     let recipe = {};
     if (source.includes('tasteline.com')) {
       recipe = await page.evaluate(() => {
@@ -579,10 +600,10 @@ async function createRecipes(sources = hardcopySources) {
               continue;
             }
 
-            if (ingredient.amount.trim() === '') {
+            if (ingredient.amount && ingredient.amount.trim() === '') {
               delete ingredient.amount;
             }
-            if (ingredient.unit.trim() === '') {
+            if (ingredient.unit && ingredient.unit.trim() === '') {
               delete ingredient.unit;
             }
             ingredientNames.push(ingredient.name);
@@ -1215,7 +1236,7 @@ async function createRecipes(sources = hardcopySources) {
     } else {
       console.log(`error on:${source}`);
     }
-
+    console.log(`progress:${index} ( ${Math.floor((index / len) * 100)}% )`);
     if (!recipe.source) {
       continue;
     }
@@ -1240,25 +1261,31 @@ async function createRecipes(sources = hardcopySources) {
           recipesRef.child(child.key).update(recipe);
         });
       });
+      console.log('updated');
       nrOfRecipesUpdated += 1;
     } else {
       recipesRef.push(recipe);
       nrOfRecipesCreated += 1;
       existingRecipes.push(recipe);
+      console.log('created');
     }
     final.push(recipe);
-    console.log(`progress:${index} ( ${Math.floor((index / len) * 100)}% )`);
   }
+} catch (error) {
+    console.log(error);
+    log.push(error);
+} finally{
+  
   await browser.close();
-
+  
   log.push(`input nr: ${sources.length}`);
   log.push(`created recipes: ${nrOfRecipesCreated}`);
   log.push(`updated recipes: ${nrOfRecipesUpdated}`);
   log.push(`imagesizeList: ${imageSizes}`);
   console.log(`created recipes: ${nrOfRecipesCreated}`);
   console.log(`Updated recipes: ${nrOfRecipesUpdated}`);
-
-
+  
+  
   fs.writeFile(`C:/dev/${filename}-LOG.json`, JSON.stringify(log), (err) => {
     if (err) {
       return console.log(err);
@@ -1273,11 +1300,12 @@ async function createRecipes(sources = hardcopySources) {
     log.push('backup saved!');
     return console.log('saved backup');
   });
-  const baseDelay = sources.length;
-  setTimeout(importUtil.changeName.bind(null, params), baseDelay + 5000);
-  setTimeout(importUtil.fixFaultyIngredients.bind(null, params), baseDelay * 2 + 10000);
-  setTimeout(importUtil.recountUsage, baseDelay * 3 + 15000);
-  setTimeout(process.exit, baseDelay * 4 + 20000);
+}
+  const baseDelay = sources.length + existingRecipes.length;
+  setTimeout(importUtil.changeName, baseDelay + 5000);
+  setTimeout(importUtil.fixFaultyIngredients, baseDelay * 2 + 10000);
+  setTimeout(importUtil.recountUsage, baseDelay * 3 + 20000);
+  setTimeout(process.exit, baseDelay * 4 + 25000);
 }
 
 function cleanRecipe(recipe_) {

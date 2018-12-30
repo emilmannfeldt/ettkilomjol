@@ -13,11 +13,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import MailIcon from '@material-ui/icons/MailOutline';
 
 function autoHeight(orgSize) {
+  const header = document.querySelector('header');
   const content = document.querySelector('#content');
   const footer = document.querySelector('#footer');
   if (footer.scrollHeight > 0) {
     content.style.minHeight = 0;
-    content.style.minHeight = `${window.document.body.scrollHeight - footer.offsetHeight}px`;
+    content.style.minHeight = `${window.document.body.scrollHeight - header.offsetHeight - 60 - footer.offsetHeight}px`;
   }
   const newSize = window.document.body.clientHeight + window.document.body.clientWidth;
   if (orgSize) {

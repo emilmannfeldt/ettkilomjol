@@ -66,11 +66,7 @@ class FilterableRecipelist extends Component {
       }
     }
     // sortera recept
-    const t0 = performance.now();
-
     const sortedRecipes = this.sortRecipes(filteredRecipes);
-    const t1 = performance.now();
-    console.log(`Call to sortrelevans took ${t1 - t0} milliseconds.`);
 
     if (sortedRecipes.length > maxHits) {
       sortedRecipes.length = maxHits;
@@ -87,16 +83,16 @@ class FilterableRecipelist extends Component {
     } = this.props;
     return (
       <Grid container>
-        <Grid item xs={12} className="searchbar-wrapper">
+        <Grid item xs={12} className="searchbar-wrapper gutter">
           <Searchbar onFilterChange={this.handleFilterInput} tags={tags} foods={foods} filter={filter} />
         </Grid>
-        <Grid item xs={12} className="popular-tags">
+        <Grid item xs={12} className="gutter">
           <QuickTags onUserInput={this.handleFilterInput} tags={tags} filter={filter} recipeListRendered={foundRecipes.length > 0} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} className="gutter">
           <Sort onUserInput={this.handleFilterInput} render={foundRecipes.length > 0} filter={filter} />
         </Grid>
-        <Grid item xs={12} style={{ color: '#fdfdfd' }}>
+        <Grid item xs={12} className="gutter" style={{ color: '#fdfdfd' }}>
           <Typography color="inherit" variant="body1">{recipes.length > 0 ? `${recipes.length} recept hämtade` : ''}</Typography>
         </Grid>
         <Grid item xs={12} container className="recipelist-wrapper">

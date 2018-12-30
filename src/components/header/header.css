@@ -26,6 +26,9 @@
 header {
     background-color: #f5f4f4 !important;
 }
+#header {
+    margin-bottom: 60px !important;
+}
 
 .appbar-login-avatar {
     margin-right: 10px;

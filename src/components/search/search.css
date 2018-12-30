@@ -38,7 +38,6 @@
 /* searchbar */
 
 .chip-wrapper {
-    margin-top:60px !important;
     flex-wrap: wrap;
     display: flex;
     min-height: 108px;
@@ -82,7 +81,7 @@
 .c-autocomplete div:first-child {
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 97%;
+    width: 90%;
     padding-right: 20px;
     margin-bottom: -0.5rem;
 }

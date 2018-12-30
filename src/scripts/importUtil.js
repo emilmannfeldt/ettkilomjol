@@ -3,8 +3,8 @@
 const firebase = require('firebase');
 const fs = require('fs');
 
-const minUsesFoods = 1;
-function changeName(options) {
+const minUsesFoods = 2;
+function changeName() {
   const recipesRef = firebase.database().ref('recipes');
   const foodRef = firebase.database().ref('foods');
   const tagRef = firebase.database().ref('tags');
@@ -816,8 +816,18 @@ function changeName(options) {
   ];
     // nya konstiga saker som upptäckts:
     // auberginer
-
-  const filename = options[3] || 'import_changename';
+let today = new Date();
+let dd = today.getDate();
+let mm = today.getMonth() + 1; // January is 0!
+const yyyy = today.getFullYear();
+if (dd < 10) {
+  dd = `0${dd}`;
+}
+if (mm < 10) {
+  mm = `0${mm}`;
+}
+today = `${yyyy}-${mm}-${dd}`;
+  const filename = 'import_changename_' + today;
   const log = [];
   let foodLoaded = false;
   let tagLoaded = false;
@@ -934,7 +944,6 @@ function changeName(options) {
                 }
               } else if (change.to.trim() === '') {
                 log.push(`deleting unit:${ingredient.unit}`);
-                console.log(`unit to delte${recipe.ingredients[i].unit}`);
                 delete recipe.ingredients[i].unit;
               } else {
                 log.push(`change unit from:${ingredient.unit}`);
@@ -984,7 +993,7 @@ function changeName(options) {
   }
 }
 
-function fixFaultyIngredients(options) {
+function fixFaultyIngredients() {
   const recipesRef = firebase.database().ref('recipes');
   const foodRef = firebase.database().ref('foods');
   const tagRef = firebase.database().ref('tags');
@@ -993,7 +1002,18 @@ function fixFaultyIngredients(options) {
   const existingFoods = [];
   const existingTags = [];
   let units = {};
-  const filename = options[3] || 'import_fixIngredients';
+  let today = new Date();
+let dd = today.getDate();
+let mm = today.getMonth() + 1; // January is 0!
+const yyyy = today.getFullYear();
+if (dd < 10) {
+  dd = `0${dd}`;
+}
+if (mm < 10) {
+  mm = `0${mm}`;
+}
+today = `${yyyy}-${mm}-${dd}`;
+  const filename = 'import_fixIngredients' + today;
   const log = [];
   let foodLoaded = false;
   let tagLoaded = false;
@@ -1323,7 +1343,7 @@ function fixFaultyIngredients(options) {
   }
 }
 
-function recountUsage(options) {
+function recountUsage() {
   console.log('recountUsage starting');
   const recipesRef = firebase.database().ref('recipes');
   const foodsRef = firebase.database().ref('foods');
@@ -1340,7 +1360,8 @@ function recountUsage(options) {
   });
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      firebase.database().ref('foods').remove();
+      foodsRef.remove();
+      tagsRef.remove();
       recipesRef.once('value', (snapshot) => {
         snapshot.forEach((child) => {
           recipes.push(child.val());
@@ -1388,7 +1409,6 @@ function recountUsage(options) {
       }
     }
 
-
     // filter low usage
     for (const prop in foods) {
       if (foods.hasOwnProperty(prop)) {
@@ -1398,7 +1418,6 @@ function recountUsage(options) {
         }
       }
     }
-
 
     foodsRef.set(foods);
     tagsRef.set(tags);

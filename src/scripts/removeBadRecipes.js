@@ -1,5 +1,6 @@
 var firebase = require('firebase');
 var fs = require('fs');
+const importUtil = require('./importUtil.js');
 
 //Prod
 let prodConfig = {
@@ -46,12 +47,10 @@ firebase.auth().onAuthStateChanged(function (user) {
   console.log("start");
   if (user) {
     foodRef.orderByChild("uses").once("value", function (snapshot) {
-      console.log("startfood");
       snapshot.forEach(function (child) {
         existingFoods.splice(0, 0, child.val().name);
 
       });
-      console.log("fooddone");
 
       foodLoaded = true;
       if (foodLoaded && tagLoaded && recipeLoaded) {
@@ -59,12 +58,10 @@ firebase.auth().onAuthStateChanged(function (user) {
       }
     });
     tagRef.orderByChild("uses").once("value", function (snapshot) {
-      console.log("tagstart");
 
       snapshot.forEach(function (child) {
         existingTags.splice(0, 0, child.val().name);
       });
-      console.log("tagdone");
 
       tagLoaded = true;
       if (foodLoaded && tagLoaded && recipeLoaded) {
@@ -88,7 +85,7 @@ function runRecipes() {
   let numberRec = 0;
 
   console.log(existingRecipes.length + " existrinrec")
-
+          console.log("existing foods:" + existingFoods.length);
   recipesRef.once('value', function (snapshot) {
     console.log("receipes hämtade");
     snapshot.forEach(function (child) {
@@ -137,7 +134,7 @@ function runRecipes() {
         console.log(numberRec);
       }
       if (deleteRecipe) {
-        // recipesRef.child(child.key).remove();
+        recipesRef.child(child.key).remove();
         log.push("Deleteing:" + recipe.source);
         log.push("cause:" + cause)
 
@@ -145,13 +142,17 @@ function runRecipes() {
 
     });
     console.log("recipes: " + numberRec);
-    fs.writeFile("C:/react/removebadRecipes" + filename + "-LOG.json", JSON.stringify(log), function (err) {
+    fs.writeFile("C:/dev/ettkilomjol resources/removebadRecipes" + filename + "-LOG.json", JSON.stringify(log), function (err) {
       if (err) {
         return console.log(err);
       }
       console.log("logilfe save")
       log.push("logfile saved!");
     });
+      const baseDelay = existingRecipes.length;
+      setTimeout(importUtil.recountUsage, baseDelay + 2000);
+      setTimeout(process.exit, baseDelay*2 + 5000);
+
 
   });
 

@@ -1,221 +1,235 @@
 import React, { Component } from 'react';
-import './grocerylist.css'
-import GrocerylistCard from './grocerylistCard';
+import './grocerylist.css';
 import TextField from '@material-ui/core/TextField';
-import GrocerylistDetails from './grocerylistDetails';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
+import GrocerylistDetails from './grocerylistDetails';
+import GrocerylistCard from './grocerylistCard';
 import { fire } from '../../../base';
 import Utils from '../../../util';
 
-
-
 class MyGrocerylists extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentList: null,
-            showNewListDialog: false,
-            newName: '',
-            showCreatingProgress: false,
-            errorText: '',
-            listToDelete: null,
-        };
-        this.setCurrentList = this.setCurrentList.bind(this);
-        this.openDialog = this.openDialog.bind(this);
-        this.createList = this.createList.bind(this);
-        this.validateName = this.validateName.bind(this);
-        this.deleteList = this.deleteList.bind(this);
-        this.resetCurrentList = this.resetCurrentList.bind(this);
-        this.undoDeletion = this.undoDeletion.bind(this);
-
-
-    }
-
-    handleChange = name => event => {
-        this.setState({
-            [name]: event.target.value,
-        });
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentList: null,
+      showNewListDialog: false,
+      newName: '',
+      errorText: '',
+      listToDelete: null,
     };
-    setCurrentList(list) {
-        this.setState({
-            currentList: list
-        })
-    }
-    deleteList(list) {
-        this.setState({
-            listToDelete: list,
-        });
-        let deletetion = {};
-        deletetion[list.name] = null;
-        let that = this;
-        fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists').update(deletetion, function (error) {
-            if (error) {
-                //console.log('Error has occured during saving process');
-            }
-            else {
-                //console.log("Data hss been dleted succesfully");
-                that.props.setSnackbar('grocerylist_delete', that.undoDeletion);
+    this.setCurrentList = this.setCurrentList.bind(this);
+    this.openDialog = this.openDialog.bind(this);
+    this.createList = this.createList.bind(this);
+    this.validateName = this.validateName.bind(this);
+    this.deleteList = this.deleteList.bind(this);
+    this.resetCurrentList = this.resetCurrentList.bind(this);
+    this.undoDeletion = this.undoDeletion.bind(this);
+  }
 
-            }
-        })
+  getError() {
+    const { errorText } = this.state;
+    return errorText;
+  }
 
-    }
-    resetCurrentList() {
-        this.setState({
-            currentList: null
-        });
-    }
-    getError() {
-        return this.state.errorText;
-    }
-    openDialog() {
-        if (fire.auth().currentUser.isAnonymous) {
-            this.props.setSnackbar('login_required');
-        } else {
 
-            let newName = 'Att handla ' + Utils.getDayAndMonthString(new Date());
-            for (let i = 0; i < this.props.grocerylists.length; i++) {
-                if (newName === this.props.grocerylists[i].name) {
-                    newName = "";
-                }
-            }
+  setCurrentList(list) {
+    this.setState({
+      currentList: list,
+    });
+  }
 
-            this.setState({
-                showNewListDialog: true,
-                newName: newName
-            })
-        }
+  handleChange = name => (event) => {
+    this.setState({
+      [name]: event.target.value,
+    });
+  };
+
+  closeDialog = () => {
+    this.setState({
+      showNewListDialog: false,
+      newName: '',
+      errorText: '',
+    });
+  };
+
+  deleteList(list) {
+    this.setState({
+      listToDelete: list,
+    });
+    const deletetion = {};
+    deletetion[list.name] = null;
+    const that = this;
+    fire.database().ref(`users/${fire.auth().currentUser.uid}/grocerylists`).update(deletetion, (error) => {
+      if (error) {
+        // console.log('Error has occured during saving process');
+      } else {
+        that.props.setSnackbar('grocerylist_delete', that.undoDeletion);
+      }
+    });
+  }
+
+  resetCurrentList() {
+    this.setState({
+      currentList: null,
+    });
+  }
+
+  openDialog() {
+    const { setSnackbar, grocerylists } = this.props;
+    if (fire.auth().currentUser.isAnonymous) {
+      setSnackbar('login_required');
+      return;
     }
-    closeDialog = () => {
-        this.setState({
-            showNewListDialog: false,
-            newName: '',
-            errorText: '',
-        });
+    let newName = `Att handla ${Utils.getDayAndMonthString(new Date())}`;
+    const nameIsTaken = grocerylists.some(x => x.name === newName);
+    if (nameIsTaken) {
+      newName = '';
+    }
+
+    this.setState({
+      showNewListDialog: true,
+      newName,
+    });
+  }
+
+
+  validateName(name) {
+    const { grocerylists } = this.props;
+    if (name.trim().length < 1) {
+      this.setState({
+        errorText: 'Namnet måste vara minst 1 tecken',
+      });
+      return false;
+    }
+    if (name.trim().length > 64) {
+      this.setState({
+        errorText: 'Namnet får max vara 64 tecken',
+      });
+      return false;
+    }
+    const nameIsTaken = grocerylists.some(x => x.name === name);
+    if (nameIsTaken) {
+      this.setState({
+        errorText: 'Du har redan en inköpslista med det namnet',
+      });
+      return false;
+    }
+    return true;
+  }
+
+  createList() {
+    const { newName } = this.state;
+    const grocerylist = {
+      name: newName,
+      created: Date.now(),
     };
-    validateName(name) {
-        if (name.trim().length < 1) {
-            this.setState({
-                errorText: 'Namnet måste vara minst 1 tecken',
-            });
-            return false;
-        }
-        if (name.trim().length > 64) {
-            this.setState({
-                errorText: 'Namnet får max vara 64 tecken',
-            });
-            return false;
-        }
-        for (let i = 0; i < this.props.grocerylists.length; i++) {
-            if (name === this.props.grocerylists[i].name) {
-                this.setState({
-                    errorText: 'Du har redan en inköpslista med det namnet',
-                });
-                return false;
-            }
-        }
-        return true;
-    }
-    createList() {
-        let grocerylist = {
-            name: this.state.newName,
-            created: Date.now(),
-        };
-        if (!this.validateName(grocerylist.name)) {
-            return;
-        }
-
-        let that = this;
-        fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + grocerylist.name).set(grocerylist, function (error) {
-            if (error) {
-                //console.log('Error has occured during saving process');
-                that.setState({
-                    errorText: 'Error: ' + error,
-                });
-            }
-            else {
-                //console.log("Data hss been saved succesfully");
-                that.setState({
-                    showCreatingProgress: false,
-                    showNewListDialog: false,
-                    currentList: grocerylist,
-                    errorText: '',
-                });
-
-
-
-            }
-        })
+    if (!this.validateName(grocerylist.name)) {
+      return;
     }
 
-    undoDeletion() {
-        //console.log("UNDO DELTET")
-        fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + this.state.listToDelete.name).set(this.state.listToDelete);
+    const that = this;
+    fire.database().ref(`users/${fire.auth().currentUser.uid}/grocerylists/${grocerylist.name}`).set(grocerylist, (error) => {
+      if (error) {
+        that.setState({
+          errorText: `Error: ${error}`,
+        });
+      } else {
+        that.setState({
+          showNewListDialog: false,
+          currentList: grocerylist,
+          errorText: '',
+        });
+      }
+    });
+  }
+
+  undoDeletion() {
+    const { listToDelete } = this.state;
+    fire.database().ref(`users/${fire.auth().currentUser.uid}/grocerylists/${listToDelete.name}`).set(listToDelete);
+  }
+
+  render() {
+    const {
+      currentList, showNewListDialog, helptext, newName,
+    } = this.state;
+    const {
+      grocerylists, foods, units, recipes, closeDialog, setSnackbar,
+    } = this.props;
+    if (currentList) {
+      const activeGrocerylist = grocerylists.find(x => x.name === currentList.name);
+      return (
+        <div className="container my_recipes-container">
+          <div className="row">
+            <GrocerylistDetails returnFunc={this.resetCurrentList} grocerylist={activeGrocerylist} foods={foods} units={units} recipes={recipes} />
+          </div>
+        </div>
+      );
     }
+    return (
+      <div className="container my_recipes-container">
+        <Grid item container xs={12} className="list-item">
+          <Grid item xs={12}>
+            <h2 className="page-title">Mina inköpslistor</h2>
+          </Grid>
+          <Grid item xs={12}>
+            <Button onClick={this.openDialog} color="primary" variant="contained">Ny lista</Button>
+          </Grid>
+        </Grid>
+        {grocerylists.map((grocerylist, index) => (
+          <GrocerylistCard
+            key={grocerylist.name}
+            setCurrentList={this.setCurrentList}
+            grocerylist={grocerylist}
+            transitionDelay={index}
+            setSnackbar={setSnackbar}
+            deleteList={this.deleteList}
+          />
+        ))}
 
-    render() {
-
-        if (this.state.currentList) {
-            let activeGrocerylist = {};
-            if (this.state.currentList) {
-                for (let i = 0; i < this.props.grocerylists.length; i++) {
-                    let tmp = this.props.grocerylists[i];
-                    if (tmp.name === this.state.currentList.name) {
-                        activeGrocerylist = this.props.grocerylists[i];
-                    }
-                }
-            }
-            return (<div className="container my_recipes-container">
-                <div className="row">
-                    <GrocerylistDetails return={this.resetCurrentList} grocerylist={activeGrocerylist} foods={this.props.foods} units={this.props.units} recipes={this.props.recipes} />
-                </div>
-            </div>);
-        } else {
-            return (<div className="container my_recipes-container">
-                <div className="row">
-                    <div className="col-xs-12 list-item">
-                        <h2 className="page-title">Mina inköpslistor</h2>
-                        <Button onClick={this.openDialog} color="primary" variant="contained">Ny lista</Button>
-
-                    </div>
-                    {this.props.grocerylists.map((grocerylist, index) =>
-                        <GrocerylistCard key={grocerylist.name} ref="child" setCurrentList={this.setCurrentList}
-                            grocerylist={grocerylist} transitionDelay={index} setSnackbar={this.props.setSnackbar} deleteList={this.deleteList} />
-                    )}
-                </div>
-                <Dialog
-                    open={this.state.showNewListDialog}
-                    onClose={this.props.closeDialog}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="simple-dialog-title">Ny inköpslista</DialogTitle>
-                    <DialogContent className="dialog-content">
-                        <DialogContentText>
-                            {this.state.helptext}
-                        </DialogContentText>
-                        <TextField className="contact-field"
-                            label="Namn"
-                            name="name"
-                            value={this.state.newName}
-                            onChange={this.handleChange('newName')}
-                            margin="normal"
-                        />
-                        <DialogContentText>
-                            {this.getError()}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.closeDialog} color="secondary" variant="contained">stäng</Button>
-                        <Button onClick={this.createList} color="primary" variant="contained">skapa</Button>
-                    </DialogActions>
-                </Dialog>
-            </div>);
-        }
-    }
+        <Dialog
+          open={showNewListDialog}
+          onClose={closeDialog}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="simple-dialog-title">Ny inköpslista</DialogTitle>
+          <DialogContent className="dialog-content">
+            <DialogContentText>
+              {helptext}
+            </DialogContentText>
+            <TextField
+              className="contact-field"
+              label="Namn"
+              name="name"
+              value={newName}
+              onChange={this.handleChange('newName')}
+              margin="normal"
+            />
+            <DialogContentText>
+              {this.getError()}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.closeDialog} color="secondary" variant="contained">stäng</Button>
+            <Button onClick={this.createList} color="primary" variant="contained">skapa</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
 }
+MyGrocerylists.propTypes = {
+  closeDialog: PropTypes.func,
+  grocerylists: PropTypes.array.isRequired,
+  foods: PropTypes.array.isRequired,
+  recipes: PropTypes.array.isRequired,
+  units: PropTypes.any.isRequired,
+  setSnackbar: PropTypes.func.isRequired,
+};
 export default MyGrocerylists;

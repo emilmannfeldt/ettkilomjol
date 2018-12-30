@@ -173,9 +173,6 @@ class Home extends Component {
           const recipesTmp = [];
           snapshot.forEach((child) => {
             const recipe = child.val();
-            if (!recipe.tags) {
-              recipe.tags = [];
-            }
             recipesTmp.push(recipe);
           });
           that.setState({
@@ -205,9 +202,6 @@ class Home extends Component {
               const recipesTmp = [];
               snapshot.forEach((child) => {
                 const recipe = child.val();
-                if (!recipe.tags) {
-                  recipe.tags = [];
-                }
                 recipesTmp.push(recipe);
               });
               that.setState({
@@ -227,9 +221,6 @@ class Home extends Component {
             const recipesTmp = [];
             for (let i = 0; i < recipedb.result.length; i++) {
               const recipe = recipedb.result[i];
-              if (!recipe.tags) {
-                recipe.tags = [];
-              }
               recipesTmp.push(recipe);
             }
             that.setState({

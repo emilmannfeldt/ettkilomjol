@@ -1,89 +1,89 @@
 import React, { Component } from 'react';
-import { fire } from '../../../base';
 import List from '@material-ui/core/List';
-import GroceryItem from './groceryItem';
 import Divider from '@material-ui/core/Divider';
-import NewGroceryItem from './newGroceryItem';
 import ListItem from '@material-ui/core/ListItem';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import PrintIcon from '@material-ui/icons/PrintOutlined';
 import IconButton from '@material-ui/core/IconButton';
+import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
+import NewGroceryItem from './newGroceryItem';
+import GroceryItem from './groceryItem';
+import { fire } from '../../../base';
 
-
+function printPage() {
+  window.print();
+}
 
 class GrocerylistDetails extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-        this.updateItem = this.updateItem.bind(this);
-        this.createItem = this.createItem.bind(this);
-        this.deleteItem = this.deleteItem.bind(this);
-        this.printPage = this.printPage.bind(this);
-    }
-    printPage() {
-        window.print();
-    }
-    createItem(item) {
-        fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + this.props.grocerylist.name + '/items').push(item, function (error) {
-            if (error) {
-                //console.log('Error has occured during saving process');
-            }
-            else {
-                //console.log("Data hss been dleted succesfully");
-            }
-        });
-    }
-    updateItem(item, key) {
-        fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + this.props.grocerylist.name + '/items/' + key).update(item, function (error) {
-            if (error) {
-                //console.log('Error has occured during saving process');
-            }
-            else {
-                //console.log("Data hss been dleted succesfully");
-            }
-        });
-    }
-    deleteItem(key) {
-        let items = {};
-        items[key] = null;
-        fire.database().ref('users/' + fire.auth().currentUser.uid + '/grocerylists/' + this.props.grocerylist.name + '/items').update(items, function (error) {
-            if (error) {
-                //console.log('Error has occured during saving process');
-            }
-            else {
-                //console.log("Data hss been dleted succesfully");
-            }
-        });
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+    this.updateItem = this.updateItem.bind(this);
+    this.createItem = this.createItem.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
+  }
 
-    render() {
+  createItem(item) {
+    const { grocerylist } = this.props;
+    fire.database().ref(`users/${fire.auth().currentUser.uid}/grocerylists/${grocerylist.name}/items`).push(item);
+  }
 
-        //vill jag ha det precis som ica med att färdiga items hamnar i en egen lista? eller kan det räcka med att sortera items på done
-        return (<div className="col-xs-12 grocerylist-details--container">
-            <List className="grocerylist-itemlist">
-                <ListItem className="grocerylist-header text-big">
-                    <IconButton onClick={this.props.return}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                    {this.props.grocerylist.name}
-                    <IconButton onClick={this.printPage} className="print-btn">
-                        <PrintIcon />
-                    </IconButton>
-                </ListItem>
-                <NewGroceryItem foods={this.props.foods} units={this.props.units} createItem={this.createItem} grocerylistItems={this.props.grocerylist.items} />
-                {this.props.grocerylist.items &&
-                    this.props.grocerylist.items.map((grocerytItem, index) =>
-                        <div key={grocerytItem.key}>
-                            <GroceryItem itemId={index} ref="child" foods={this.props.foods} units={this.props.units} updateItem={this.updateItem}
-                                groceryItem={grocerytItem} deleteItem={this.deleteItem}
-                                itemList={this.props.grocerylist.items} />
-                            {index === this.props.grocerylist.items.length - 1 ? (null) : (<Divider />)}
-                        </div>
-                    )
+  updateItem(item, key) {
+    const { grocerylist } = this.props;
+    fire.database().ref(`users/${fire.auth().currentUser.uid}/grocerylists/${grocerylist.name}/items/${key}`).update(item);
+  }
+
+  deleteItem(key) {
+    const { grocerylist } = this.props;
+    const items = {};
+    items[key] = null;
+    fire.database().ref(`users/${fire.auth().currentUser.uid}/grocerylists/${grocerylist.name}/items`).update(items);
+  }
+
+  render() {
+    const {
+      returnFunc, grocerylist, foods, units,
+    } = this.props;
+    return (
+      <Grid item container xs={12} className="grocerylist-details--container">
+        <List className="grocerylist-itemlist">
+          <ListItem className="grocerylist-header text-big">
+            <IconButton onClick={returnFunc}>
+              <ChevronLeftIcon />
+            </IconButton>
+            {grocerylist.name}
+            <IconButton onClick={printPage} className="print-btn">
+              <PrintIcon />
+            </IconButton>
+          </ListItem>
+          <NewGroceryItem foods={foods} units={units} createItem={this.createItem} grocerylistItems={grocerylist.items} />
+          {grocerylist.items
+                    && grocerylist.items.map((grocerytItem, index) => (
+                      <div key={grocerytItem.key}>
+                        <GroceryItem
+                          itemId={index}
+                          foods={foods}
+                          units={units}
+                          updateItem={this.updateItem}
+                          groceryItem={grocerytItem}
+                          deleteItem={this.deleteItem}
+                          itemList={grocerylist.items}
+                        />
+                        {index === grocerylist.items.length - 1 ? (null) : (<Divider />)}
+                      </div>
+                    ))
                 }
-            </List>
-        </div>);
-    }
+        </List>
+      </Grid>
+    );
+  }
 }
+GrocerylistDetails.propTypes = {
+  grocerylist: PropTypes.object.isRequired,
+  foods: PropTypes.array.isRequired,
+  units: PropTypes.any.isRequired,
+  returnFunc: PropTypes.func.isRequired,
+};
 export default GrocerylistDetails;

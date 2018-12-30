@@ -39,7 +39,7 @@ class Rating extends Component {
   }
 }
 Rating.propTypes = {
-  votes: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
+  votes: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
 };
 export default Rating;

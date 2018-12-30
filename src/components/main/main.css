@@ -21,3 +21,17 @@
     z-index: 99;
     opacity: 0.7;
 }
+.gutter{
+    padding-right:8px !important;
+    padding-left:8px !important;
+}
+a{
+    text-decoration: none;
+    color: #337ab7;
+}
+a:hover{
+    color:#23527c;
+}
+body{
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+}

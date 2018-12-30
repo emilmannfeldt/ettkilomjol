@@ -40,7 +40,7 @@ const styles = theme => ({
     marginTop: -10,
   },
   actions: {
-    color: '#ffb3b7',
+    color: '#f50057',
     position: 'absolute',
     top: 15,
     right: 15,
@@ -53,6 +53,7 @@ const styles = theme => ({
       marginTop: 15,
       marginBottom: 15,
       marginLeft: -15,
+      marginRight:15,
       borderRadius: '0px 3px 3px 0px',
     },
     recipeCard: {
@@ -170,16 +171,6 @@ class Recipe extends Component {
     { missingIngredients: [], matchedIngredients: [] });
 
     const matchedTags = filter.tags.filter(tag => recipe.tags[tag]);
-
-    // få card content mer kompakt, använd cardheader och footer?
-    // BUGG: när jag angett food och tags så det går över en rad så försvinner den raden??
-
-    // ta bort bootstrap helt? ersätt med grid på alla ställen.
-    // testa igenom allt
-    // fixa eslintar
-    // refactorer med destructing i inparametrarna. använd så mycket dependency injection det går. för att underlätta testning. Pure function etc.
-    // ersätt loopar med find, reject, map, reduce, ta in underscore.js om det behövs?
-    // kolla fun fun functions avsnitt om dependency injection för att se hur man testar och mochar. använd mocha eller jets++
     return (
       <Grid item xs={12} className="list-item">
         <Fade

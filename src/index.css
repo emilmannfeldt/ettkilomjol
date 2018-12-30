@@ -61,10 +61,6 @@ a:focus, a:hover {
 input, label{
   font-size: 0.875rem !important;
 }
-.col-xs-12, .col-md-12{
-  padding-right: 8px;
-  padding-left: 8px;
-}
 
 html, body {
   margin: 0;

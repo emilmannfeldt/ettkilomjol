@@ -153,7 +153,7 @@ class Searchbar extends Component {
     const searchables = this.getAutoCompletteFoods().concat(this.getAutoCompletteTags());
 
     return (
-      <Grid item container xs={12}>
+      <Grid item container spacing={32} xs={12}>
         <Grid item xs={12} className="chip-wrapper">
           {chips}
         </Grid>

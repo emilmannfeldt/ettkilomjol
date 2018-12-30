@@ -23,7 +23,7 @@ class Tags extends Component {
 
     const matched = matchedTags.map(x => (<span key={recipeKey + x} className="recipecard-tag-matched">{x}</span>));
     const unmatched = Object.keys(recipeTags).reduce((result, tag) => {
-      if (!matched.includes(tag)) {
+      if (!matchedTags.includes(tag)) {
         result.push(<span key={recipeKey + tag} className="recipecard-tag-unmatched">{tag}</span>);
       }
       return result;

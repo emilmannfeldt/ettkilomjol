@@ -88,8 +88,7 @@
 }
 
 .recipe-card-info {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  padding: 0 !important;
 }
 
 .recipecard-save-btn span {
