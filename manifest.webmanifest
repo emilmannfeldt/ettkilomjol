@@ -3,7 +3,7 @@
   "short_name": "Ett kilo mjöl",
   "start_url": "https://mannfeldt.github.io/ettkilomjol/",
   "display": "standalone",
-  "background_color": "#fff",
+  "background_color": "#fdfdfd",
   "description": "Sökmotor för ditt kylskåp",
   "icons": [
     {
