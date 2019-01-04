@@ -1,5 +1,5 @@
 const firebase = require('firebase');
-var fs = require('fs');
+const fs = require('fs');
 const importUtil = require('./importUtil.js');
 
 // Prod
@@ -31,7 +31,7 @@ if (enviromentArg === 'dev') {
 const recipesRef = firebase.database().ref('recipes');
 const foodRef = firebase.database().ref('foods');
 const tagRef = firebase.database().ref('tags');
-var fs = require('fs');
+let recipes;
 
 const existingFoods = [];
 const existingTags = [];
@@ -52,7 +52,7 @@ firebase.auth().onAuthStateChanged((user) => {
 
       foodLoaded = true;
       if (foodLoaded && tagLoaded) {
-        runRecipes();
+        // runRecipes();
       }
     });
     tagRef.orderByChild('uses').once('value', (snapshot) => {
@@ -65,50 +65,32 @@ firebase.auth().onAuthStateChanged((user) => {
 
       tagLoaded = true;
       if (foodLoaded && tagLoaded) {
-        runRecipes();
+        // runRecipes();
       }
+    });
+    fs.readFile('./recipes.json', (err, data) => {
+      if (err) {
+        throw err;
+      }
+      recipes = JSON.parse(data);
+
+      runRecipes(); // Or put the next step in a function and invoke it
     });
   }
 });
+
 
 function runRecipes() {
   // script för att  hitta alla recept som har någon ingrediens med ett visst antal uses
   const namel = 0;
   const numberRec = 0;
   const invalids = [',', '+', '$', '#', '[', ']', '.'];
-  recipesRef.once('value', (snapshot) => {
-    console.log('receipes hämtade');
-    snapshot.forEach((child) => {
-      const busted = false;
-      const recipe = child.val();
-      log.push(recipe.source);
-      const changesmade = false;
-      // lös problemte med 30-40 dumplings som inte blir rätt iscriptet här? why??
-      // jag kan plocka ut alla recept vars portion är bara en siffra? ta ut de soruces för de ska updateras.
-      // resulterar i 4 filer med sources som jag sedan ska köra om i respektiva ica.js script. se så att resultatet blir bra och sen updatera mot createrecipes.js
-      //
+  const len = recipes.length;
+  console.log(`${len}recipes`);
 
-      // läs om alla recept som finns från varje source.
-      // ica done
-      // tasteline påväg
-      // mittkok behöver samla in hrefs, hitta script som funkar bra likt icas
-      // koket.se samma som ovan
-    });
-    const uniqRecipes = [...new Set(log)]; 
-
-    console.log("total recipes: " + log.length);
-    console.log("uniq recipes: " + uniqRecipes.length);
-
-
-    console.log(`recipes: ${numberRec}`);
-    fs.writeFile(`C:/dev/datachange${filename}-LOG.json`, JSON.stringify(log), (err) => {
-      if (err) {
-        return console.log(err);
-      }
-      console.log('logilfe save');
-      log.push('logfile saved!');
-    });
-  });
+  for (let i = 0; i < len; i++) {
+    recipesRef.push(recipes[i]);
+  }
 
   console.log('done');
   console.log('recipes fetched');
